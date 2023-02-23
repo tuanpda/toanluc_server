@@ -32,7 +32,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-// cập nhật kế hoạch
+// cập nhật kế hoạch NHÀ MÁY
 router.patch("/:_id", async (req, res) => {
   try {
     await pool.connect();
@@ -56,6 +56,47 @@ router.patch("/:_id", async (req, res) => {
                         soluong = @soluong,
                         ngaybd = @ngaybd, 
                         ngaykt = @ngaykt,
+                        updatedAt = @updatedAt
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật kế hoạch NĂM
+router.patch("/kehoachnam/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM kehoach WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("tgbatdau", req.body.tgbatdau)
+        .input("tgketthuc", req.body.tgketthuc)
+        .input("soluong", req.body.soluong)
+        .input("soluongmuavup1", req.body.soluongmuavup1)
+        .input("soluongmuavup2", req.body.soluongmuavup2)
+        .input("soluongmuavup3", req.body.soluongmuavup3)
+        .input("updatedAt", req.body.updatedAt)
+        .query(
+          `UPDATE kehoach SET 
+                        tgbatdau = @makhpx, 
+                        tgketthuc = @soluong,
+                        soluong = @ngaybd, 
+                        soluongmuavup1 = @ngaykt,
+                        soluongmuavup2 = @soluongmuavup2,
+                        soluongmuavup3 = @soluongmuavup3,
                         updatedAt = @updatedAt
                         WHERE _id = @_id;`
         );
@@ -182,7 +223,7 @@ router.patch("/updatelokehoachpxatdangkylodesanxuat/:_id", async (req, res) => {
   }
 });
 
-// cập nhật kế hoạch nhà máy
+// cập nhật kế hoạch nhà máy anchor
 router.patch("/kehoach/:_id", async (req, res) => {
   try {
     await pool.connect();
@@ -195,6 +236,8 @@ router.patch("/kehoach/:_id", async (req, res) => {
       await pool
         .request()
         .input("_id", req.params._id)
+        .input("tgbatdau", req.body.tgbatdau)
+        .input("tgketthuc", req.body.tgketthuc)
         .input("soluongmuavup1", req.body.soluongmuavup1)
         .input("soluongmuavup2", req.body.soluongmuavup2)
         .input("soluongmuavup3", req.body.soluongmuavup3)
@@ -214,6 +257,8 @@ router.patch("/kehoach/:_id", async (req, res) => {
         .input("updatedAt", req.body.updatedAt)
         .query(
           `UPDATE kehoach SET 
+                        tgbatdau = @tgbatdau,
+                        tgketthuc = @tgketthuc,
                         soluongmuavup1 = @soluongmuavup1, 
                         soluongmuavup2 = @soluongmuavup2,
                         soluongmuavup3 = @soluongmuavup3,
@@ -437,6 +482,63 @@ router.get("/searchnhomsp", async (req, res) => {
   }
 });
 
+// tìm dữ liệu lô kế hoạch phân xưởng theo nhóm sp
+router.get("/searchnhomsplokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nhomsp", req.query.nhomsp)
+      .query(
+        `SELECT * FROM lokehoachphanxuong where nhomsp=@nhomsp order by makh`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô kế hoạch phân xưởng theo sp
+router.get("/searchsplokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("maspkhpx", req.query.maspkhpx)
+      .query(
+        `SELECT * FROM lokehoachphanxuong where maspkhpx=@maspkhpx order by makh`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô kế hoạch phân xưởng theo trước ngày kết thúc
+router.get("/searchlokhpxtheongaykt", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngayktkhpx", req.query.ngayktkhpx)
+      .query(
+        `select * from lokehoachphanxuong where ngayktkhpx <= @ngayktkhpx order by ngayktkhpx, makh`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // tìm dữ liệu lô nhà máy theo sp
 router.get("/searchsanpham", async (req, res) => {
   try {
@@ -454,6 +556,26 @@ router.get("/searchsanpham", async (req, res) => {
   }
 });
 
+// tìm dữ liệu lô nhà máy theo sp và nhóm sp
+router.get("/searchsanphamandnhomsp", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("masp", req.query.masp)
+      .input("nhomsp", req.query.nhomsp)
+      .query(
+        `SELECT * FROM lokehoach where masp=@masp and nhomsp=@nhomsp order by makhpx`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // tìm dữ liệu lô nhà máy theo ngày kết thúc
 router.get("/searchtimekt", async (req, res) => {
   try {
@@ -461,7 +583,26 @@ router.get("/searchtimekt", async (req, res) => {
     const result = await pool
       .request()
       .input("ngaykt", req.query.ngaykt)
-      .query(`SELECT * FROM lokehoach where ngaykt=@ngaykt order by makhpx`);
+      .query(`SELECT * FROM lokehoach where ngaykt<=@ngaykt order by makhpx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô kế hoạch năm theo ngày kết thúc
+router.get("/searchtimektkhn", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tgketthuc", req.query.tgketthuc)
+      .query(
+        `SELECT * FROM kehoach where tgketthuc <= @tgketthuc order by makh`
+      );
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -881,6 +1022,24 @@ router.get("/getallkehoachpxwithpxorderbyngaykt", async (req, res) => {
       .input("ngayktkhpx", req.query.ngayktkhpx)
       .query(
         `select * from lokehoachphanxuong where mapx=@mapx and ngayktkhpx between @ngaybdkhpx and @ngayktkhpx order by ngayktkhpx, makhpx`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all lô kế hoạch phân xưởng where mã phân xưởng
+router.get("/getallkehoachpxwithmapx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query(
+        `select * from lokehoachphanxuong where mapx=@mapx order by ngayktkhpx, makhpx`
       );
     const tenpx = result.recordset;
 

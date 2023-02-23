@@ -890,6 +890,40 @@ router.get("/getallkehoachpxwithpxorderbyngaykt", async (req, res) => {
   }
 });
 
+// get all lô kế hoạch phân xưởng where mã phân xưởng and theo ngày kết thúc
+router.post("/getallkehoachpxwithfiltermapxorngayktkhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    let result;
+    const { mapx,ngayktkhpx } = req.body
+    if( mapx && ngayktkhpx){
+      result = await pool
+      .request()
+      .input("mapx", mapx)
+      .input("ngayktkhpx", ngayktkhpx)
+      .query(
+        `select * from lokehoachphanxuong where mapx=@mapx and ngayktkhpx=@ngayktkhpx order by ngayktkhpx, makhpx`
+      );
+    }
+    
+    else {
+      result = await pool
+      .request()
+      .input("mapx", mapx)
+      .input("ngayktkhpx", ngayktkhpx)
+      .query(
+        `select * from lokehoachphanxuong where mapx=@mapx or ngayktkhpx=@ngayktkhpx order by ngayktkhpx, makhpx`
+      );
+    }
+    
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // search malo sx
 router.get("/searchlsx", async (req, res) => {
   try {

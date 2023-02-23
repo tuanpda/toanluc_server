@@ -1,0 +1,244 @@
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcrypt");
+const { pool } = require("../database/dbinfo");
+const jwt = require("jsonwebtoken");
+const verifyToken = require("../services/verify-token");
+const multer = require("multer");
+
+// SET STORAGE
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    /* Nhớ sửa đường dẫn khi deploy lên máy chủ */
+    cb(null, "D:\\CODE\\PROJECT\\client\\static\\avatar");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage });
+
+router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
+  let linkAvatar;
+  if (!req.file) {
+    linkAvatar = req.body.anhdd;
+  } else {
+    linkAvatar = `http://localhost/avatar/${req.file.filename}`;
+  }
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM nhanvien WHERE _id = @_id`);
+    let nhanvien = result.recordset[0];
+    //console.log(user.email);
+    // console.log(req.file)
+    if (nhanvien) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("tennv", req.body.tennv)
+        .input("mapb", req.body.mapb)
+        .input("tenphong", req.body.tenphong)
+        .input("sodienthoai", req.body.sodienthoai)
+        .input("cccd", req.body.cccd)
+        .input("anhdd", linkAvatar)
+        .input("ngaysinh", req.body.ngaysinh)
+        .input("gioitinh", req.body.gioitinh)
+        .input("mucluong", req.body.mucluong)
+        .input("lhkhancap", req.body.lhkhancap)
+        .input("diachilh", req.body.diachilh)
+        .input("sotknh", req.body.sotknh)
+        .input("tennh", req.body.tennh)
+        .input("diengiai", req.body.diengiai)
+        .input("updatedAt", req.body.updatedAt)
+        .query(
+          `UPDATE nhanvien SET 
+              tennv = @tennv,
+              mapb =@mapb,
+              tenphong = @tenphong,
+              sodienthoai = @sodienthoai,
+              cccd = @cccd,
+              anhdd = @anhdd,
+              ngaysinh = @ngaysinh,
+              gioitinh = @gioitinh,
+              mucluong = @mucluong,
+              lhkhancap = @lhkhancap,
+              diachilh = @diachilh,
+              sotknh = @sotknh,
+              tennh = @tennh,
+              diengiai = @diengiai,
+              updatedAt = @updatedAt
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
+  let linkAvatar;
+  const file = req.file;
+  if (!file) {
+    anhdd = req.body.anhdd;
+  } else {
+    // Đổi đường dẫn khi deploy lên máy chủ
+    linkAvatar = `http://localhost/avatar/${req.file.filename}`;
+  }
+
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("manv", req.body.manv)
+      .input("tennv", req.body.tennv)
+      .input("mapb", req.body.mapb)
+      .input("tenphong", req.body.tenphong)
+      .input("sodienthoai", req.body.sodienthoai)
+      .input("cccd", req.body.cccd)
+      .input("anhdd", linkAvatar)
+
+      .input("ngaysinh", req.body.ngaysinh)
+      .input("gioitinh", req.body.gioitinh)
+      .input("mucluong", req.body.mucluong)
+      .input("lhkhancap", req.body.lhkhancap)
+      .input("diachilh", req.body.diachilh)
+      .input("sotknh", req.body.sotknh)
+      .input("tennh", req.body.tennh)
+
+      .input("diengiai", req.body.diengiai)
+      .input("createdAt", req.body.createdAt)
+      .input("accadd", req.body.accadd)
+      .input("thuong", req.body.thuong).query(`
+                      INSERT INTO nhanvien (manv, tennv, mapb, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong) 
+                      VALUES (@manv, @tennv, @mapb, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong);
+                  `);
+    const nhanvien = req.body;
+    res.json(nhanvien);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all data nhanvien
+router.get("/", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM nhanvien order by mapb`);
+    const nv = result.recordset;
+
+    res.json(nv);
+    //console.log(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all data nhóm mpb
+router.get("/reportnhansu", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM nhanvien order by mapb`);
+    const nv = result.recordset;
+
+    res.json(nv);
+    //console.log(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all nhan vien by maphong
+router.get("/getallnhanvien", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapb", req.query.mapb)
+      .query(`SELECT * FROM nhanvien where mapb=@mapb`);
+    const nv = result.recordset;
+
+    res.json(nv);
+    //console.log(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get nhan vien by ccd
+router.get("/getcccd", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("cccd", req.query.cccd)
+      .query(`SELECT * FROM nhanvien where cccd=@cccd`);
+    const nv = result.recordset;
+
+    res.json(nv);
+    //console.log(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get by id
+router.get("/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM nhanvien WHERE _id = @_id`);
+    const nhanvien = result.recordset.length ? result.recordset[0] : null;
+    //const t = result.recordset[0].madonvi
+    if (nhanvien) {
+      res.json(nhanvien);
+      //console.log(t)
+    } else {
+      res.status(404).json({
+        message: "Record not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// delete api by id
+router.delete("/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM nhanvien WHERE _id = @_id`);
+    let nhanvien = result.recordset.length ? result.recordset[0] : null;
+    if (nhanvien) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM nhanvien WHERE _id = @_id;`);
+      res.json(nhanvien);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy nhân viên này",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+module.exports = router;

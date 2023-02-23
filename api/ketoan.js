@@ -1,0 +1,1583 @@
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcrypt");
+const { pool } = require("../database/dbinfo");
+const jwt = require("jsonwebtoken");
+const verifyToken = require("../services/verify-token");
+const multer = require("multer");
+
+// SET STORAGE
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    /* Nhớ sửa đường dẫn khi deploy lên máy chủ */
+    //cb(null, "E:\\PROJECT\\docthuBhxh\\client\\static\\avatar");
+    cb(null, "E:\\PROJECT\\TINHLUONGCONGDOAN\\client\\static\\avatar");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage });
+
+// cập nhật phiếu ứng tiền
+router.patch("/phieuungtien/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM ungtien WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("nguoiung", req.body.nguoiung)
+        .input("tienung", req.body.tienung)
+        .input("ngayung", req.body.ngayung)
+        .input("noidung", req.body.noidung)
+        .input("phongban", req.body.phongban)
+        .input("manv", req.body.manv)
+        .query(
+          `UPDATE ungtien SET 
+                    nguoiung = @nguoiung, 
+                    tienung = @tienung,
+                    ngayung = @ngayung,
+                    noidung = @noidung,
+                    phongban = @phongban,
+                    manv = @manv
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật quy tắc lương
+router.patch("/quytactinhluong/:_id", async (req, res) => {
+  try {
+    // console.log(p.replace('dog', 'monkey'));
+    kpcd = req.body.tl_dong_cd_cn;
+    u_kpcd = kpcd.replace(",", "");
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM quytacluong WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("luong_ttv", req.body.luong_ttv)
+        .input("luong_max_bhxh_bhyt", req.body.luong_max_bhxh_bhyt)
+        .input("luong_max_bhtn", req.body.luong_max_bhtn)
+        .input("songay_tinhluong", req.body.songay_tinhluong)
+        .input("sogio_tinhluong", req.body.sogio_tinhluong)
+        .input("tl_lamthem_thuong_bn", req.body.tl_lamthem_thuong_bn)
+        .input("tl_lamthem_nghi_bn", req.body.tl_lamthem_nghi_bn)
+        .input("tl_lamthem_le_bn", req.body.tl_lamthem_le_bn)
+        .input("tl_lamthem_thuong_bd", req.body.tl_lamthem_thuong_bd)
+        .input("tl_lamthem_nghi_bd", req.body.tl_lamthem_nghi_bd)
+        .input("tl_lamthem_le_bd", req.body.tl_lamthem_le_bd)
+        .input("tl_dong_bhxh_ct", req.body.tl_dong_bhxh_ct)
+        .input("tl_dong_bhyt_ct", req.body.tl_dong_bhyt_ct)
+        .input("tl_dong_bhtn_ct", req.body.tl_dong_bhtn_ct)
+        .input("tl_dong_cd_ct", req.body.tl_dong_cd_ct)
+        .input("tl_dong_bhxh_cn", req.body.tl_dong_bhxh_cn)
+        .input("tl_dong_bhyt_cn", req.body.tl_dong_bhyt_cn)
+        .input("tl_dong_bhtn_cn", req.body.tl_dong_bhtn_cn)
+        .input("tl_dong_cd_cn", u_kpcd)
+        .input("thue_tncn_gtcn", req.body.thue_tncn_gtcn)
+        .input("thue_tncn_gtnt", req.body.thue_tncn_gtnt)
+        .query(
+          `UPDATE quytacluong SET 
+                luong_ttv=@luong_ttv,
+                luong_max_bhxh_bhyt=@luong_max_bhxh_bhyt,
+                luong_max_bhtn=@luong_max_bhtn,
+                songay_tinhluong=@songay_tinhluong,
+                sogio_tinhluong=@sogio_tinhluong,
+                tl_lamthem_thuong_bn=@tl_lamthem_thuong_bn,
+                tl_lamthem_nghi_bn=@tl_lamthem_nghi_bn,
+                tl_lamthem_le_bn=@tl_lamthem_le_bn,
+                tl_lamthem_thuong_bd=@tl_lamthem_thuong_bd,
+                tl_lamthem_nghi_bd=@tl_lamthem_nghi_bd,
+                tl_lamthem_le_bd=@tl_lamthem_le_bd,
+                tl_dong_bhxh_ct=@tl_dong_bhxh_ct,
+                tl_dong_bhyt_ct=@tl_dong_bhyt_ct,
+                tl_dong_bhtn_ct=@tl_dong_bhtn_ct,
+                tl_dong_cd_ct=@tl_dong_cd_ct,
+                tl_dong_bhxh_cn=@tl_dong_bhxh_cn,
+                tl_dong_bhyt_cn=@tl_dong_bhyt_cn,
+                tl_dong_bhtn_cn=@tl_dong_bhtn_cn,
+                tl_dong_cd_cn=@tl_dong_cd_cn,
+                thue_tncn_gtcn=@thue_tncn_gtcn,
+                thue_tncn_gtnt=@thue_tncn_gtnt          
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật lô sản xuất
+router.patch("/updatelsx/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id = @_id`);
+    let lsx = result.recordset[0];
+    if (lsx) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("mapx", req.body.mapx)
+        .input("tenpx", req.body.tenpx)
+        .input("makh", req.body.makh)
+        .input("ngaybd", req.body.ngaybd)
+        .input("ngaykt", req.body.ngaykt)
+        .input("sldathang", req.body.sldathang)
+        .input("slsanxuat", req.body.slsanxuat)
+        .input("masp", req.body.masp)
+        .input("tensp", req.body.tensp)
+        .input("soluong", req.body.soluong)
+        .input("nhomluong", req.body.nhomluong)
+        .input("malosx", req.body.malosx)
+        .input("soluonglsx", req.body.soluonglsx)
+        .input("slthuctetaixuong", req.body.slthuctetaixuong)
+        .input("startday", req.body.startday)
+        .input("stopday", req.body.stopday)
+        .input("ghichu", req.body.ghichu)
+        .input("createdAt", req.body.createdAt)
+        .input("createdBy", req.body.createdBy)
+        .input("status", req.body.status)
+        .input("tongdat", req.body.tongdat)
+        .input("tonghong", req.body.tonghong)
+        .query(
+          `UPDATE losanxuat SET 
+                mapx=@mapx,
+                tenpx=@tenpx,
+                makh=@makh,
+                ngaybd=@ngaybd,
+                ngaykt=@ngaykt,
+                sldathang=@sldathang,
+                slsanxuat=@slsanxuat,
+                masp=@masp,
+                tensp=@tensp,
+                soluong=@soluong,
+                nhomluong=@nhomluong,
+                malosx=@malosx,
+                soluonglsx=@soluonglsx,
+                slthuctetaixuong=@slthuctetaixuong,
+                startday=@startday,
+                stopday=@stopday,
+                ghichu=@ghichu,
+                createdAt=@createdAt,
+                createdBy=@createdBy,
+                status=@status,
+                tongdat=@tongdat,
+                tonghong=@tonghong  
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/taophieuung", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nguoiung", req.body.nguoiung)
+      .input("tienung", req.body.tienung)
+      .input("ngayung", req.body.ngayung)
+      .input("noidung", req.body.noidung)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("mapb", req.body.mapb)
+      .input("phongban", req.body.phongban)
+      .input("manv", req.body.manv)
+      .input("typeung", req.body.typeung)
+      .input("hoanung", req.body.hoanung).query(`
+                      INSERT INTO ungtien (nguoiung, tienung, ngayung, noidung,createdAt, createdBy, mapb, phongban, manv, typeung, hoanung) 
+                      VALUES (@nguoiung, @tienung, @ngayung, @noidung,@createdAt, @createdBy, @mapb, @phongban, @manv, @typeung, @hoanung);
+                  `);
+    const ungtien = req.body;
+    res.json(ungtien);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/themluongthang", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapb", req.body.mapb)
+      .input("tenpb", req.body.tenpb)
+      .input("mato", req.body.mato)
+      .input("manv", req.body.manv)
+      .input("hotennv", req.body.hotennv)
+      .input("chucvu", req.body.chucvu)
+      .input("luongcb", req.body.luongcb)
+      .input("luongqlsp", req.body.luongqlsp)
+      .input("luongcd", req.body.luongcd)
+      .input("luongps", req.body.luongps)
+      .input("tongluong", req.body.tongluong)
+      .input("antrua", req.body.antrua)
+      .input("bhxh", req.body.bhxh)
+      .input("congdoan", req.body.congdoan)
+      .input("tamung", req.body.tamung)
+      .input("tongtru", req.body.tongtru)
+      .input("tongnhan", req.body.tongnhan)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("thang", req.body.thang)
+      .input("nam", req.body.nam)
+      .input("key_thangnam", req.body.key_thangnam)
+      .input("status", req.body.status).query(`
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongqlsp, luongcd, luongps, tongluong, antrua, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status);
+                  `);
+    const bl = req.body;
+    res.json(bl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// thêm lương công đoạn
+router.post("/addluongcongdoan", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.body._id_losx)
+      .input("makh", req.body.makh)
+      .input("makhpx", req.body.makhpx)
+      .input("tensp", req.body.tensp)
+      .input("mapx", req.body.mapx)
+      .input("mato", req.body.mato)
+      .input("malosx", req.body.malosx)
+      .input("nguyencong", req.body.nguyencong)
+      .input("dongia", req.body.dongia)
+      .input("may", req.body.may)
+      .input("phanxuong_cn", req.body.phanxuong_cn)
+      .input("to_cn", req.body.to_cn)
+      .input("congnhan", req.body.congnhan)
+      .input("tencn", req.body.tencn)
+      .input("sodat", req.body.sodat)
+      .input("sohong", req.body.sohong)
+      .input("ghichu", req.body.ghichu)
+      .input("stopday_losx", req.body.stopday_losx)
+      .input("status", req.body.status)
+      .input("executedAt", req.body.executedAt)
+      .input("ngaythuchien", req.body.ngaythuchien).query(`
+                      INSERT INTO luongcongnhan (_id_losx, makh, makhpx, tensp, mapx, mato, malosx, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien) 
+                      VALUES (@_id_losx, @makh, @makhpx, @tensp, @mapx, @mato, @malosx, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien);
+                  `);
+    const lc = req.body;
+    res.json(lc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Thêm công nhật
+router.post("/addcongnhat", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.body._id_losx)
+      .input("makh", req.body.makh)
+      .input("makhpx", req.body.makhpx)
+      .input("tensp", req.body.tensp)
+      .input("mapx", req.body.mapx)
+      .input("malosx", req.body.malosx)
+      .input("macongnhat", req.body.macongnhat)
+      .input("tencongnhat", req.body.tencongnhat)
+      .input("macongnhan", req.body.macongnhan)
+      .input("nguoithuchien", req.body.nguoithuchien)
+      .input("sogiocong", req.body.sogiocong)
+      .input("dongia", req.body.dongia)
+      .input("ghichu", req.body.ghichu)
+      .input("ngaythuchien", req.body.ngaythuchien).query(`
+                      INSERT INTO congnhat (_id_losx, makh, makhpx, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien) 
+                      VALUES (@_id_losx, @makh, @makhpx, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien);
+                  `);
+    const lcn = req.body;
+    res.json(lcn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Thêm phiếu lô sản xuất
+router.post("/addphieulosx", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("kehoachnam", req.body.kehoachnam)
+      .input("makh", req.body.makh)
+      .input("makhpx", req.body.makhpx)
+      .input("malosx", req.body.malosx)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("mato", req.body.mato)
+      .input("tento", req.body.tento)
+      .input("masp", req.body.masp)
+      .input("tensp", req.body.tensp)
+      .input("soluong", req.body.soluong)
+      .input("nhomluong", req.body.nhomluong)
+      .input("soluonglsx", req.body.soluonglsx)
+      .input("soluongkhsx", req.body.soluongkhsx)
+      .input("ngaybd", req.body.ngaybd)
+      .input("ngaykt", req.body.ngaykt)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("status", req.body.status)
+      .input("datinhluong", 0)
+      .input("stopday_losx", req.body.stopday_losx).query(`
+                      INSERT INTO losanxuat (kehoachnam, makh, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, datinhluong, stopday_losx) 
+                      VALUES (@kehoachnam, @makh, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @datinhluong, @stopday_losx);
+                  `);
+    const lc = req.body;
+    res.json(lc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Thêm phiếu lô kế hoạch
+router.post("/addphieulokh", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("makh", req.body.makh)
+      .input("makhpx", req.body.makhpx)
+      .input("ngaybd", req.body.ngaybd)
+      .input("ngaykt", req.body.ngaykt)
+      .input("sldathang", req.body.sldathang)
+      .input("slsanxuat", req.body.slsanxuat)
+      .input("masp", req.body.masp)
+      .input("tensp", req.body.tensp)
+      .input("soluong", req.body.soluong)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("status", 0)
+      .input("nhomsp", req.body.nhomsp).query(`
+                      INSERT INTO lokehoach (mapx, tenpx, makh, makhpx, ngaybd, ngaykt, sldathang, slsanxuat, masp, tensp, soluong, ghichu, createdAt, createdBy, status, nhomsp) 
+                      VALUES (@mapx, @tenpx, @makh, @makhpx,@ngaybd, @ngaykt, @sldathang, @slsanxuat, @masp, @tensp, @soluong, @ghichu, @createdAt, @createdBy, @status, @nhomsp);
+                  `);
+    const lc = req.body;
+    res.json(lc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Thêm phiếu lô kế hoạch phân xưởng
+router.post("/addphieulokhpx", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("kehoachnam", req.body.kehoachnam)
+      .input("makh", req.body.makh)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("malonhamay", req.body.malonhamay)
+      .input("soluonglonm", req.body.soluonglonm)
+      .input("ngaybdlonm", req.body.ngaybdlonm)
+      .input("ngayktlonm", req.body.ngayktlonm)
+      .input("masplonm", req.body.masplonm)
+      .input("tensplonm", req.body.tensplonm)
+      .input("makhpx", req.body.makhpx)
+      .input("maspkhpx", req.body.maspkhpx)
+      .input("tenspkhpx", req.body.tenspkhpx)
+      .input("soluongkhpx", req.body.soluongkhpx)
+      .input("ngaybdkhpx", req.body.ngaybdkhpx)
+      .input("ngayktkhpx", req.body.ngayktkhpx)
+      .input("nhomluong", req.body.nhomluong)
+      .input("sldathang", req.body.sldathang)
+      .input("slsanxuat", req.body.slsanxuat)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
+      .input("status", 0)
+      .input("ttqt", req.body.ttqt).query(`
+                      INSERT INTO lokehoachphanxuong (kehoachnam, makh, mapx, tenpx, malonhamay, soluonglonm, ngaybdlonm, ngayktlonm, masplonm, tensplonm, makhpx, maspkhpx, tenspkhpx, soluongkhpx, ngaybdkhpx, ngayktkhpx, nhomluong, sldathang, slsanxuat, ghichu, createdAt, createdBy, ngayhoanthanhtt,	status,	ttqt) 
+                      VALUES (@kehoachnam, @makh, @mapx, @tenpx, @malonhamay, @soluonglonm, @ngaybdlonm, @ngayktlonm, @masplonm, @tensplonm, @makhpx, @maspkhpx, @tenspkhpx, @soluongkhpx, @ngaybdkhpx, @ngayktkhpx, @nhomluong, @sldathang, @slsanxuat, @ghichu, @createdAt, @createdBy, @ngayhoanthanhtt,	@status,	@ttqt);
+                  `);
+    const lc = req.body;
+    res.json(lc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Thêm phiếu lô kế hoạch mùa vụ
+// Lập kế hoạch nhà máy
+router.post("/lapkehoachmuavu", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.body.makh)
+      .input("makhmv", req.body.makhmv)
+      .input("mota", req.body.mota)
+      .input("masp", req.body.masp)
+      .input("tensp", req.body.tensp)
+      .input("nhomsp", req.body.nhomsp)
+      .input("soluong", req.body.soluong)
+      .input("soluongmuavu", req.body.soluongmuavu)
+      .input("tgbatdau", req.body.tgbatdau)
+      .input("tgketthuc", req.body.tgketthuc)
+      .input("khachhang", req.body.khachhang)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("status", req.body.status).query(`
+                      INSERT INTO kehoachmuavu (makh, makhmv, mota, masp, tensp, nhomsp, soluong, soluongmuavu, tgbatdau, tgketthuc, khachhang, ghichu, createdAt, createdBy, status) 
+                      VALUES (@makh, @makhmv, @mota, @masp, @tensp, @nhomsp, @soluong, @soluongmuavu, @tgbatdau, @tgketthuc, @khachhang, @ghichu, @createdAt, @createdBy, @status);
+                  `);
+    const lc = req.body;
+    res.json(lc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Lập kế hoạch nhà máy
+router.post("/lapkhnhamay", async (req, res) => {
+  try {
+    // console.log(req.body)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.body.makh)
+      .input("mota", req.body.mota)
+      .input("masp", req.body.masp)
+      .input("tensp", req.body.tensp)
+      .input("nhomsp", req.body.nhomsp)
+      .input("soluong", req.body.soluong)
+      .input("tgbatdau", req.body.tgbatdau)
+      .input("tgketthuc", req.body.tgketthuc)
+      .input("khachhang", req.body.khachhang)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("status", req.body.status)
+      .input("soluongmuavup1", req.body.soluongmuavup1)
+      .input("soluongmuavup2", req.body.soluongmuavup2)
+      .input("soluongmuavup3", req.body.soluongmuavup3)
+      .input("slthang1", req.body.slthang1)
+      .input("slthang2", req.body.slthang2)
+      .input("slthang3", req.body.slthang3)
+      .input("slthang4", req.body.slthang4)
+      .input("slthang5", req.body.slthang5)
+      .input("slthang6", req.body.slthang6)
+      .input("slthang7", req.body.slthang7)
+      .input("slthang8", req.body.slthang8)
+      .input("slthang9", req.body.slthang9)
+      .input("slthang10", req.body.slthang10)
+      .input("slthang11", req.body.slthang11)
+      .input("slthang12", req.body.slthang12).query(`
+                      INSERT INTO kehoach (makh, mota, masp, tensp, nhomsp, soluong, tgbatdau, tgketthuc, khachhang, ghichu, createdAt, createdBy, status, soluongmuavup1, soluongmuavup2, soluongmuavup3, slthang1, slthang2, slthang3, slthang4, slthang5, slthang6, slthang7, slthang8, slthang9, slthang10, slthang11, slthang12) 
+                      VALUES (@makh, @mota, @masp, @tensp, @nhomsp, @soluong, @tgbatdau, @tgketthuc, @khachhang, @ghichu, @createdAt, @createdBy, @status, @soluongmuavup1, @soluongmuavup2, @soluongmuavup3, @slthang1, @slthang2, @slthang3, @slthang4, @slthang5, @slthang6, @slthang7, @slthang8, @slthang9, @slthang10, @slthang11, @slthang12);
+                  `);
+    const lc = req.body;
+    res.json(lc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật công đoạn lương cho công nhân
+router.patch("/updateluongcongdoan/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM luongcongnhan WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("sodat", req.body.sodat)
+        .input("sohong", req.body.sohong)
+        .input("ghichu", req.body.ghichu)
+        .query(
+          `UPDATE luongcongnhan SET 
+                sodat=@sodat,
+                sohong=@sohong,
+                ghichu=@ghichu          
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lấy tổng số lượng trong lô sản xuất
+router.get("/sumsoluonginlsx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .input("makhpx", req.query.makhpx)
+      .input("mapx", req.query.mapx)
+      .query(
+        `select sum(cast(trim(soluong) as int)) total from losanxuat where makh=@makh and makhpx=@makhpx and mapx=@mapx`
+      );
+    const ktn = result.recordset;
+
+    res.json(ktn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lấy keythangnam từ bảng luongthang
+router.get("/getkeythangnam", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(key_thangnam) from luongthang`);
+    const ktn = result.recordset;
+
+    res.json(ktn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật status trong công đoạn lương
+router.patch("/updatestatusluongcongdoan/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM luongcongnhan WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("status", req.body.status)
+        .input("stopday_losx", req.body.stopday_losx)
+        .query(
+          `UPDATE luongcongnhan SET 
+              status=@status,
+              stopday_losx=@stopday_losx      
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật công nhật lương cho công nhân
+router.patch("/updateluongcongnhat/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhat WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("sogiocong", req.body.sogiocong)
+        .input("ghichu", req.body.ghichu)
+        .query(
+          `UPDATE congnhat SET 
+                sogiocong=@sogiocong,
+                ghichu=@ghichu          
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tình trạng cho lô sản xuất
+router.patch("/updatelosx/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("stopday_losx", req.body.stopday_losx)
+        .input("status", req.body.status)
+        .query(
+          `UPDATE losanxuat SET 
+                stopday_losx=@stopday_losx,
+                status=@status          
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tình trạng cho lương công đoạn
+router.patch("/updateluongcdstatus", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM luongcongnhan WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("stopday_losx", req.body.stopday_losx)
+        .input("status", req.body.status)
+        .query(
+          `UPDATE losanxuat SET 
+                stopday_losx=@stopday_losx,
+                status=@status          
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tình trạng cho LÔ sản xuất
+router.patch("/capnhatstatuslosx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .input("makhpx", req.query.makhpx)
+      .input("malosx", req.query.malosx)
+      .input("mapx", req.query.mapx)
+      .query(
+        `SELECT * FROM losanxuat WHERE makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx`
+      );
+    let ut = result.recordset[0];
+    // console.log(ut)
+    if (ut) {
+      await pool
+        .request()
+        .input("makh", req.query.makh)
+        .input("makhpx", req.query.makhpx)
+        .input("malosx", req.query.malosx)
+        .input("mapx", req.query.mapx)
+        .input("stopday_losx", req.body.stopday_losx)
+        .input("status", req.body.status)
+        .query(
+          `UPDATE losanxuat SET 
+                stopday_losx=@stopday_losx,
+                status=@status
+              WHERE makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tổng hỏng tổng đạt trong 1 lô sản xuất theo _id
+router.patch("/updatetonghong", async (req, res) => {
+  console.log(req.body);
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`SELECT * FROM losanxuat WHERE _id=@_id`);
+    let ut = result.recordset[0];
+    console.log(ut);
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.query._id)
+        .input("tonghong", req.body.tonghong)
+        .input("tongdat", req.body.tongdat)
+        .query(
+          `UPDATE losanxuat SET 
+                tonghong = @tonghong,
+                tongdat = @tongdat 
+              WHERE _id=@_id`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật mot so thong tin trong losanxuat
+router.patch("/updatettlsx/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id=@_id`);
+    let ut = result.recordset[0];
+    // console.log(ut);
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("malosx", req.body.malosx)
+        .input("ngaybd", req.body.ngaybd)
+        .input("ngaykt", req.body.ngaykt)
+        .input("soluong", req.body.soluong)
+        .query(
+          `UPDATE losanxuat SET 
+                malosx = @malosx,
+                ngaybd = @ngaybd,
+                ngaykt = @ngaykt,
+                soluong = @soluong
+              WHERE _id=@_id`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật chot phieu lo cho toan bo lo san xuat
+router.patch("/capnhatstatuslcd", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .input("makhpx", req.query.makhpx)
+      .input("mapx", req.query.mapx)
+      .input("malosx", req.query.malosx)
+      .query(
+        `SELECT * FROM luongcongnhan WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
+      );
+    let ut = result.recordset[0];
+    // console.log(ut)
+    if (ut) {
+      await pool
+        .request()
+        .input("makh", req.query.makh)
+        .input("makhpx", req.query.makhpx)
+        .input("mapx", req.query.mapx)
+        .input("malosx", req.query.malosx)
+        .input("stopday_losx", req.body.stopday_losx)
+        .input("status", req.body.status)
+        .query(
+          `UPDATE luongcongnhan SET 
+                stopday_losx=@stopday_losx,
+                status=@status          
+              WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật chot phieu lo cho toan bo lo san xuat
+router.patch("/capnhatstatusluongcnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .input("makhpx", req.query.makhpx)
+      .input("mapx", req.query.mapx)
+      .input("malosx", req.query.malosx)
+      .query(
+        `SELECT * FROM congnhat WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
+      );
+    let ut = result.recordset[0];
+    // console.log(ut)
+    if (ut) {
+      await pool
+        .request()
+        .input("makh", req.query.makh)
+        .input("makhpx", req.query.makhpx)
+        .input("mapx", req.query.mapx)
+        .input("malosx", req.query.malosx)
+        .input("stopday_losx", req.body.stopday_losx)
+        .input("status", req.body.status)
+        .query(
+          `UPDATE congnhat SET 
+                stopday_losx=@stopday_losx,
+                status=@status          
+              WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all data history
+router.get("/allhis", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM history_action order by createdAt desc`);
+    const his = result.recordset;
+
+    res.json(his);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get one luong cong nhan
+router.get("/getoneluongcongnhan", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`SELECT * FROM luongcongnhan where _id=@_id`);
+    const lcn = result.recordset;
+
+    res.json(lcn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// to is nhom???
+// get one luong cong nhan
+router.get("/toornhom", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query(`select mapx from tonhom where mapx=@mapx`);
+    const lcn = result.recordset;
+
+    res.json(lcn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phieu lô tính lương công đoạn
+router.get("/getallphieulsxtinhluongcd", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx).query(`select * from losanxuat 
+    where status=1 and
+    right(stopday_losx, 4)=@nam and SUBSTRING(stopday_losx, 4, 2 )=@thang and mapx=@mapx`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// hủy lương tháng
+router.delete("/delluongthang", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mapb", req.query.mapb)
+      .query(
+        `delete from luongthang where thang = @thang and nam = @nam and mapb=@mapb`
+      );
+    const ktn = result.recordset;
+
+    res.json(ktn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// xem chi tiết lương công đoạn của từng nhân viên
+router.get("/detailluongcongdoancn", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("congnhan", req.query.congnhan)
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx).query(`select * from luongcongnhan 
+    where congnhan=@congnhan and status=1 and
+    right(stopday_losx, 4)=@nam and SUBSTRING(stopday_losx, 4, 2 )=@thang and mapx=@mapx`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get tên sản phẩm trong lập kế hoạch nhà máy
+router.get("/gettenspkhnm", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mavt", req.query.mavt)
+      .query(`SELECT tenvt, nhomsp FROM dmnc where mavt=@mavt`);
+    const dgc = result.recordset;
+
+    res.json(dgc);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get tên sản phẩm trong lập kế hoạch
+router.get("/gettensp", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("mavt", req.query.mavt)
+      .query(`SELECT tenvt FROM dmnc where mapx=@mapx and mavt=@mavt`);
+    const dgc = result.recordset;
+
+    res.json(dgc);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+router.get("/getinfosp", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mavt", req.query.mavt)
+      .query(`SELECT * FROM dmnc where mavt=@mavt`);
+    const dgc = result.recordset;
+
+    res.json(dgc);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get dm nguyen cong
+router.get("/getnguyencong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("khsp", req.query.khsp)
+      .input("px", req.query.px)
+      .query(
+        `SELECT * FROM dongiacong where khsp=@khsp and px=@px and congdoan is not null`
+      );
+    const dgc = result.recordset;
+
+    res.json(dgc);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get nhóm lương
+router.get("/getnhomluong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("mavt", req.query.mavt)
+      .query(`SELECT * FROM dmnc where mapx=@mapx and mavt=@mavt`);
+    const dgc = result.recordset;
+
+    res.json(dgc);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get dm công nhật
+router.get("/alldmcongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`SELECT * FROM dmcongnhat`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phiếu lô with mã phân xưởng
+router.get("/allphieulopx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query(
+        `SELECT * FROM lokehoach where mapx=@mapx order by createdAt desc`
+      );
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phiếu lô kế hoạch
+router.get("/allphieulokh", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from kehoach order by makh`);
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tim kiem lo san xuat theo khoang thoi gian de vao luong
+// new ---------
+router.get("/getlosxtheoky", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .query(
+        `select * from losanxuat where mapx=@mapx and year(ngaybd)=@nam and month(ngaybd) = @thang and status=0 order by ngaybd`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all mã lô kế hoạch theo phân xưởng
+router.get("/getallmalkhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query(`SELECT * FROM lokehoach where mapx=@mapx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phiếu lô sản xuất
+router.get("/allphieulosx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM losanxuat order by malosx`);
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phiếu lô sản xuất chưa hoàn thành
+router.get("/getallphieulocht", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM losanxuat where status = 0 order by mapx`);
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all mã lô sản xuất theo phân xưởng
+router.get("/getallmalsxpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query(`SELECT * FROM losanxuat where mapx=@mapx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get one mã lô sản xuất theo mã lô sx
+router.get("/getonemalosx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("malosx", req.query.malosx)
+      .query(`SELECT * FROM losanxuat where malosx=@malosx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all data nguyên công sơn
+router.get("/allnguyencongson", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`SELECT * FROM nguyencong_son`);
+    const ncs = result.recordset;
+
+    res.json(ncs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all nhân sự lập bảng lương
+router.get("/nhanvienbangluong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().execute("lapbangluongthang");
+    const his = result.recordset;
+
+    res.json(his);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get quy tắc lương
+router.get("/quytactinhluong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`SELECT * FROM quytacluong`);
+    const his = result.recordset;
+
+    res.json(his);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all data ứng tiền
+router.get("/allungtien", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM ungtien order by createdAt desc`);
+    const ungtien = result.recordset;
+
+    res.json(ungtien);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all lương công đoạn trong loo sx
+router.get("/getallluongcongdoaninlsx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .input("makhpx", req.query.makhpx)
+      .input("malosx", req.query.malosx)
+      .input("mapx", req.query.mapx)
+      .query(
+        `select * from luongcongnhan where makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx`
+      );
+    const lcd = result.recordset;
+
+    res.json(lcd);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all lương công nhật trong loo sx
+router.get("/getallluongcongnhatinlsx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .input("makhpx", req.query.makhpx)
+      .input("malosx", req.query.malosx)
+      .input("mapx", req.query.mapx)
+      .query(
+        `select * from congnhat where makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx`
+      );
+    const lcd = result.recordset;
+
+    res.json(lcd);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tính lương công đoạn theo phân xưởng
+router.get("/getallluongcongdoanpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx)
+      .execute(`luongcongdoan_phanxuong`);
+    const lcd = result.recordset;
+
+    res.json(lcd);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tính lương công đoạn theo tổ nhóm
+router.get("/getallluongcongdoanto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mato", req.query.mato)
+      .execute(`luongcongdoan_to`);
+    const lcd = result.recordset;
+
+    res.json(lcd);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tính tổng hỏng trong lô sản xuất theo mã lô
+router.get("/sumtonghong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.query._id_losx)
+      .query(
+        `select sum(cast(trim(sohong) as float)) tonghong from luongcongnhan where _id_losx=@_id_losx`
+      );
+    const tonghong = result.recordset;
+
+    res.json(tonghong);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// ăn trưa
+// tính lương công nhân
+router.get("/tienantrua", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`select * from buatrua`);
+    const antrua = result.recordset;
+
+    res.json(antrua);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// ăn trưa
+// tính lương công nhân
+router.get("/getphieulosx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("malosx", req.query.malosx)
+      .query(`select * from losanxuat where malosx=@malosx`);
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all công đoạn
+router.get("/getphieulocongdoan", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("malosx", req.query.malosx)
+      .input("mapx", req.query.mapx)
+      .query(
+        `select * from luongcongnhan where malosx=@malosx and mapx=@mapx order by _id`
+      );
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all công nhật
+router.get("/getphieulocongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("malosx", req.query.malosx)
+      .query(`select * from congnhat where malosx=@malosx order by _id`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get by id
+router.get("/ungtien/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM ungtien WHERE _id = @_id`);
+    const ut = result.recordset.length ? result.recordset[0] : null;
+    //const t = result.recordset[0].madonvi
+    if (ut) {
+      res.json(ut);
+      //console.log(t)
+    } else {
+      res.status(404).json({
+        message: "Record not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// delete tiền ứng
+router.delete("/tienung/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM ungtien WHERE _id = @_id`);
+    let ungtien = result.recordset.length ? result.recordset[0] : null;
+    if (ungtien) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM ungtien WHERE _id = @_id;`);
+      res.json(ungtien);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// delete lương công nhật
+router.delete("/congnhat/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhat WHERE _id = @_id`);
+    let cn = result.recordset.length ? result.recordset[0] : null;
+    if (cn) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM congnhat WHERE _id = @_id;`);
+      res.json(cn);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// ghi lại lịch sử thao tác trên phần mềm
+router.post("/record-action", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tenthaotac", req.body.tenthaotac)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("ghichu", req.body.ghichu).query(`
+                          INSERT INTO history_action (tenthaotac, createdAt, createdBy, ghichu) 
+                          VALUES (@tenthaotac, @createdAt, @createdBy, @ghichu);
+                      `);
+    const histac = req.body;
+    res.json(histac);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+module.exports = router;

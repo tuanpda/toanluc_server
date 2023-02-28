@@ -520,6 +520,23 @@ router.get("/searchsplokhpx", async (req, res) => {
   }
 });
 
+// tìm dữ liệu lô kế hoạch phân xưởng theo mã lô nhà máy
+router.get("/searchmalonmlokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .query(`SELECT * FROM lokehoachphanxuong where makh=@makh order by makh`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // tìm dữ liệu lô kế hoạch phân xưởng theo trước ngày kết thúc
 router.get("/searchlokhpxtheongaykt", async (req, res) => {
   try {
@@ -1039,8 +1056,57 @@ router.get("/getallkehoachpxwithmapx", async (req, res) => {
       .request()
       .input("mapx", req.query.mapx)
       .query(
-        `select * from lokehoachphanxuong where mapx=@mapx order by ngayktkhpx, makhpx`
+        `select * from lokehoachphanxuong where mapx=@mapx order by makh, ngayktkhpx`
       );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// sắp xếp các lô nhà máy và sort theo thứ tự quy trình
+router.get("/sortmalonmsortttqt", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from lokehoachphanxuong order by makh, ttqt`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// show all mã sản phẩm với điều kiện status = 2 and status = 1
+router.get("/pivotproduct", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request()
+      .query(`SELECT ROW_NUMBER() OVER(ORDER BY maspkhpx) AS id, maspkhpx
+	FROM lokehoachphanxuong
+	where status = 2 or status = 1
+	GROUP BY maspkhpx`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// show ra nhóm mã kế hoạch phân xưởng dựa vào mã sp phía trên
+router.get("/pivotmakhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().input("maspkhpx", req.query.maspkhpx)
+      .query(`SELECT ROW_NUMBER() OVER(ORDER BY makhpx) AS id, makhpx
+	FROM lokehoachphanxuong
+	where (status = 2 or status = 1) and maspkhpx=@maspkhpx
+	GROUP BY makhpx`);
     const tenpx = result.recordset;
 
     res.json(tenpx);

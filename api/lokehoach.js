@@ -1492,9 +1492,7 @@ router.get("/hmsanphamlosx", async (req, res) => {
   try {
     const masp = req.query.masp;
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(`select distinct(masp) from losanxuat`);
+    const result = await pool.request().query(`select * from losanxuat`);
     const tenpx = result.recordset;
 
     res.json(tenpx);

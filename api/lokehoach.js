@@ -1330,6 +1330,39 @@ router.get("/filteronlymapxandstatus", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí chỉ có trạng thái
+router.get("/filteronlystatus", async (req, res) => {
+  try {
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from lokehoachphanxuong where status in (${strstatus})`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã sp
+router.get("/filteronlymasp", async (req, res) => {
+  try {
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from lokehoachphanxuong where maspkhpx='${masp}'`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
 router.get("/filterfulldklosanxuat", async (req, res) => {
   try {
@@ -1349,6 +1382,135 @@ router.get("/filterfulldklosanxuat", async (req, res) => {
       .query(
         `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus})`
       );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã px
+router.get("/filteronlymapxlosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from losanxuat where mapx in (${strpx})`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã px và mã sp
+router.get("/filteronlymapxandmasplosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã px và trạng thái
+router.get("/filteronlymapxandstatuslosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const statusList = req.query.status;
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có trạng thái
+router.get("/filteronlystatuslosanxuat", async (req, res) => {
+  try {
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from losanxuat where status in (${strstatus})`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã sp
+router.get("/filteronlymasplosanxuat", async (req, res) => {
+  try {
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from losanxuat where masp='${masp}'`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
+router.get("/hmsanphamlosx", async (req, res) => {
+  try {
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(masp) from losanxuat`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tìm xem có bao nhiêu sản phẩm trong lô kế hoạch phân xưởng
+router.get("/hmsanphamlokhpx", async (req, res) => {
+  try {
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(maspkhpx) as masp from lokehoachphanxuong`);
     const tenpx = result.recordset;
 
     res.json(tenpx);

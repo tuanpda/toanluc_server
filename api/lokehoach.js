@@ -1330,6 +1330,33 @@ router.get("/filteronlymapxandstatus", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
+router.get("/filterfulldklosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    // console.log(masp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(strstatus);
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and maspkhpx='${masp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all lô sản xuất trong 1 kế hoạch phân xưởng
 router.get("/getalllsxinkhpx", async (req, res) => {
   try {

@@ -1347,7 +1347,7 @@ router.get("/filterfulldklosanxuat", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `select * from losanxuat where mapx in (${strpx}) and maspkhpx='${masp}' and status in (${strstatus})`
+        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus})`
       );
     const tenpx = result.recordset;
 

@@ -1495,7 +1495,7 @@ router.get("/hmsanphamlosx", async (req, res) => {
       .request()
       .query(`select distinct(masp) from losanxuat`);
     const tenpx = result.recordset;
-
+    // console.log(tenpx)
     res.json(tenpx);
   } catch (error) {
     res.status(500).json(error);

@@ -1,16 +1,16 @@
 const mssql = require("mssql");
 
-const SQL_DRIVER = "SQL server";
-const SQL_SERVER = "TUANPDA\\SQLEXPRESS";
-const SQL_DATABASE = "tinhluong_bu";
-const SQL_UID = "sa";
-const SQL_PWD = "Sa@1";
-
 // const SQL_DRIVER = "SQL server";
-// const SQL_SERVER = "192.168.2.97";
+// const SQL_SERVER = "TUANPDA\\SQLEXPRESS";
 // const SQL_DATABASE = "tinhluong_bu";
 // const SQL_UID = "sa";
-// const SQL_PWD = "Sa)(%^0702!@";
+// const SQL_PWD = "Sa@1";
+
+const SQL_DRIVER = "SQL server";
+const SQL_SERVER = "192.168.2.97";
+const SQL_DATABASE = "tinhluong_bu";
+const SQL_UID = "sa";
+const SQL_PWD = "Sa)(%^0702!@";
 
 /* NOTE IMPORTANT FOR SQLSERVER AFTER REINSTALL 8391
 ENABLE TCP/IP

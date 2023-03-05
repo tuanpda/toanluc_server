@@ -746,6 +746,21 @@ router.get("/alllonhamay", async (req, res) => {
   }
 });
 
+// get all mã lô nhà máy kèm số lượng lô khpx đã đăng ký
+router.get("/alllonhamaywithsoluonglokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .execute("fetch_lonhamay_pivot_soluong_khpx");
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all mã lô kế hoạch phân xưởng
 router.get("/alllokehoachphanxuong", async (req, res) => {
   try {

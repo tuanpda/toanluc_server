@@ -1490,7 +1490,6 @@ router.get("/filteronlymasplosanxuat", async (req, res) => {
 // Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
 router.get("/hmsanphamlosx", async (req, res) => {
   try {
-    const masp = req.query.masp;
     await pool.connect();
     const result = await pool
       .request()
@@ -1506,7 +1505,6 @@ router.get("/hmsanphamlosx", async (req, res) => {
 // Tìm xem có bao nhiêu sản phẩm trong lô kế hoạch phân xưởng
 router.get("/hmsanphamlokhpx", async (req, res) => {
   try {
-    const masp = req.query.masp;
     await pool.connect();
     const result = await pool
       .request()

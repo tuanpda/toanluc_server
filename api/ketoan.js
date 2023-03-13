@@ -275,12 +275,14 @@ router.post("/addluongcongdoan", async (req, res) => {
     const result = await pool
       .request()
       .input("_id_losx", req.body._id_losx)
+      .input("kehoachnam", req.body.kehoachnam)
       .input("makh", req.body.makh)
       .input("makhpx", req.body.makhpx)
-      .input("tensp", req.body.tensp)
+      .input("malosx", req.body.malosx)
       .input("mapx", req.body.mapx)
       .input("mato", req.body.mato)
-      .input("malosx", req.body.malosx)
+      .input("masp", req.body.masp)
+      .input("tensp", req.body.tensp)
       .input("nguyencong", req.body.nguyencong)
       .input("dongia", req.body.dongia)
       .input("may", req.body.may)
@@ -295,8 +297,8 @@ router.post("/addluongcongdoan", async (req, res) => {
       .input("status", req.body.status)
       .input("executedAt", req.body.executedAt)
       .input("ngaythuchien", req.body.ngaythuchien).query(`
-                      INSERT INTO luongcongnhan (_id_losx, makh, makhpx, tensp, mapx, mato, malosx, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien) 
-                      VALUES (@_id_losx, @makh, @makhpx, @tensp, @mapx, @mato, @malosx, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien);
+                      INSERT INTO luongcongnhan (_id_losx, kehoachnam, makh, makhpx, malosx,mapx, mato,masp,tensp, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien) 
+                      VALUES (@_id_losx, @kehoachnam, @makh, @makhpx, @malosx, @mapx, @mato, @masp, @tensp, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -313,8 +315,10 @@ router.post("/addcongnhat", async (req, res) => {
     const result = await pool
       .request()
       .input("_id_losx", req.body._id_losx)
+      .input("kehoachnam", req.body.kehoachnam)
       .input("makh", req.body.makh)
       .input("makhpx", req.body.makhpx)
+      .input("masp", req.body.masp)
       .input("tensp", req.body.tensp)
       .input("mapx", req.body.mapx)
       .input("malosx", req.body.malosx)
@@ -325,9 +329,10 @@ router.post("/addcongnhat", async (req, res) => {
       .input("sogiocong", req.body.sogiocong)
       .input("dongia", req.body.dongia)
       .input("ghichu", req.body.ghichu)
-      .input("ngaythuchien", req.body.ngaythuchien).query(`
-                      INSERT INTO congnhat (_id_losx, makh, makhpx, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien) 
-                      VALUES (@_id_losx, @makh, @makhpx, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien);
+      .input("ngaythuchien", req.body.ngaythuchien)
+      .input("status", 0).query(`
+                      INSERT INTO congnhat (_id_losx, kehoachnam,makh, makhpx, masp, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien, status) 
+                      VALUES (@_id_losx, @kehoachnam, @makh, @makhpx, @masp, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien, @status);
                   `);
     const lcn = req.body;
     res.json(lcn);
@@ -361,11 +366,14 @@ router.post("/addphieulosx", async (req, res) => {
       .input("ngaykt", req.body.ngaykt)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy)
-      .input("status", req.body.status)
+      .input("status", 0)
       .input("datinhluong", 0)
-      .input("stopday_losx", req.body.stopday_losx).query(`
-                      INSERT INTO losanxuat (kehoachnam, makh, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, datinhluong, stopday_losx) 
-                      VALUES (@kehoachnam, @makh, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @datinhluong, @stopday_losx);
+      .input("stopday_losx", req.body.stopday_losx)
+      .input("tongdat", req.body.tongdat)
+      .input("tonghong", req.body.tonghong)
+      .input("ghichu", req.body.ghichu).query(`
+                      INSERT INTO losanxuat (kehoachnam, makh, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, datinhluong, stopday_losx, tongdat, tonghong, ghichu) 
+                      VALUES (@kehoachnam, @makh, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @datinhluong, @stopday_losx, @tongdat, @tonghong, @ghichu);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -728,34 +736,28 @@ router.patch("/updateluongcdstatus", async (req, res) => {
 });
 
 // cập nhật tình trạng cho LÔ sản xuất
-router.patch("/capnhatstatuslosx", async (req, res) => {
+router.patch("/capnhatstatuslosx/:_id", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .input("makhpx", req.query.makhpx)
-      .input("malosx", req.query.malosx)
-      .input("mapx", req.query.mapx)
-      .query(
-        `SELECT * FROM losanxuat WHERE makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx`
-      );
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id=@_id`);
     let ut = result.recordset[0];
     // console.log(ut)
     if (ut) {
       await pool
         .request()
-        .input("makh", req.query.makh)
-        .input("makhpx", req.query.makhpx)
-        .input("malosx", req.query.malosx)
-        .input("mapx", req.query.mapx)
-        .input("stopday_losx", req.body.stopday_losx)
+        .input("_id", req.params._id)
         .input("status", req.body.status)
+        .input("stopday_losx", req.body.stopday_losx)
+        .input("status_tinhluong", req.body.status_tinhluong)
         .query(
           `UPDATE losanxuat SET 
+                status=@status,
                 stopday_losx=@stopday_losx,
-                status=@status
-              WHERE makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx;`
+                status_tinhluong=@status_tinhluong
+              WHERE _id=@_id`
         );
       res.json({
         success: true,
@@ -843,23 +845,19 @@ router.patch("/updatettlsx/:_id", async (req, res) => {
 });
 
 // cập nhật chot phieu lo cho toan bo lo san xuat
-router.patch("/capnhatstatuslcd", async (req, res) => {
+router.patch("/capnhatstatuslcd/:_id_losx", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .input("makhpx", req.query.makhpx)
-      .input("mapx", req.query.mapx)
-      .input("malosx", req.query.malosx)
-      .query(
-        `SELECT * FROM luongcongnhan WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
-      );
+      .input("_id_losx", req.params._id_losx)
+      .query(`SELECT * FROM luongcongnhan WHERE _id_losx=@_id_losx`);
     let ut = result.recordset[0];
-    // console.log(ut)
+    console.log(ut);
     if (ut) {
       await pool
         .request()
+        .input("_id_losx", req.params._id_losx)
         .input("makh", req.query.makh)
         .input("makhpx", req.query.makhpx)
         .input("mapx", req.query.mapx)
@@ -870,7 +868,7 @@ router.patch("/capnhatstatuslcd", async (req, res) => {
           `UPDATE luongcongnhan SET 
                 stopday_losx=@stopday_losx,
                 status=@status          
-              WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
+              WHERE _id_losx=@_id_losx`
         );
       res.json({
         success: true,
@@ -885,34 +883,26 @@ router.patch("/capnhatstatuslcd", async (req, res) => {
 });
 
 // cập nhật chot phieu lo cho toan bo lo san xuat
-router.patch("/capnhatstatusluongcnhat", async (req, res) => {
+router.patch("/capnhatstatusluongcnhat/:_id_losx", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .input("makhpx", req.query.makhpx)
-      .input("mapx", req.query.mapx)
-      .input("malosx", req.query.malosx)
-      .query(
-        `SELECT * FROM congnhat WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
-      );
+      .input("_id_losx", req.params._id_losx)
+      .query(`SELECT * FROM congnhat WHERE _id_losx=@_id_losx`);
     let ut = result.recordset[0];
     // console.log(ut)
     if (ut) {
       await pool
         .request()
-        .input("makh", req.query.makh)
-        .input("makhpx", req.query.makhpx)
-        .input("mapx", req.query.mapx)
-        .input("malosx", req.query.malosx)
+        .input("_id_losx", req.params._id_losx)
         .input("stopday_losx", req.body.stopday_losx)
         .input("status", req.body.status)
         .query(
           `UPDATE congnhat SET 
                 stopday_losx=@stopday_losx,
                 status=@status          
-              WHERE makh=@makh and makhpx=@makhpx and mapx=@mapx and malosx=@malosx`
+              WHERE _id_losx=@_id_losx`
         );
       res.json({
         success: true,
@@ -983,8 +973,8 @@ router.get("/getallphieulsxtinhluongcd", async (req, res) => {
       .input("nam", req.query.nam)
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from losanxuat 
-    where status=1 and
-    right(stopday_losx, 4)=@nam and SUBSTRING(stopday_losx, 4, 2 )=@thang and mapx=@mapx`);
+    where status_tinhluong=1 and
+    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
     const cn = result.recordset;
 
     res.json(cn);
@@ -1024,7 +1014,7 @@ router.get("/detailluongcongdoancn", async (req, res) => {
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from luongcongnhan 
     where congnhan=@congnhan and status=1 and
-    right(stopday_losx, 4)=@nam and SUBSTRING(stopday_losx, 4, 2 )=@thang and mapx=@mapx`);
+    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
     const cn = result.recordset;
 
     res.json(cn);
@@ -1225,7 +1215,7 @@ router.get("/getallphieulocht", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`SELECT * FROM losanxuat where status = 0 order by mapx`);
+      .query(`SELECT * FROM losanxuat  order by mapx`);
     const pl = result.recordset;
 
     res.json(pl);
@@ -1242,6 +1232,22 @@ router.get("/getallmalsxpx", async (req, res) => {
       .request()
       .input("mapx", req.query.mapx)
       .query(`SELECT * FROM losanxuat where mapx=@mapx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//
+router.get("/checkcongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.query._id_losx)
+      .query(`SELECT * FROM congnhat where _id_losx=@_id_losx`);
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -1327,13 +1333,8 @@ router.get("/getallluongcongdoaninlsx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .input("makhpx", req.query.makhpx)
-      .input("malosx", req.query.malosx)
-      .input("mapx", req.query.mapx)
-      .query(
-        `select * from luongcongnhan where makh=@makh and makhpx=@makhpx and malosx=@malosx and mapx=@mapx`
-      );
+      .input("_id_losx", req.query._id_losx)
+      .query(`select * from luongcongnhan where _id_losx=@_id_losx`);
     const lcd = result.recordset;
 
     res.json(lcd);

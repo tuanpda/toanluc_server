@@ -1378,6 +1378,26 @@ router.get("/filteronlymasp", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí chỉ có mã sp và trạng thái
+router.get("/filteronlymaspandstatus", async (req, res) => {
+  try {
+    const masp = req.query.masp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where maspkhpx='${masp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
 router.get("/filterfulldklosanxuat", async (req, res) => {
   try {
@@ -1502,6 +1522,26 @@ router.get("/filteronlymasplosanxuat", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí chỉ có mã sp và trạng thái
+router.get("/filteronlymaspandstatuslosx", async (req, res) => {
+  try {
+    const masp = req.query.masp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where masp='${masp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
 router.get("/hmsanphamlosx", async (req, res) => {
   try {
@@ -1524,6 +1564,21 @@ router.get("/hmsanphamlokhpx", async (req, res) => {
     const result = await pool
       .request()
       .query(`select distinct(maspkhpx) as masp from lokehoachphanxuong`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
+router.get("/hmsanphamlosanxuat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(masp) as masp from losanxuat`);
     const tenpx = result.recordset;
 
     res.json(tenpx);

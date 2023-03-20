@@ -366,14 +366,15 @@ router.post("/addphieulosx", async (req, res) => {
       .input("ngaykt", req.body.ngaykt)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy)
-      .input("status", 0)
-      .input("datinhluong", 0)
+      .input("status", req.body.status)
+      .input("status_tinhluong", req.body.status_tinhluong)
+      .input("datinhluong", req.body.datinhluong)
       .input("stopday_losx", req.body.stopday_losx)
       .input("tongdat", req.body.tongdat)
       .input("tonghong", req.body.tonghong)
       .input("ghichu", req.body.ghichu).query(`
-                      INSERT INTO losanxuat (kehoachnam, makh, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, datinhluong, stopday_losx, tongdat, tonghong, ghichu) 
-                      VALUES (@kehoachnam, @makh, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @datinhluong, @stopday_losx, @tongdat, @tonghong, @ghichu);
+                      INSERT INTO losanxuat (kehoachnam, makh, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, ghichu) 
+                      VALUES (@kehoachnam, @makh, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @ghichu);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -1215,7 +1216,22 @@ router.get("/getallphieulocht", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`SELECT * FROM losanxuat  order by mapx`);
+      .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phiếu lô trong chức năng danh sách losx
+router.get("/getallphieulo", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM losanxuat order by mapx, malosx`);
     const pl = result.recordset;
 
     res.json(pl);
@@ -1334,7 +1350,9 @@ router.get("/getallluongcongdoaninlsx", async (req, res) => {
     const result = await pool
       .request()
       .input("_id_losx", req.query._id_losx)
-      .query(`select * from luongcongnhan where _id_losx=@_id_losx`);
+      .query(
+        `select * from luongcongnhan where _id_losx=@_id_losx order by nguyencong`
+      );
     const lcd = result.recordset;
 
     res.json(lcd);

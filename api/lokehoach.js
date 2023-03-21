@@ -491,7 +491,9 @@ router.get("/getallkehoachpx", async (req, res) => {
     const result = await pool
       .request()
       .input("makh", req.query.makh)
-      .query(`SELECT * FROM lokehoach where makh=@makh order by makhpx`);
+      .query(
+        `SELECT * FROM lokehoach where makh=@makh order by ngaykt, makhpx`
+      );
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -1300,6 +1302,34 @@ router.get("/filterfulldk", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí full tiêu chí --- mã thành phẩm (# mã sản phẩm)
+router.get("/filterfulldkmtp", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const matp = req.query.matp;
+    // console.log(masp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(strstatus);
+    const nhomtp = req.query.nhomtp;
+    // console.log(nhomsp);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where mapx in (${strpx}) and mathanhpham='${matp}' and status in (${strstatus}) and nhomthanhpham='${nhomtp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí chỉ có mã px
 router.get("/filteronlymapx", async (req, res) => {
   try {
@@ -1341,20 +1371,42 @@ router.get("/filteronlymapxandmasp", async (req, res) => {
   }
 });
 
-// new update
-// lọc dữ liệu theo tiêu chí chỉ có mã px và nhomsp - new update
-router.get("/filteronlymapxandnhomsp", async (req, res) => {
+// lọc dữ liệu theo tiêu chí chỉ có mã px và mã thành phẩm
+router.get("/filteronlymapxandmatp", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
-    const nhomsp = req.query.nhomsp;
+    const matp = req.query.matp;
     await pool.connect();
     const result = await pool
       .request()
       .query(
-        `select * from lokehoachphanxuong where mapx in (${strpx}) and nhomsp='${nhomsp}'`
+        `select * from lokehoachphanxuong where mapx in (${strpx}) and mathanhpham='${matp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// new update
+// lọc dữ liệu theo tiêu chí chỉ có mã px và nhomsp - new update
+router.get("/filteronlymapxandnhomtp", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const nhomtp = req.query.nhomtp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where mapx in (${strpx}) and nhomthanhpham='${nhomtp}'`
       );
     const tenpx = result.recordset;
 
@@ -1365,13 +1417,15 @@ router.get("/filteronlymapxandnhomsp", async (req, res) => {
 });
 
 // lọc dữ liệu theo tiêu chí chỉ có nhomsp - new update
-router.get("/filteronlynhomsp", async (req, res) => {
+router.get("/filteronlynhomtp", async (req, res) => {
   try {
-    const nhomsp = req.query.nhomsp;
+    const nhomtp = req.query.nhomtp;
     await pool.connect();
     const result = await pool
       .request()
-      .query(`select * from lokehoachphanxuong where nhomsp='${nhomsp}'`);
+      .query(
+        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}'`
+      );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1399,17 +1453,38 @@ router.get("/filteronlynhomspandmasp", async (req, res) => {
   }
 });
 
-// lọc dữ liệu theo tiêu chí chỉ có nhomsp và trạng thái - new update
-router.get("/filteronlynhomspandstatus", async (req, res) => {
+// lọc dữ liệu theo tiêu chí chỉ có nhomsp và sản phẩm - new update
+router.get("/filteronlynhomtpandmatp", async (req, res) => {
   try {
-    const nhomsp = req.query.nhomsp;
+    const nhomtp = req.query.nhomtp;
+    const matp = req.query.matp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and mathanhpham='${matp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí nhóm sản phẩm; nhóm thành phẩm; trạng thái
+router.get("/filteronlynhomtpnhomtpstatus", async (req, res) => {
+  try {
+    const nhomtp = req.query.nhomtp;
+    const matp = req.query.matp;
     const statusList = req.query.status;
+    // console.log(masp);
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
     const result = await pool
       .request()
       .query(
-        `select * from lokehoachphanxuong where nhomsp='${nhomsp}' and status in (${strstatus})`
+        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and mathanhpham='${matp}' and status in (${strstatus})`
       );
     const tenpx = result.recordset;
 
@@ -1420,19 +1495,62 @@ router.get("/filteronlynhomspandstatus", async (req, res) => {
 });
 
 // lọc dữ liệu theo tiêu chí chỉ có nhomsp và trạng thái - new update
-router.get("/filteronlypxandnhomspandstatus", async (req, res) => {
+router.get("/filteronlynhomtpandstatus", async (req, res) => {
   try {
-    const mapxList = req.query.mapx;
-    // console.log(mapxList);
-    const strpx = "'" + mapxList.join("','") + "'";
-    const nhomsp = req.query.nhomsp;
+    const nhomtp = req.query.nhomtp;
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
     const result = await pool
       .request()
       .query(
-        `select * from lokehoachphanxuong where nhomsp='${nhomsp}' and status in (${strstatus}) and mapx in (${strpx})`
+        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có nhomsp và trạng thái - new update
+router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const nhomtp = req.query.nhomtp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and status in (${strstatus}) and mapx in (${strpx})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí xưởng - nhóm tp - mã thành phẩm
+router.get("/filteronlypxandnhomtpmatp", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const nhomtp = req.query.nhomtp;
+    const matp = req.query.matp;
+    console.log(matp);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and mathanhpham in ('${matp}') and mapx in (${strpx})`
       );
     const tenpx = result.recordset;
 
@@ -1521,6 +1639,22 @@ router.get("/filteronlymasp", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí chỉ có mã thành phẩm
+router.get("/filteronlymatp", async (req, res) => {
+  try {
+    const matp = req.query.matp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from lokehoachphanxuong where mathanhpham='${matp}'`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí chỉ có mã sp và trạng thái
 router.get("/filteronlymaspandstatus", async (req, res) => {
   try {
@@ -1532,6 +1666,26 @@ router.get("/filteronlymaspandstatus", async (req, res) => {
       .request()
       .query(
         `select * from lokehoachphanxuong where maspkhpx='${masp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã thành phẩm và trạng thái
+router.get("/filteronlymatpandstatus", async (req, res) => {
+  try {
+    const matp = req.query.matp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoachphanxuong where mathanhpham='${matp}' and status in (${strstatus})`
       );
     const tenpx = result.recordset;
 
@@ -1716,13 +1870,32 @@ router.get("/hmsanphamlokhpx", async (req, res) => {
   }
 });
 
-// Tìm xem có bao nhiêu nhóm sản phẩm trong lô kế hoạch phân xưởng
-router.get("/nhomsanphamlokhpx", async (req, res) => {
+// Tìm xem có bao nhiêu mã thành phẩm trong lô kế hoạch phân xưởng
+router.get("/matpinlokhpx", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`select distinct(nhomsp) as nhomsp from lokehoachphanxuong`);
+      .query(
+        `select distinct(mathanhpham) as mathanhpham from lokehoachphanxuong`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tìm xem có bao nhiêu nhóm sản phẩm trong lô kế hoạch phân xưởng
+router.get("/nhomthanhphamlokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select distinct(nhomthanhpham) as nhomthanhpham from lokehoachphanxuong`
+      );
     const tenpx = result.recordset;
 
     res.json(tenpx);

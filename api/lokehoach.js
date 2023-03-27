@@ -49,6 +49,8 @@ router.patch("/:_id", async (req, res) => {
         .input("soluong", req.body.soluong)
         .input("ngaybd", req.body.ngaybd)
         .input("ngaykt", req.body.ngaykt)
+        .input("tuanbd", req.body.tuanbd)
+        .input("tuankt", req.body.tuankt)
         .input("updatedAt", req.body.updatedAt)
         .query(
           `UPDATE lokehoach SET 
@@ -56,6 +58,8 @@ router.patch("/:_id", async (req, res) => {
                         soluong = @soluong,
                         ngaybd = @ngaybd, 
                         ngaykt = @ngaykt,
+                        tuanbd = @tuanbd, 
+                        tuankt = @tuankt,
                         updatedAt = @updatedAt
                         WHERE _id = @_id;`
         );
@@ -170,6 +174,8 @@ router.patch("/updatelokehoachpx/:_id", async (req, res) => {
         .input("soluongkhpx", req.body.soluongkhpx)
         .input("ngaybdkhpx", req.body.ngaybdkhpx)
         .input("ngayktkhpx", req.body.ngayktkhpx)
+        .input("tuanbd", req.body.tuanbd)
+        .input("tuankt", req.body.tuankt)
         .input("ttqt", req.body.ttqt)
         .input("updatedAt", req.body.updatedAt)
         .query(
@@ -178,6 +184,8 @@ router.patch("/updatelokehoachpx/:_id", async (req, res) => {
                         soluongkhpx = @soluongkhpx,
                         ngaybdkhpx = @ngaybdkhpx, 
                         ngayktkhpx = @ngayktkhpx,
+                        tuanbd = @tuanbd,
+                        tuankt = @tuankt,
                         ttqt = @ttqt,
                         updatedAt = @updatedAt
                         WHERE _id = @_id;`
@@ -444,6 +452,174 @@ router.patch("/losanxuat/status/:_id", async (req, res) => {
   }
 });
 
+// update trạng thái của lô kế hoạch thành sản xuất
+router.patch("/lokehoach/status2/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoachphanxuong SET 
+                        status = 2
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// update trạng thái của lô kế hoạch thành đăng ký
+router.patch("/lokehoach/status1/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoachphanxuong SET 
+                        status = 1
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// update trạng thái của lô kế hoạch thành hoàn thành
+router.patch("/lokehoach/status3/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoachphanxuong SET 
+                        status = 3
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// update trạng thái của lô nhà máy thành đăng ký
+router.patch("/lonhamay/status1/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoach WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoach SET 
+                        status = 1
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// update trạng thái của lô nhà máy thành sản xuất
+router.patch("/lonhamay/status2/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoach WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoach SET 
+                        status = 2
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// update trạng thái của lô nhà máy thành hoàn thành
+router.patch("/lonhamay/status3/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoach WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoach SET 
+                        status = 3
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/addkehoach", async (req, res) => {
   try {
     await pool.connect();
@@ -491,9 +667,7 @@ router.get("/getallkehoachpx", async (req, res) => {
     const result = await pool
       .request()
       .input("makh", req.query.makh)
-      .query(
-        `SELECT * FROM lokehoach where makh=@makh order by ngaykt, makhpx`
-      );
+      .query(`SELECT * FROM lokehoach where makh=@makh order by _id`);
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -1089,9 +1263,29 @@ router.get("/getallkhmuavu", async (req, res) => {
 router.get("/getallkehoachphanxuong", async (req, res) => {
   try {
     await pool.connect();
+    const result = await pool.request()
+      .query(`SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all lô kế hoạch phân xưởng sắp xếp theo mã phân xưởng bỏ các status = 0
+router.get("/getallkehoachphanxuongwithout0", async (req, res) => {
+  try {
+    await pool.connect();
     const result = await pool
       .request()
-      .query(`select * from lokehoachphanxuong order by mapx`);
+      .execute("fetch_lokhpx_pivot_soluong_losx");
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1317,13 +1511,19 @@ router.get("/filterfulldkmtp", async (req, res) => {
     const nhomtp = req.query.nhomtp;
     // console.log(nhomsp);
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where mapx in (${strpx}) and mathanhpham='${matp}' and status in (${strstatus}) and nhomthanhpham='${nhomtp}'`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
+    );
     const tenpx = result.recordset;
-
     res.json(tenpx);
   } catch (error) {
     res.status(500).json(error);
@@ -1338,9 +1538,16 @@ router.get("/filteronlymapx", async (req, res) => {
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(`select * from lokehoachphanxuong where mapx in (${strpx})`);
+    const result = await pool.request().query(`with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mapx in (${strpx})`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1380,11 +1587,18 @@ router.get("/filteronlymapxandmatp", async (req, res) => {
     // console.log(strpx);
     const matp = req.query.matp;
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where mapx in (${strpx}) and mathanhpham='${matp}'`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}'`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1403,11 +1617,18 @@ router.get("/filteronlymapxandnhomtp", async (req, res) => {
     // console.log(strpx);
     const nhomtp = req.query.nhomtp;
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where mapx in (${strpx}) and nhomthanhpham='${nhomtp}'`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mapx in (${strpx}) and t.nhomthanhpham='${nhomtp}'`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1421,11 +1642,18 @@ router.get("/filteronlynhomtp", async (req, res) => {
   try {
     const nhomtp = req.query.nhomtp;
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}'`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.nhomthanhpham='${nhomtp}'`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1459,11 +1687,18 @@ router.get("/filteronlynhomtpandmatp", async (req, res) => {
     const nhomtp = req.query.nhomtp;
     const matp = req.query.matp;
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and mathanhpham='${matp}'`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham='${matp}'`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1481,11 +1716,18 @@ router.get("/filteronlynhomtpnhomtpstatus", async (req, res) => {
     // console.log(masp);
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and mathanhpham='${matp}' and status in (${strstatus})`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham='${matp}'and t.status in (${strstatus})`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1501,11 +1743,18 @@ router.get("/filteronlynhomtpandstatus", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and status in (${strstatus})`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus})`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1524,11 +1773,18 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and status in (${strstatus}) and mapx in (${strpx})`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1547,11 +1803,18 @@ router.get("/filteronlypxandnhomtpmatp", async (req, res) => {
     const matp = req.query.matp;
     console.log(matp);
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where nhomthanhpham='${nhomtp}' and mathanhpham in ('${matp}') and mapx in (${strpx})`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham in ('${matp}') and t.mapx in (${strpx})`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1593,11 +1856,18 @@ router.get("/filteronlymapxandstatus", async (req, res) => {
     // console.log(strpx);
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where mapx in (${strpx}) and status in (${strstatus})`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mapx in (${strpx}) and t.status in (${strstatus})`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1612,9 +1882,16 @@ router.get("/filteronlystatus", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(`select * from lokehoachphanxuong where status in (${strstatus})`);
+    const result = await pool.request().query(`with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.status in (${strstatus})`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1644,9 +1921,16 @@ router.get("/filteronlymatp", async (req, res) => {
   try {
     const matp = req.query.matp;
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(`select * from lokehoachphanxuong where mathanhpham='${matp}'`);
+    const result = await pool.request().query(`with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mathanhpham='${matp}'`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1682,11 +1966,18 @@ router.get("/filteronlymatpandstatus", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from lokehoachphanxuong where mathanhpham='${matp}' and status in (${strstatus})`
-      );
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong
+        FROM lokehoachphanxuong AS khpx 
+        LEFT JOIN (
+          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong
+          FROM losanxuat
+          GROUP BY _id_khpx
+        ) AS losx ON khpx._id = losx._id_khpx
+        WHERE (khpx.status = 1 or khpx.status = 2 or khpx.status = 3)
+      ) select * from t where t.mathanhpham='${matp}' and t.status in (${strstatus})`
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1707,12 +1998,13 @@ router.get("/filterfulldklosanxuat", async (req, res) => {
     // console.log(masp);
     const strstatus = "'" + statusList.join("','") + "'";
     // console.log(strstatus);
+    const nhomsp = req.query.nhomsp;
 
     await pool.connect();
     const result = await pool
       .request()
       .query(
-        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus})`
+        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus}) and nhomsp='${nhomsp}'`
       );
     const tenpx = result.recordset;
 
@@ -1763,6 +2055,28 @@ router.get("/filteronlymapxandmasplosanxuat", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí chỉ có mã px và nhóm sp
+router.get("/filteronlymapxandnhomsplosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const nhomsp = req.query.nhomsp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and nhomsp='${nhomsp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí chỉ có mã px và trạng thái
 router.get("/filteronlymapxandstatuslosanxuat", async (req, res) => {
   try {
@@ -1777,6 +2091,30 @@ router.get("/filteronlymapxandstatuslosanxuat", async (req, res) => {
       .request()
       .query(
         `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã px và trạng thái
+router.get("/filteronlymapxandstatusnhomsplosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const statusList = req.query.status;
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const strstatus = "'" + statusList.join("','") + "'";
+    const nhomsp = req.query.nhomsp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus}) and nhomsp='${nhomsp}'`
       );
     const tenpx = result.recordset;
 
@@ -1840,6 +2178,98 @@ router.get("/filteronlymaspandstatuslosx", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí chỉ có mã sp và trạng thái
+router.get("/filteronlynhomspandstatuslosx", async (req, res) => {
+  try {
+    const nhomsp = req.query.nhomsp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where nhomsp='${nhomsp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã sp và trạng thái
+router.get("/filteronlynhomspandstatuslosxmasp", async (req, res) => {
+  try {
+    const nhomsp = req.query.nhomsp;
+    const masp = req.query.masp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where nhomsp='${nhomsp}' and status in (${strstatus}) and masp='${masp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu mã thành phẩm + tên thành phẩm
+router.get("/locmathanhphamnhomthanhpham", async (req, res) => {
+  try {
+    const matp = req.query.matp;
+    const nhomtp = req.query.nhomtp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from lokehoach where mathanhpham='${matp}' and nhomthanhpham='${nhomtp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu mã thành phẩm
+router.get("/locmathanhpham", async (req, res) => {
+  try {
+    const matp = req.query.matp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from lokehoach where mathanhpham='${matp}'`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu mã thành phẩm + tên thành phẩm
+router.get("/locnhomthanhpham", async (req, res) => {
+  try {
+    const nhomtp = req.query.nhomtp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select * from lokehoach where nhomthanhpham='${nhomtp}'`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
 router.get("/hmsanphamlosx", async (req, res) => {
   try {
@@ -1887,7 +2317,7 @@ router.get("/matpinlokhpx", async (req, res) => {
   }
 });
 
-// Tìm xem có bao nhiêu nhóm sản phẩm trong lô kế hoạch phân xưởng
+// Tìm xem có bao nhiêu nhóm thành phẩm trong lô kế hoạch phân xưởng
 router.get("/nhomthanhphamlokhpx", async (req, res) => {
   try {
     await pool.connect();
@@ -1896,6 +2326,36 @@ router.get("/nhomthanhphamlokhpx", async (req, res) => {
       .query(
         `select distinct(nhomthanhpham) as nhomthanhpham from lokehoachphanxuong`
       );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tìm xem có bao nhiêu nhóm thành phẩm trong lô kế hoạch phân xưởng
+router.get("/nhomthanhphamlonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(nhomthanhpham) as nhomthanhpham from lokehoach`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Tìm xem có bao nhiêu mã thành phẩm trong lô kế hoạch phân xưởng
+router.get("/mathanhphamlonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(mathanhpham) as mathanhpham from lokehoach`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1919,18 +2379,29 @@ router.get("/hmsanphamlosanxuat", async (req, res) => {
   }
 });
 
+// Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
+router.get("/nhomspinlosanxuat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(nhomsp) as nhomsp from losanxuat`);
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all lô sản xuất trong 1 kế hoạch phân xưởng
 router.get("/getalllsxinkhpx", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .input("makhpx", req.query.makhpx)
-      .input("mapx", req.query.mapx)
-      .query(
-        `select * from losanxuat where makh=@makh and makhpx=@makhpx and mapx=@mapx order by ngaykt`
-      );
+      .input("_id_khpx", req.query._id_khpx)
+      .query(`select * from losanxuat where _id_khpx=@_id_khpx order by _id`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -1992,8 +2463,12 @@ router.get("/predelete_muctieunam", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .query(`select * from lokehoach where makh=@makh`);
+      // .input("makh", req.query.makh)
+      .input("_id", req.query._id)
+      .query(
+        `select _id from kehoach where _id in (select _id_khnam from lokehoach) AND _id = @_id`
+      );
+
     const losx = result.recordset;
 
     res.json(losx);
@@ -2009,10 +2484,12 @@ router.get("/predelete_lonhamay", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("kehoachnam", req.query.kehoachnam)
-      .input("makh", req.query.makh)
+      // .input("kehoachnam", req.query.kehoachnam)
+      // .input("makh", req.query.makh)
+      .input("_id", req.query._id)
       .query(
-        `select * from lokehoachphanxuong where kehoachnam=@kehoachnam and makh=@makh`
+        // `select * from lokehoachphanxuong where kehoachnam=@kehoachnam and makh=@makh`
+        `select _id from lokehoach where _id in (select _id_lonhamay from lokehoachphanxuong) AND _id = @_id`
       );
     const losx = result.recordset;
 
@@ -2027,15 +2504,11 @@ router.get("/predelete_lonhamay", async (req, res) => {
 router.get("/predelete_lokehoachpx", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .input("kehoachnam", req.query.kehoachnam)
-      .input("makh", req.query.makh)
-      .input("makhpx", req.query.makhpx)
-      .input("mapx", req.query.mapx)
-      .query(
-        `select * from losanxuat where kehoachnam=@kehoachnam and makh=@makh and makhpx=@makhpx and mapx=@mapx`
-      );
+    // const id = req.query._id;
+    const result = await pool.request().input("_id", req.query._id).query(
+      // `select * from losanxuat where kehoachnam=@kehoachnam and makh=@makh and makhpx=@makhpx and mapx=@mapx`
+      `select _id from lokehoachphanxuong where _id in (select _id_khpx from losanxuat) AND _id = @_id`
+    );
     const losx = result.recordset;
 
     res.json(losx);
@@ -2380,7 +2853,7 @@ router.delete("/kehoachnam/:_id", async (req, res) => {
         .request()
         .input("_id", req.params._id)
         .query(
-          `DELETE FROM kehoach WHERE _id = @_id and status=0 and makh not in (select makh from lokehoach)`
+          `DELETE FROM kehoach WHERE _id = @_id and status=0 and _id not in (select _id_khnam from lokehoach)`
         );
       res.json(lcn);
     } else {
@@ -2408,7 +2881,7 @@ router.delete("/kehoachnhamay/:_id", async (req, res) => {
         .request()
         .input("_id", req.params._id)
         .query(
-          `DELETE FROM lokehoach WHERE _id = @_id and status=0 and makhpx not in (select makh from lokehoachphanxuong)`
+          `DELETE FROM lokehoach WHERE _id = @_id and status=0 and _id not in (select _id_lonhamay from lokehoachphanxuong)`
         );
       res.json(lcn);
     } else {
@@ -2435,7 +2908,7 @@ router.delete("/kehoachphanxuong/:_id", async (req, res) => {
         .request()
         .input("_id", req.params._id)
         .query(
-          `DELETE FROM lokehoachphanxuong WHERE _id = @_id and status=0 and makh not in (select makh from losanxuat)`
+          `DELETE FROM lokehoachphanxuong WHERE _id = @_id and status=0 and _id not in(select _id_khpx from losanxuat)`
         );
       res.json(lcn);
     } else {

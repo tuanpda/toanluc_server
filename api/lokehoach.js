@@ -667,7 +667,7 @@ router.get("/getallkehoachpx", async (req, res) => {
     const result = await pool
       .request()
       .input("makh", req.query.makh)
-      .query(`SELECT * FROM lokehoach where makh=@makh order by _id`);
+      .query(`SELECT * FROM lokehoach where makh=@makh order by makhpx`);
     const lokehoach = result.recordset;
 
     res.json(lokehoach);

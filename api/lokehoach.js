@@ -22,8 +22,8 @@ const {
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     /* Nhớ sửa đường dẫn khi deploy lên máy chủ */
-    //cb(null, "E:\\PROJECT\\docthuBhxh\\client\\static\\avatar");
-    cb(null, "D:\\CODE\\PROJECT\\server\\filesupload");
+    //cb(null, "E:\\PROJECT\\docthuBhxh\\client\\static\\avatar"); D:\CODE\TEAMGIT\server\filesupload
+    cb(null, "D:\\CODE\\TEAMGIT\\server\\filesupload");
   },
   filename: function (req, file, cb) {
     cb(null, "-" + file.originalname);
@@ -620,6 +620,34 @@ router.patch("/lonhamay/status3/:_id", async (req, res) => {
   }
 });
 
+// update trạng thái của lô nhà máy thành 0
+router.patch("/lonhamay/status0/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoach WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(
+          `UPDATE lokehoach SET 
+                        status = 0
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/addkehoach", async (req, res) => {
   try {
     await pool.connect();
@@ -660,14 +688,16 @@ router.get("/alllokehoach", async (req, res) => {
   }
 });
 
-// get all data lokehoach where makh
+// get all data lokehoach where _id của kế hoạch năm
 router.get("/getallkehoachpx", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .query(`SELECT * FROM lokehoach where makh=@makh order by _id`);
+      .input("_id_khnam", req.query._id_khnam)
+      .query(
+        `SELECT * FROM lokehoach where _id_khnam=@_id_khnam order by ngaykt`
+      );
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -683,10 +713,28 @@ router.get("/showlokehoachpx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("malonhamay", req.query.malonhamay)
+      .input("_id_lonhamay", req.query._id_lonhamay)
       .query(
-        `SELECT * FROM lokehoachphanxuong where malonhamay=@malonhamay order by ttqt`
+        `SELECT * FROM lokehoachphanxuong where _id_lonhamay=@_id_lonhamay order by ttqt`
       );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get tên vật tư
+router.get("/gettenvt", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("mavt", req.query.mavt)
+      .query(`SELECT tenvt FROM dmnc where mapx=@mapx and mavt=@mavt`);
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -704,6 +752,44 @@ router.get("/searchnhomsp", async (req, res) => {
       .request()
       .input("nhomsp", req.query.nhomsp)
       .query(`SELECT * FROM lokehoach where nhomsp=@nhomsp order by makhpx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô nhà máy theo nhóm thành phẩm
+router.get("/searchnhomthanhpham", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nhomthanhpham", req.query.nhomthanhpham)
+      .query(
+        `SELECT * FROM lokehoach where nhomthanhpham=@nhomthanhpham order by malonhamay`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô nhà máy theo mã thành phẩm
+router.get("/searchmathanhpham", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mathanhpham", req.query.mathanhpham)
+      .query(
+        `SELECT * FROM lokehoach where mathanhpham=@mathanhpham order by malonhamay`
+      );
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -1249,8 +1335,8 @@ router.get("/getallkhmuavu", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("makh", req.query.makh)
-      .query(`select * from kehoach where makh=@makh order by makh`);
+      .input("_id", req.query._id)
+      .query(`select * from kehoach where _id=@_id`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -2645,18 +2731,21 @@ router.post("/importkehoachnam", upload.single("file"), async (req, res) => {
     //console.table(rows);
     // console.log(rows);
 
+    const createdBy = req.body.createdBy;
+    const createdAt = req.body.createdAt;
+    const updatedAt = req.body.updatedAt;
+
     const table = new Table("kehoach");
     table.create = false;
 
-    table.columns.add("makh", NChar, { nullable: true });
-    table.columns.add("masp", NChar, {
+    table.columns.add("makh", NVarChar, { nullable: true });
+    table.columns.add("mathanhpham", NVarChar, {
       nullable: true,
     });
-    table.columns.add("tensp", NVarChar, {
-      length: "max",
+    table.columns.add("tenthanhpham", NVarChar, {
       nullable: true,
     });
-    table.columns.add("nhomsp", NChar, { nullable: true });
+    table.columns.add("nhomthanhpham", NVarChar, { nullable: true });
     table.columns.add("soluong", NVarChar, {
       nullable: true,
     });
@@ -2683,32 +2772,92 @@ router.post("/importkehoachnam", upload.single("file"), async (req, res) => {
       length: "max",
       nullable: true,
     });
-    table.columns.add("status", Bit, {
+    table.columns.add("status", Int, {
+      nullable: true,
+    });
+    table.columns.add("createdAt", Date, {
+      nullable: true,
+    });
+    table.columns.add("createdBy", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("updatedAt", Date, {
+      nullable: true,
+    });
+    table.columns.add("slthang1", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang2", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang3", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang4", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang5", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang6", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang7", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang8", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang9", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang10", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang11", NVarChar, {
+      nullable: true,
+    });
+    table.columns.add("slthang12", NVarChar, {
       nullable: true,
     });
 
-    rows.forEach((row) => table.rows.add.apply(table.rows, row));
+    // rows.forEach((row) => table.rows.add.apply(table.rows, row));
 
     // console.log(rows);
 
-    // for (let j = 0; j < rows.length; j += 1) {
-    //   table.rows.add(
-    //     rows[j][0].trim(),
-    //     rows[j][1],
-    //     rows[j][2],
-    //     rows[j][3],
-    //     rows[j][4],
-    //     rows[j][5],
-    //     rows[j][6],
-    //     rows[j][7],
-    //     rows[j][8],
-    //     rows[j][9],
-    //     rows[j][10],
-    //     rows[j][11],
-    //     rows[j][12],
-    //     rows[j][13]
-    //   );
-    // }
+    for (let j = 0; j < rows.length; j += 1) {
+      table.rows.add(
+        rows[j][0].trim(),
+        rows[j][1],
+        rows[j][2],
+        rows[j][3],
+        rows[j][4],
+        rows[j][5],
+        rows[j][6],
+        rows[j][7],
+        rows[j][8],
+        rows[j][9],
+        rows[j][10],
+        rows[j][11],
+        rows[j][12],
+        rows[j][13],
+        createdAt,
+        createdBy,
+        updatedAt,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      );
+    }
 
     try {
       await pool.connect();

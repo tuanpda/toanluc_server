@@ -352,7 +352,7 @@ router.post("/addphieulosx", async (req, res) => {
       .input("_id_lonhamay", req.body._id_lonhamay)
       .input("_id_khpx", req.body._id_khpx)
       .input("kehoachnam", req.body.kehoachnam)
-      .input("makh", req.body.makh)
+      .input("malonhamay", req.body.malonhamay)
       .input("makhpx", req.body.makhpx)
       .input("malosx", req.body.malosx)
       .input("mapx", req.body.mapx)
@@ -377,8 +377,8 @@ router.post("/addphieulosx", async (req, res) => {
       .input("tonghong", req.body.tonghong)
       .input("nhomsp", req.body.nhomsp)
       .input("ghichu", req.body.ghichu).query(`
-                      INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, makh, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu) 
-                      VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @makh, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
+                      INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, malonhamay, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu) 
+                      VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -395,28 +395,27 @@ router.post("/addphieulokh", async (req, res) => {
     const result = await pool
       .request()
       .input("_id_khnam", req.body._id_khnam)
-      .input("mapx", req.body.mapx)
-      .input("tenpx", req.body.tenpx)
-      .input("makh", req.body.makh)
-      .input("makhpx", req.body.makhpx)
-      .input("ngaybd", req.body.ngaybd)
-      .input("ngaykt", req.body.ngaykt)
+      .input("kehoachnam", req.body.kehoachnam)
+      .input("malonhamay", req.body.malonhamay)
+      .input("soluong", req.body.soluong)
       .input("sldathang", req.body.sldathang)
       .input("slsanxuat", req.body.slsanxuat)
-      .input("masp", req.body.masp)
-      .input("tensp", req.body.tensp)
-      .input("soluong", req.body.soluong)
-      .input("ghichu", req.body.ghichu)
-      .input("createdAt", req.body.createdAt)
-      .input("createdBy", req.body.createdBy)
-      .input("status", 0)
-      .input("nhomthanhpham", req.body.nhomthanhpham)
-      .input("mathanhpham", req.body.mathanhpham)
       .input("tuanbd", req.body.tuanbd)
       .input("tuankt", req.body.tuankt)
-      .input("nhomsp", req.body.nhomsp).query(`
-                      INSERT INTO lokehoach (_id_khnam, mapx, tenpx, makh, makhpx, ngaybd, ngaykt, sldathang, slsanxuat, masp, tensp, soluong, ghichu, createdAt, createdBy, status, nhomthanhpham, mathanhpham, tuanbd, tuankt, nhomsp) 
-                      VALUES (@_id_khnam, @mapx, @tenpx, @makh, @makhpx,@ngaybd, @ngaykt, @sldathang, @slsanxuat, @masp, @tensp, @soluong, @ghichu, @createdAt, @createdBy, @status, @nhomthanhpham, @mathanhpham, @tuanbd, @tuankt, @nhomsp);
+      .input("ngaybd", req.body.ngaybd)
+      .input("ngaykt", req.body.ngaykt)
+      .input("mathanhpham", req.body.mathanhpham)
+      .input("tenthanhpham", req.body.tenthanhpham)
+      .input("nhomthanhpham", req.body.nhomthanhpham)
+      .input("status", req.body.status)
+      .input("ngaybatdautt", req.body.ngaybatdautt)
+      .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("updatedAt", req.body.updatedAt)
+      .input("createdBy", req.body.createdBy).query(`
+                      INSERT INTO lokehoach (_id_khnam,kehoachnam,malonhamay,soluong,sldathang,slsanxuat,tuanbd,tuankt,ngaybd,ngaykt,mathanhpham,tenthanhpham,nhomthanhpham,status,ngaybatdautt,ngayhoanthanhtt,ghichu,createdAt,updatedAt,createdBy) 
+                      VALUES (@_id_khnam,@kehoachnam,@malonhamay,@soluong,@sldathang,@slsanxuat,@tuanbd,@tuankt,@ngaybd,@ngaykt,@mathanhpham,@tenthanhpham,@nhomthanhpham,@status,@ngaybatdautt,@ngayhoanthanhtt,@ghichu,@createdAt,@updatedAt,@createdBy);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -435,37 +434,46 @@ router.post("/addphieulokhpx", async (req, res) => {
       .input("_id_khnam", req.body._id_khnam)
       .input("_id_lonhamay", req.body._id_lonhamay)
       .input("kehoachnam", req.body.kehoachnam)
-      .input("makh", req.body.makh)
-      .input("mapx", req.body.mapx)
-      .input("tenpx", req.body.tenpx)
       .input("malonhamay", req.body.malonhamay)
       .input("soluonglonm", req.body.soluonglonm)
+      .input("tuanbdlonm", req.body.tuanbdlonm)
+      .input("tuanktlonm", req.body.tuanktlonm)
       .input("ngaybdlonm", req.body.ngaybdlonm)
       .input("ngayktlonm", req.body.ngayktlonm)
-      .input("masplonm", req.body.masplonm)
-      .input("tensplonm", req.body.tensplonm)
-      .input("makhpx", req.body.makhpx)
+      .input("mathanhpham", req.body.mathanhpham)
+      .input("tenthanhpham", req.body.tenthanhpham)
+      .input("nhomthanhpham", req.body.nhomthanhpham)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("mato", req.body.mato)
+      .input("tento", req.body.tento)
       .input("maspkhpx", req.body.maspkhpx)
       .input("tenspkhpx", req.body.tenspkhpx)
+      .input("nhomspkhpx", req.body.nhomspkhpx)
+      .input("makhpx", req.body.makhpx)
       .input("soluongkhpx", req.body.soluongkhpx)
+      .input("tuanbdkhpx", req.body.tuanbdkhpx)
+      .input("tuanktkhpx", req.body.tuanktkhpx)
       .input("ngaybdkhpx", req.body.ngaybdkhpx)
       .input("ngayktkhpx", req.body.ngayktkhpx)
+      .input("tuanbdthucte", req.body.tuanbdthucte)
+      .input("tuanktthucte", req.body.tuanktthucte)
+      .input("ngaybdthucte", req.body.ngaybdthucte)
+      .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
+      .input("ttqt", req.body.ttqt)
       .input("nhomluong", req.body.nhomluong)
+      .input("status", req.body.status)
       .input("sldathang", req.body.sldathang)
       .input("slsanxuat", req.body.slsanxuat)
       .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
+      .input("updatedAt", req.body.updatedAt)
       .input("createdBy", req.body.createdBy)
-      .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
-      .input("status", 0)
-      .input("nhomsp", req.body.nhomsp)
-      .input("nhomthanhpham", req.body.nhomthanhpham)
-      .input("mathanhpham", req.body.mathanhpham)
-      .input("tuanbd", req.body.tuanbd)
-      .input("tuankt", req.body.tuankt)
-      .input("ttqt", req.body.ttqt).query(`
-                      INSERT INTO lokehoachphanxuong (_id_khnam, _id_lonhamay, kehoachnam, makh, mapx, tenpx, malonhamay, soluonglonm, ngaybdlonm, ngayktlonm, masplonm, tensplonm, makhpx, maspkhpx, tenspkhpx, soluongkhpx, ngaybdkhpx, ngayktkhpx, nhomluong, sldathang, slsanxuat, ghichu, createdAt, createdBy, ngayhoanthanhtt,	status,	nhomsp, nhomthanhpham, mathanhpham, tuanbd, tuankt, ttqt) 
-                      VALUES (@_id_khnam, @_id_lonhamay, @kehoachnam, @makh, @mapx, @tenpx, @malonhamay, @soluonglonm, @ngaybdlonm, @ngayktlonm, @masplonm, @tensplonm, @makhpx, @maspkhpx, @tenspkhpx, @soluongkhpx, @ngaybdkhpx, @ngayktkhpx, @nhomluong, @sldathang, @slsanxuat, @ghichu, @createdAt, @createdBy, @ngayhoanthanhtt,	@status,	@nhomsp, @nhomthanhpham, @mathanhpham, @tuanbd, @tuankt, @ttqt);
+      .input("congsuat", req.body.congsuat)
+      .input("songay", req.body.songay)
+      .input("may", req.body.may).query(`
+                      INSERT INTO lokehoachphanxuong (_id_khnam, _id_lonhamay, kehoachnam, malonhamay, soluonglonm, tuanbdlonm,	tuanktlonm,	ngaybdlonm,	ngayktlonm,	mathanhpham, tenthanhpham, nhomthanhpham,	mapx,	tenpx, mato, tento,	maspkhpx,	tenspkhpx, nhomspkhpx, makhpx,	soluongkhpx, tuanbdkhpx, tuanktkhpx,	ngaybdkhpx,	ngayktkhpx,	tuanbdthucte,	tuanktthucte,	ngaybdthucte, ngayhoanthanhtt, ttqt, nhomluong, status, sldathang, slsanxuat, ghichu, createdAt, updatedAt, createdBy, congsuat, songay, may) 
+                      VALUES (@_id_khnam,	@_id_lonhamay, @kehoachnam,	@malonhamay, @soluonglonm, @tuanbdlonm,	@tuanktlonm, @ngaybdlonm,	@ngayktlonm, @mathanhpham, @tenthanhpham,	@nhomthanhpham,	@mapx, @tenpx, @mato,	@tento,	@maspkhpx, @tenspkhpx, @nhomspkhpx, @makhpx,	@soluongkhpx,	@tuanbdkhpx, @tuanktkhpx,	@ngaybdkhpx, @ngayktkhpx, @tuanbdthucte, @tuanktthucte,	@ngaybdthucte, @ngayhoanthanhtt, @ttqt,	@nhomluong,	@status, @sldathang, @slsanxuat, @ghichu,	@createdAt,	@updatedAt,	@createdBy,	@congsuat, @songay, @may);
                   `);
     const lc = req.body;
     res.json(lc);

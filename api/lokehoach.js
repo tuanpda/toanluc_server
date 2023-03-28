@@ -174,20 +174,19 @@ router.patch("/updatelokehoachpx/:_id", async (req, res) => {
         .input("_id", req.params._id)
         .input("makhpx", req.body.makhpx)
         .input("soluongkhpx", req.body.soluongkhpx)
-        .input("ngaybdkhpx", req.body.ngaybdkhpx)
-        .input("ngayktkhpx", req.body.ngayktkhpx)
-        .input("tuanbd", req.body.tuanbd)
-        .input("tuankt", req.body.tuankt)
+        // .input("ngaybdkhpx", req.body.ngaybdkhpx) // sửa lại code
+        // .input("ngayktkhpx", req.body.ngayktkhpx)
+        .input("tuanbdkhpx", req.body.tuanbdkhpx)
+        .input("tuanktkhpx", req.body.tuanktkhpx)
         .input("ttqt", req.body.ttqt)
         .input("updatedAt", req.body.updatedAt)
         .query(
           `UPDATE lokehoachphanxuong SET 
                         makhpx = @makhpx, 
                         soluongkhpx = @soluongkhpx,
-                        ngaybdkhpx = @ngaybdkhpx, 
-                        ngayktkhpx = @ngayktkhpx,
-                        tuanbd = @tuanbd,
-                        tuankt = @tuankt,
+
+                        tuanbdkhpx = @tuanbdkhpx,
+                        tuanktkhpx = @tuanktkhpx,
                         ttqt = @ttqt,
                         updatedAt = @updatedAt
                         WHERE _id = @_id;`
@@ -2643,8 +2642,8 @@ router.get("/getlokhnm", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("nhomsp", req.query.nhomsp)
-      .query(`select * from kehoach where nhomsp=@nhomsp order by makh`);
+      .input("nhomthanhpham", req.query.nhomthanhpham)
+      .query(`select * from kehoach where nhomthanhpham=@nhomthanhpham order by makh`);
     const losx = result.recordset;
 
     res.json(losx);
@@ -2660,8 +2659,8 @@ router.get("/getlokhnmwithmasp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("masp", req.query.masp)
-      .query(`select * from kehoach where masp=@masp order by makh`);
+      .input("mathanhpham", req.query.mathanhpham)
+      .query(`select * from kehoach where mathanhpham=@mathanhpham order by makh`);
     const losx = result.recordset;
 
     res.json(losx);

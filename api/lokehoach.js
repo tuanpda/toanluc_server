@@ -22,8 +22,10 @@ const {
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     /* Nhớ sửa đường dẫn khi deploy lên máy chủ */
-    //cb(null, "E:\\PROJECT\\docthuBhxh\\client\\static\\avatar"); D:\CODE\TEAMGIT\server\filesupload
-    cb(null, "D:\\CODE\\TEAMGIT\\server\\filesupload");
+    //cb(null, "E:\\PROJECT\\docthuBhxh\\client\\static\\avatar");
+    // E:\CODE_APP\TEAMGIT\server\filesupload
+    // cb(null, "D:\\CODE\\TEAMGIT\\server\\filesupload"); // offline
+    cb(null, "E:\\CODE_APP\\TEAMGIT\\server\\filesupload"); // server
   },
   filename: function (req, file, cb) {
     cb(null, "-" + file.originalname);
@@ -2827,7 +2829,7 @@ router.post("/importkehoachnam", upload.single("file"), async (req, res) => {
 
     for (let j = 0; j < rows.length; j += 1) {
       table.rows.add(
-        rows[j][0].trim(),
+        rows[j][0],
         rows[j][1],
         rows[j][2],
         rows[j][3],

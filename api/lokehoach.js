@@ -954,9 +954,7 @@ router.get("/searchsanphamandnhomsp", async (req, res) => {
 router.get("/searchtimekt", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .input("ngaykt", req.query.ngaykt)
+    const result = await pool.request().input("ngaykt", req.query.ngaykt)
       .query(`SELECT l.*, 
       COALESCE(p.px1, 0) AS px1, 
       COALESCE(p.px2, 0) AS px2, 
@@ -1655,13 +1653,15 @@ router.get("/filterfulldkmtp", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
     );
     const tenpx = result.recordset;
@@ -1680,13 +1680,15 @@ router.get("/filteronlymapx", async (req, res) => {
     // console.log(strpx);
     await pool.connect();
     const result = await pool.request().query(`with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+      SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+      coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+          FROM lokehoachphanxuong AS khpx 
+          LEFT JOIN (
+            SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+            sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+            FROM losanxuat
+            GROUP BY _id_khpx
+          ) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.mapx in (${strpx})`);
     const tenpx = result.recordset;
 
@@ -1730,13 +1732,15 @@ router.get("/filteronlymapxandmatp", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}'`
     );
     const tenpx = result.recordset;
@@ -1759,13 +1763,15 @@ router.get("/filteronlymapxandnhomtp", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.mapx in (${strpx}) and t.nhomthanhpham='${nhomtp}'`
     );
     const tenpx = result.recordset;
@@ -1783,13 +1789,15 @@ router.get("/filteronlynhomtp", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}'`
     );
     const tenpx = result.recordset;
@@ -1827,13 +1835,15 @@ router.get("/filteronlynhomtpandmatp", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham='${matp}'`
     );
     const tenpx = result.recordset;
@@ -1855,13 +1865,15 @@ router.get("/filteronlynhomtpnhomtpstatus", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham='${matp}'and t.status in (${strstatus})`
     );
     const tenpx = result.recordset;
@@ -1881,13 +1893,15 @@ router.get("/filteronlynhomtpandstatus", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanhsoluong
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus})`
     );
     const tenpx = result.recordset;
@@ -1910,14 +1924,46 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
+    );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/filtermapxmatpstatus", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const matp = req.query.matp;
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    await pool.connect();
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
+      ) select * from t where t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
     );
     const tenpx = result.recordset;
 
@@ -1940,13 +1986,15 @@ router.get("/filteronlypxandnhomtpmatp", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham in ('${matp}') and t.mapx in (${strpx})`
     );
     const tenpx = result.recordset;
@@ -1992,13 +2040,15 @@ router.get("/filteronlymapxandstatus", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.mapx in (${strpx}) and t.status in (${strstatus})`
     );
     const tenpx = result.recordset;
@@ -2016,13 +2066,15 @@ router.get("/filteronlystatus", async (req, res) => {
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
     const result = await pool.request().query(`with t as(
-      SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-      FROM lokehoachphanxuong AS khpx 
-      LEFT JOIN (
-        SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+      SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.status in (${strstatus})`);
     const tenpx = result.recordset;
 
@@ -2054,13 +2106,15 @@ router.get("/filteronlymatp", async (req, res) => {
     const matp = req.query.matp;
     await pool.connect();
     const result = await pool.request().query(`with t as(
-      SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-      FROM lokehoachphanxuong AS khpx 
-      LEFT JOIN (
-        SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+      SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.mathanhpham='${matp}'`);
     const tenpx = result.recordset;
 
@@ -2099,13 +2153,15 @@ router.get("/filteronlymatpandstatus", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh
-        FROM lokehoachphanxuong AS khpx 
-        LEFT JOIN (
-          SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh
-          FROM losanxuat
-          GROUP BY _id_khpx
-        ) AS losx ON khpx._id = losx._id_khpx
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
 
       ) select * from t where t.mathanhpham='${matp}' and t.status in (${strstatus})`
     );
@@ -2448,16 +2504,13 @@ router.get("/matpinlokhpx", async (req, res) => {
   }
 });
 
-
 // nhóm thành phẩm trong lô nhà máy
 router.get("/nhomtpinlonhamay", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select distinct(nhomthanhpham) from lokehoach`
-      );
+      .query(`select distinct(nhomthanhpham) from lokehoach`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -2470,11 +2523,7 @@ router.get("/nhomtpinlonhamay", async (req, res) => {
 router.get("/getallthanhpham", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `select * from dm_banthanhpham`
-      );
+    const result = await pool.request().query(`select * from dm_banthanhpham`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -2489,10 +2538,8 @@ router.get("/getallthanhphamwithmtp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('mathanhpham', req.query.mathanhpham)
-      .query(
-        `select * from dm_banthanhpham where mathanhpham=@mathanhpham`
-      );
+      .input("mathanhpham", req.query.mathanhpham)
+      .query(`select * from dm_banthanhpham where mathanhpham=@mathanhpham`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -2507,9 +2554,7 @@ router.get("/matpinlonhamay", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select distinct(mathanhpham) from lokehoach`
-      );
+      .query(`select distinct(mathanhpham) from lokehoach`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -2757,7 +2802,9 @@ router.get("/getlokhnm", async (req, res) => {
     const result = await pool
       .request()
       .input("nhomthanhpham", req.query.nhomthanhpham)
-      .query(`select * from kehoach where nhomthanhpham=@nhomthanhpham order by makh`);
+      .query(
+        `select * from kehoach where nhomthanhpham=@nhomthanhpham order by makh`
+      );
     const losx = result.recordset;
 
     res.json(losx);
@@ -2774,7 +2821,9 @@ router.get("/getlokhnmwithmasp", async (req, res) => {
     const result = await pool
       .request()
       .input("mathanhpham", req.query.mathanhpham)
-      .query(`select * from kehoach where mathanhpham=@mathanhpham order by makh`);
+      .query(
+        `select * from kehoach where mathanhpham=@mathanhpham order by makh`
+      );
     const losx = result.recordset;
 
     res.json(losx);

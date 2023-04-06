@@ -896,6 +896,39 @@ router.patch("/updateonlytonghong", async (req, res) => {
   }
 });
 
+// cập nhật tổng dat trong 1 lô sản xuất theo _id
+router.patch("/updateonlytongdat", async (req, res) => {
+  // console.log(req.body);
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`SELECT * FROM losanxuat WHERE _id=@_id`);
+    let ut = result.recordset[0];
+    // console.log(ut);
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.query._id)
+        .input("tongdat", req.body.tongdat)
+        .query(
+          `UPDATE losanxuat SET 
+              tongdat = @tongdat
+              WHERE _id=@_id`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật mot so thong tin trong losanxuat
 router.patch("/updatettlsx/:_id", async (req, res) => {
   try {

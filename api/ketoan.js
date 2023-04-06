@@ -276,7 +276,7 @@ router.post("/addluongcongdoan", async (req, res) => {
       .request()
       .input("_id_losx", req.body._id_losx)
       .input("kehoachnam", req.body.kehoachnam)
-      .input("makh", req.body.makh)
+      .input("malonhamay", req.body.malonhamay)
       .input("makhpx", req.body.makhpx)
       .input("malosx", req.body.malosx)
       .input("mapx", req.body.mapx)
@@ -297,8 +297,8 @@ router.post("/addluongcongdoan", async (req, res) => {
       .input("status", req.body.status)
       .input("executedAt", req.body.executedAt)
       .input("ngaythuchien", req.body.ngaythuchien).query(`
-                      INSERT INTO luongcongnhan (_id_losx, kehoachnam, makh, makhpx, malosx,mapx, mato,masp,tensp, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien) 
-                      VALUES (@_id_losx, @kehoachnam, @makh, @makhpx, @malosx, @mapx, @mato, @masp, @tensp, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien);
+                      INSERT INTO luongcongnhan (_id_losx, kehoachnam, malonhamay, makhpx, malosx,mapx, mato,masp,tensp, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien) 
+                      VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @mato, @masp, @tensp, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -463,8 +463,8 @@ router.post("/addphieulokhpx", async (req, res) => {
       .input("ttqt", req.body.ttqt)
       .input("nhomluong", req.body.nhomluong)
       .input("status", req.body.status)
-      .input("sldathang", req.body.sldathang)
-      .input("slsanxuat", req.body.slsanxuat)
+      .input("tongdat", req.body.tongdat)
+      .input("tonghong", req.body.tonghong)
       .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
       .input("updatedAt", req.body.updatedAt)
@@ -472,8 +472,8 @@ router.post("/addphieulokhpx", async (req, res) => {
       .input("congsuat", req.body.congsuat)
       .input("songay", req.body.songay)
       .input("may", req.body.may).query(`
-                      INSERT INTO lokehoachphanxuong (_id_khnam, _id_lonhamay, kehoachnam, malonhamay, soluonglonm, tuanbdlonm,	tuanktlonm,	ngaybdlonm,	ngayktlonm,	mathanhpham, tenthanhpham, nhomthanhpham,	mapx,	tenpx, mato, tento,	maspkhpx,	tenspkhpx, nhomspkhpx, makhpx,	soluongkhpx, tuanbdkhpx, tuanktkhpx,	ngaybdkhpx,	ngayktkhpx,	tuanbdthucte,	tuanktthucte,	ngaybdthucte, ngayhoanthanhtt, ttqt, nhomluong, status, sldathang, slsanxuat, ghichu, createdAt, updatedAt, createdBy, congsuat, songay, may) 
-                      VALUES (@_id_khnam,	@_id_lonhamay, @kehoachnam,	@malonhamay, @soluonglonm, @tuanbdlonm,	@tuanktlonm, @ngaybdlonm,	@ngayktlonm, @mathanhpham, @tenthanhpham,	@nhomthanhpham,	@mapx, @tenpx, @mato,	@tento,	@maspkhpx, @tenspkhpx, @nhomspkhpx, @makhpx,	@soluongkhpx,	@tuanbdkhpx, @tuanktkhpx,	@ngaybdkhpx, @ngayktkhpx, @tuanbdthucte, @tuanktthucte,	@ngaybdthucte, @ngayhoanthanhtt, @ttqt,	@nhomluong,	@status, @sldathang, @slsanxuat, @ghichu,	@createdAt,	@updatedAt,	@createdBy,	@congsuat, @songay, @may);
+                      INSERT INTO lokehoachphanxuong (_id_khnam, _id_lonhamay, kehoachnam, malonhamay, soluonglonm, tuanbdlonm,	tuanktlonm,	ngaybdlonm,	ngayktlonm,	mathanhpham, tenthanhpham, nhomthanhpham,	mapx,	tenpx, mato, tento,	maspkhpx,	tenspkhpx, nhomspkhpx, makhpx,	soluongkhpx, tuanbdkhpx, tuanktkhpx,	ngaybdkhpx,	ngayktkhpx,	tuanbdthucte,	tuanktthucte,	ngaybdthucte, ngayhoanthanhtt, ttqt, nhomluong, status, tongdat, tonghong, ghichu, createdAt, updatedAt, createdBy, congsuat, songay, may) 
+                      VALUES (@_id_khnam,	@_id_lonhamay, @kehoachnam,	@malonhamay, @soluonglonm, @tuanbdlonm,	@tuanktlonm, @ngaybdlonm,	@ngayktlonm, @mathanhpham, @tenthanhpham,	@nhomthanhpham,	@mapx, @tenpx, @mato,	@tento,	@maspkhpx, @tenspkhpx, @nhomspkhpx, @makhpx,	@soluongkhpx,	@tuanbdkhpx, @tuanktkhpx,	@ngaybdkhpx, @ngayktkhpx, @tuanbdthucte, @tuanktthucte,	@ngaybdthucte, @ngayhoanthanhtt, @ttqt,	@nhomluong,	@status, @tongdat, @tonghong, @ghichu,	@createdAt,	@updatedAt,	@createdBy,	@congsuat, @songay, @may);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -523,13 +523,13 @@ router.post("/lapkhnhamay", async (req, res) => {
     const result = await pool
       .request()
       .input("makh", req.body.makh)
-      .input("mota", req.body.mota)
-      .input("masp", req.body.masp)
-      .input("tensp", req.body.tensp)
-      .input("nhomsp", req.body.nhomsp)
+      .input("mathanhpham", req.body.mathanhpham)
+      .input("tenthanhpham", req.body.tenthanhpham)
+      .input("nhomthanhpham", req.body.nhomthanhpham)
       .input("soluong", req.body.soluong)
       .input("tgbatdau", req.body.tgbatdau)
       .input("tgketthuc", req.body.tgketthuc)
+      .input("makhachhang", req.body.makhachhang)
       .input("khachhang", req.body.khachhang)
       .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
@@ -550,8 +550,8 @@ router.post("/lapkhnhamay", async (req, res) => {
       .input("slthang10", req.body.slthang10)
       .input("slthang11", req.body.slthang11)
       .input("slthang12", req.body.slthang12).query(`
-                      INSERT INTO kehoach (makh, mota, masp, tensp, nhomsp, soluong, tgbatdau, tgketthuc, khachhang, ghichu, createdAt, createdBy, status, soluongmuavup1, soluongmuavup2, soluongmuavup3, slthang1, slthang2, slthang3, slthang4, slthang5, slthang6, slthang7, slthang8, slthang9, slthang10, slthang11, slthang12) 
-                      VALUES (@makh, @mota, @masp, @tensp, @nhomsp, @soluong, @tgbatdau, @tgketthuc, @khachhang, @ghichu, @createdAt, @createdBy, @status, @soluongmuavup1, @soluongmuavup2, @soluongmuavup3, @slthang1, @slthang2, @slthang3, @slthang4, @slthang5, @slthang6, @slthang7, @slthang8, @slthang9, @slthang10, @slthang11, @slthang12);
+                      INSERT INTO kehoach (makh, mathanhpham, tenthanhpham, nhomthanhpham, soluong, tgbatdau, tgketthuc, makhachhang, khachhang, ghichu, createdAt, createdBy, status, soluongmuavup1, soluongmuavup2, soluongmuavup3, slthang1, slthang2, slthang3, slthang4, slthang5, slthang6, slthang7, slthang8, slthang9, slthang10, slthang11, slthang12) 
+                      VALUES (@makh, @mathanhpham, @tenthanhpham, @nhomthanhpham, @soluong, @tgbatdau, @tgketthuc, @makhachhang, @khachhang, @ghichu, @createdAt, @createdBy, @status, @soluongmuavup1, @soluongmuavup2, @soluongmuavup3, @slthang1, @slthang2, @slthang3, @slthang4, @slthang5, @slthang6, @slthang7, @slthang8, @slthang9, @slthang10, @slthang11, @slthang12);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -595,7 +595,7 @@ router.patch("/updatesodatsohonglcd/:_id", async (req, res) => {
 // cập nhật số đạt
 router.patch("/updateluongcongdoansodat/:_id", async (req, res) => {
   try {
-    console.log(req.body.sodat);
+    // console.log(req.body.sodat);
     await pool.connect();
     const result = await pool
       .request()
@@ -621,6 +621,7 @@ router.patch("/updateluongcongdoansodat/:_id", async (req, res) => {
     res.status(500).json(error);
   }
 });
+
 
 // lấy tổng số lượng trong lô sản xuất
 router.get("/sumsoluonginlsx", async (req, res) => {
@@ -827,7 +828,7 @@ router.patch("/capnhatstatuslosx/:_id", async (req, res) => {
 
 // cập nhật tổng hỏng tổng đạt trong 1 lô sản xuất theo _id
 router.patch("/updatetonghong", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     await pool.connect();
     const result = await pool
@@ -842,10 +843,45 @@ router.patch("/updatetonghong", async (req, res) => {
         .input("_id", req.query._id)
         .input("tonghong", req.body.tonghong)
         .input("tongdat", req.body.tongdat)
+        .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
         .query(
           `UPDATE losanxuat SET 
                 tonghong = @tonghong,
-                tongdat = @tongdat 
+                tongdat = @tongdat,
+                ngayhoanthanhtt = @ngayhoanthanhtt
+              WHERE _id=@_id`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tổng hỏng trong 1 lô sản xuất theo _id
+router.patch("/updateonlytonghong", async (req, res) => {
+  // console.log(req.body);
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`SELECT * FROM losanxuat WHERE _id=@_id`);
+    let ut = result.recordset[0];
+    // console.log(ut);
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.query._id)
+        .input("tonghong", req.body.tonghong)
+        .query(
+          `UPDATE losanxuat SET 
+                tonghong = @tonghong
               WHERE _id=@_id`
         );
       res.json({
@@ -1302,7 +1338,8 @@ router.get("/getallphieulocht", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
+      // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
+      .query(`SELECT * FROM losanxuat order by mapx, malosx`);
     const pl = result.recordset;
 
     res.json(pl);
@@ -1437,7 +1474,7 @@ router.get("/getallluongcongdoaninlsx", async (req, res) => {
       .request()
       .input("_id_losx", req.query._id_losx)
       .query(
-        `select * from luongcongnhan where _id_losx=@_id_losx order by nguyencong`
+        `select * from luongcongnhan where _id_losx=@_id_losx order by nguyencong, congnhan`
       );
     const lcd = result.recordset;
 
@@ -1460,6 +1497,53 @@ router.get("/checklosanxuatstussx", async (req, res) => {
 
     res.json(lcd);
     //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// KIỂM TRA XEM TRONG LÔ KẾ HOẠCH PHÂN XƯỞNG CÓ BAO NHIÊU trang thai = sx
+router.get("/checklosanxuatstussxtrangthai2", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_khpx", req.query._id_khpx)
+      .query(`SELECT * FROM losanxuat WHERE _id_khpx=@_id_khpx and status=2`);
+    const lcd = result.recordset;
+
+    res.json(lcd);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật lo kế hoạch tại phân xưởng cho ngaybdtt
+router.patch("/updatelokehoachngaybdtt/:_id", async (req, res) => {
+  try {
+    console.log(req.body.ngaybdthucte)
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("ngaybdthucte", req.body.ngaybdthucte)
+        .query(
+          `UPDATE lokehoachphanxuong SET 
+                ngaybdthucte = @ngaybdthucte
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
   } catch (error) {
     res.status(500).json(error);
   }
@@ -1547,7 +1631,7 @@ router.get("/sumtonghong", async (req, res) => {
       .request()
       .input("_id_losx", req.query._id_losx)
       .query(
-        `select sum(cast(trim(sohong) as float)) tonghong from luongcongnhan where _id_losx=@_id_losx`
+        `select sum(cast(trim(sohong) as int)) tonghong from luongcongnhan where _id_losx=@_id_losx`
       );
     const tonghong = result.recordset;
 

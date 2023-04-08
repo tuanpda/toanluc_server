@@ -316,7 +316,7 @@ router.post("/addcongnhat", async (req, res) => {
       .request()
       .input("_id_losx", req.body._id_losx)
       .input("kehoachnam", req.body.kehoachnam)
-      .input("makh", req.body.makh)
+      .input("malonhamay", req.body.malonhamay)
       .input("makhpx", req.body.makhpx)
       .input("masp", req.body.masp)
       .input("tensp", req.body.tensp)
@@ -331,8 +331,8 @@ router.post("/addcongnhat", async (req, res) => {
       .input("ghichu", req.body.ghichu)
       .input("ngaythuchien", req.body.ngaythuchien)
       .input("status", 0).query(`
-                      INSERT INTO congnhat (_id_losx, kehoachnam,makh, makhpx, masp, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien, status) 
-                      VALUES (@_id_losx, @kehoachnam, @makh, @makhpx, @masp, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien, @status);
+                      INSERT INTO congnhat (_id_losx, kehoachnam,malonhamay, makhpx, masp, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien, status) 
+                      VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @masp, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien, @status);
                   `);
     const lcn = req.body;
     res.json(lcn);

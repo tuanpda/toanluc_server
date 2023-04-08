@@ -1372,7 +1372,7 @@ router.get("/getallphieulocht", async (req, res) => {
     const result = await pool
       .request()
       // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
-      .query(`SELECT * FROM losanxuat order by mapx, malosx`);
+      .query(`SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`);
     const pl = result.recordset;
 
     res.json(pl);

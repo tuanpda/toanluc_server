@@ -1419,7 +1419,22 @@ router.get("/getallkehoachphanxuong", async (req, res) => {
   }
 });
 
-// get all lô kế hoạch phân xưởng sắp xếp theo mã phân xưởng bỏ các status = 0
+// get all lô kế hoạch phân xưởng sắp xếp theo mã phân xưởng
+router.get("/getallkehoachphanxuong_chonlkhdesx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .execute("fetch_lokhpx_pivot_soluong_losx_all_status");
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all lô kế hoạch phân xưởng sắp xếp theo mã phân xưởng chỉ status=2
 router.get("/getallkehoachphanxuongwithout0", async (req, res) => {
   try {
     await pool.connect();

@@ -1995,9 +1995,9 @@ router.get("/filteronlypxandnhomtpmatp", async (req, res) => {
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     const nhomtp = req.query.nhomthanhpham;
-    console.log(nhomtp);
+    // console.log(nhomtp);
     const matp = req.query.mathanhpham;
-    console.log(matp);
+    // console.log(matp);
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
@@ -2011,6 +2011,39 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 		  GROUP BY _id_khpx
 		) AS losx ON khpx._id = losx._id_khpx
       ) select * from t where t.nhomthanhpham='${nhomtp}' and t.mathanhpham in ('${matp}') and t.mapx in (${strpx})`
+    );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí xưởng - mã thành phẩm - trạng thái
+router.get("/filteronlypxandmatptrangthai", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const statusList = req.query.status;
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(nhomtp);
+    const matp = req.query.mathanhpham;
+    // console.log(matp);
+    await pool.connect();
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx 
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
+      ) select * from t where t.status in (${strstatus}) and t.mathanhpham in ('${matp}') and t.mapx in (${strpx})`
     );
     const tenpx = result.recordset;
 

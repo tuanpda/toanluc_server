@@ -2206,7 +2206,7 @@ router.get("/filterfulldklosanxuat", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus}) and nhomsp='${nhomsp}'`
+        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus})`
       );
     const tenpx = result.recordset;
 
@@ -3158,7 +3158,7 @@ router.delete("/losx/:_id", async (req, res) => {
       res.json(lcn);
     } else {
       res.status(404).json({
-        message: "Không tìm thấy sản phẩm này",
+        message: "Không tìm thấy",
       });
     }
   } catch (error) {

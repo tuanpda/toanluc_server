@@ -384,7 +384,7 @@ router.post("/addphieulosx", async (req, res) => {
     // res.json(lc)
 
     // const newProduct = result.recordset[0];
-    console.log(result.recordsets)
+    console.log(result)
 
     res.json();
 

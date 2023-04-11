@@ -376,26 +376,18 @@ router.post("/addphieulosx", async (req, res) => {
       .input("tongdat", req.body.tongdat)
       .input("tonghong", req.body.tonghong)
       .input("nhomsp", req.body.nhomsp)
-      .input("ghichu", req.body.ghichu)
-      .query(
-        `
+      .input("ghichu", req.body.ghichu).query(`
                       INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, malonhamay, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu)
                       VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
-                  `,
-        function (err, recordset) {
-          if (err) console.log(err);
-
-          // send records as a response
-          res.send(recordset);
-        }
-      );
+                  `);
     // const lc = req.body;
     // res.json(lc)
 
     // const newProduct = result.recordset[0];
-    console.log(result);
+    console.log(result)
 
     res.json();
+
   } catch (error) {
     res.status(500).json(error);
   }
@@ -432,7 +424,7 @@ router.post("/addphieulokh", async (req, res) => {
                       VALUES (@_id_khnam,@kehoachnam,@malonhamay,@soluong,@sldathang,@slsanxuat,@tuanbd,@tuankt,@ngaybd,@ngaykt,@mathanhpham,@tenthanhpham,@nhomthanhpham,@status,@ngaybatdautt,@ngayhoanthanhtt,@ghichu,@createdAt,@updatedAt,@createdBy);
                   `);
     const lc = req.body;
-    res.json(lc);
+    res.json(lc)
   } catch (error) {
     res.status(500).json(error);
   }
@@ -491,6 +483,7 @@ router.post("/addphieulokhpx", async (req, res) => {
                   `);
     const lc = req.body;
     res.json(lc);
+
   } catch (error) {
     res.status(500).json(error);
   }
@@ -635,6 +628,7 @@ router.patch("/updateluongcongdoansodat/:_id", async (req, res) => {
     res.status(500).json(error);
   }
 });
+
 
 // lấy tổng số lượng trong lô sản xuất
 router.get("/sumsoluonginlsx", async (req, res) => {
@@ -1385,9 +1379,7 @@ router.get("/getallphieulocht", async (req, res) => {
     const result = await pool
       .request()
       // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
-      .query(
-        `SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`
-      );
+      .query(`SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`);
     const pl = result.recordset;
 
     res.json(pl);
@@ -1570,7 +1562,7 @@ router.get("/checklosanxuatstussxtrangthai2", async (req, res) => {
 // cập nhật lo kế hoạch tại phân xưởng cho ngaybdtt
 router.patch("/updatelokehoachngaybdtt/:_id", async (req, res) => {
   try {
-    console.log(req.body.ngaybdthucte);
+    console.log(req.body.ngaybdthucte)
     await pool.connect();
     const result = await pool
       .request()

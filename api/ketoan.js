@@ -342,11 +342,11 @@ router.post("/addcongnhat", async (req, res) => {
 });
 
 // Thêm phiếu lô sản xuất
-router.post("/addphieulosx1", async (req, res) => {
+router.post("/addphieulosx", async (req, res) => {
   try {
     // console.log(req.body)
     await pool.connect();
-    const result = await pool
+    await pool
       .request()
       .input("_id_khnam", req.body._id_khnam)
       .input("_id_lonhamay", req.body._id_lonhamay)
@@ -380,65 +380,16 @@ router.post("/addphieulosx1", async (req, res) => {
                       INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, malonhamay, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu)
                       VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
                   `);
-    // const lc = req.body;
-    // res.json(lc)
 
-    // const newProduct = result.recordset[0];
-    console.log(res);
-
-    res.json();
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-router.post("/addphieulosx", async (req, res) => {
-  try {
-    // console.log(req.body)
-    await pool.connect();
-    pool
+    const result = await pool
       .request()
-      .input("_id_khnam", req.body._id_khnam)
-      .input("_id_lonhamay", req.body._id_lonhamay)
-      .input("_id_khpx", req.body._id_khpx)
-      .input("kehoachnam", req.body.kehoachnam)
-      .input("malonhamay", req.body.malonhamay)
-      .input("makhpx", req.body.makhpx)
-      .input("malosx", req.body.malosx)
-      .input("mapx", req.body.mapx)
-      .input("tenpx", req.body.tenpx)
-      .input("mato", req.body.mato)
-      .input("tento", req.body.tento)
-      .input("masp", req.body.masp)
-      .input("tensp", req.body.tensp)
-      .input("soluong", req.body.soluong)
-      .input("nhomluong", req.body.nhomluong)
-      .input("soluonglsx", req.body.soluonglsx)
-      .input("soluongkhsx", req.body.soluongkhsx)
-      .input("ngaybd", req.body.ngaybd)
-      .input("ngaykt", req.body.ngaykt)
-      .input("createdAt", req.body.createdAt)
-      .input("createdBy", req.body.createdBy)
-      .input("status", req.body.status)
-      .input("status_tinhluong", req.body.status_tinhluong)
-      .input("datinhluong", req.body.datinhluong)
-      .input("stopday_losx", req.body.stopday_losx)
-      .input("tongdat", req.body.tongdat)
-      .input("tonghong", req.body.tonghong)
-      .input("nhomsp", req.body.nhomsp)
-      .input("ghichu", req.body.ghichu).query(`
-                      INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, malonhamay, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu)
-                      VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
-                  `, function (err, result){
-                    console.log(result)
-                  });
-    // const lc = req.body;
-    // res.json(lc)
-
+      .query("SELECT TOP 1 * FROM your_table ORDER BY _id DESC");
+    res.status(200).json(result.recordset[0]);
+    res.status(200).json(result);
     // const newProduct = result.recordset[0];
     // console.log(res);
 
-    res.json();
+    // res.json();
   } catch (error) {
     res.status(500).json(error);
   }

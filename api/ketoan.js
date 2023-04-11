@@ -378,10 +378,15 @@ router.post("/addphieulosx", async (req, res) => {
       .input("nhomsp", req.body.nhomsp)
       .input("ghichu", req.body.ghichu).query(`
                       INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, malonhamay, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu)
+                      OUTPUT inserted.*
                       VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
                   `);
-    const lc = req.body;
-    res.json(lc)
+    // const lc = req.body;
+    // res.json(lc)
+
+    const newProduct = result.recordset[0];
+
+    res.status(201).json(newProduct);
 
   } catch (error) {
     res.status(500).json(error);

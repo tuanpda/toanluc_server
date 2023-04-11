@@ -418,7 +418,7 @@ router.post("/addphieulokh", async (req, res) => {
                       VALUES (@_id_khnam,@kehoachnam,@malonhamay,@soluong,@sldathang,@slsanxuat,@tuanbd,@tuankt,@ngaybd,@ngaykt,@mathanhpham,@tenthanhpham,@nhomthanhpham,@status,@ngaybatdautt,@ngayhoanthanhtt,@ghichu,@createdAt,@updatedAt,@createdBy);
                   `);
     const lc = req.body;
-    res.json(lc);
+    console.log(result)
   } catch (error) {
     res.status(500).json(error);
   }

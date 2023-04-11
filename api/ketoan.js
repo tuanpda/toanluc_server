@@ -342,7 +342,7 @@ router.post("/addcongnhat", async (req, res) => {
 });
 
 // Thêm phiếu lô sản xuất
-router.post("/addphieulosx", async (req, res) => {
+router.post("/addphieulosx1", async (req, res) => {
   try {
     // console.log(req.body)
     await pool.connect();
@@ -384,10 +384,30 @@ router.post("/addphieulosx", async (req, res) => {
     // res.json(lc)
 
     // const newProduct = result.recordset[0];
-    console.log(result)
+    console.log(result);
 
     res.json();
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
+router.post("/addphieulosx", async (req, res) => {
+  try {
+    // console.log(req.body)
+    const insertQuery = `
+    INSERT INTO losanxuat (_id_khnam, _id_lonhamay, _id_khpx, kehoachnam, malonhamay, makhpx, malosx, mapx, tenpx, mato, tento, masp, tensp, soluong, nhomluong, soluonglsx, soluongkhsx, ngaybd, ngaykt, createdAt, createdBy, status, status_tinhluong, datinhluong, stopday_losx, tongdat, tonghong, nhomsp, ghichu)
+    VALUES (@_id_khnam, @_id_lonhamay, @_id_khpx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @tenpx, @mato, @tento, @masp, @tensp, @soluong, @nhomluong, @soluonglsx, @soluongkhsx, @ngaybd, @ngaykt, @createdAt, @createdBy, @status, @status_tinhluong, @datinhluong, @stopday_losx, @tongdat, @tonghong, @nhomsp, @ghichu);
+`;
+
+    await pool.connect();
+    await pool.request.query(insertQuery, (err, result) => {
+      if (err) {
+        console.log(`Lỗi: ${err}`);
+      } else {
+        console.log(`Thêm thành công ${result.rowsAffected} dòng`);
+      }
+    });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -424,7 +444,7 @@ router.post("/addphieulokh", async (req, res) => {
                       VALUES (@_id_khnam,@kehoachnam,@malonhamay,@soluong,@sldathang,@slsanxuat,@tuanbd,@tuankt,@ngaybd,@ngaykt,@mathanhpham,@tenthanhpham,@nhomthanhpham,@status,@ngaybatdautt,@ngayhoanthanhtt,@ghichu,@createdAt,@updatedAt,@createdBy);
                   `);
     const lc = req.body;
-    res.json(lc)
+    res.json(lc);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -483,7 +503,6 @@ router.post("/addphieulokhpx", async (req, res) => {
                   `);
     const lc = req.body;
     res.json(lc);
-
   } catch (error) {
     res.status(500).json(error);
   }
@@ -628,7 +647,6 @@ router.patch("/updateluongcongdoansodat/:_id", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
 
 // lấy tổng số lượng trong lô sản xuất
 router.get("/sumsoluonginlsx", async (req, res) => {
@@ -1379,7 +1397,9 @@ router.get("/getallphieulocht", async (req, res) => {
     const result = await pool
       .request()
       // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
-      .query(`SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`);
+      .query(
+        `SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`
+      );
     const pl = result.recordset;
 
     res.json(pl);
@@ -1562,7 +1582,7 @@ router.get("/checklosanxuatstussxtrangthai2", async (req, res) => {
 // cập nhật lo kế hoạch tại phân xưởng cho ngaybdtt
 router.patch("/updatelokehoachngaybdtt/:_id", async (req, res) => {
   try {
-    console.log(req.body.ngaybdthucte)
+    console.log(req.body.ngaybdthucte);
     await pool.connect();
     const result = await pool
       .request()

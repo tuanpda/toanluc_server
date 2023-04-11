@@ -342,7 +342,7 @@ router.post("/addcongnhat", async (req, res) => {
 });
 
 // Thêm phiếu lô sản xuất
-router.post("/addphieulosx1", async (req, res) => {
+router.post("/addphieulosx", async (req, res) => {
   try {
     // console.log(req.body)
     await pool.connect();
@@ -392,7 +392,7 @@ router.post("/addphieulosx1", async (req, res) => {
   }
 });
 
-router.post("/addphieulosx", async (req, res) => {
+router.post("/addphieulosx1", async (req, res) => {
   try {
     // console.log(req.body)
     const insertQuery = `

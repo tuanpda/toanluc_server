@@ -383,7 +383,7 @@ router.post("/addphieulosx", async (req, res) => {
 
     const result = await pool
       .request()
-      .query("SELECT TOP 1 * FROM your_table ORDER BY _id DESC");
+      .query("SELECT TOP 1 * FROM losanxuat ORDER BY _id DESC");
     res.status(200).json(result.recordset[0]);
     res.status(200).json(result);
     // const newProduct = result.recordset[0];

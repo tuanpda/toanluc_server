@@ -417,6 +417,7 @@ router.patch("/losanxuat/:_id", async (req, res) => {
         success: true,
         message: "Update success !",
       });
+      console.log(res)
     }
   } catch (error) {
     res.status(500).json(error);

@@ -385,11 +385,7 @@ router.post("/addphieulosx", async (req, res) => {
       .request()
       .query("SELECT TOP 1 * FROM losanxuat ORDER BY _id DESC");
     res.status(200).json(result.recordset[0]);
-    res.status(200).json(result);
-    // const newProduct = result.recordset[0];
-    // console.log(res);
 
-    // res.json();
   } catch (error) {
     res.status(500).json(error);
   }

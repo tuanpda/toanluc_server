@@ -1996,9 +1996,9 @@ router.get("/filteronlypxandnhomtpmatp", async (req, res) => {
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    const nhomtp = req.query.matp;
+    const nhomtp = req.query.nhomtp;
     // console.log(nhomtp);
-    const matp = req.query.nhomtp;
+    const matp = req.query.matp;
     // console.log(matp);
     await pool.connect();
     const result = await pool.request().query(

@@ -1772,9 +1772,9 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 router.get("/filteronlymapxandnhomtp", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
-    // console.log(mapxList);
+    console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
+    console.log(strpx);
     const nhomtp = req.query.nhomthanhpham;
     await pool.connect();
     const result = await pool.request().query(
@@ -1791,7 +1791,7 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
       ) select * from t where t.mapx in (${strpx}) and t.nhomthanhpham='${nhomtp}'`
     );
     const tenpx = result.recordset;
-
+    console.log(tenpx)
     res.json(tenpx);
   } catch (error) {
     res.status(500).json(error);

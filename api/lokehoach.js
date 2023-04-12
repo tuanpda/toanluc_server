@@ -1660,11 +1660,11 @@ router.get("/filterfulldkmtp", async (req, res) => {
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
-    const matp = req.query.mathanhpham;
+    const matp = req.query.matp;
     // console.log(matp);
     const strstatus = "'" + statusList.join("','") + "'";
     // console.log(strstatus);
-    const nhomtp = req.query.nhomthanhpham;
+    const nhomtp = req.query.nhomtp;
     // console.log(nhomtp);
     await pool.connect();
     const result = await pool.request().query(
@@ -1775,8 +1775,8 @@ router.get("/filteronlymapxandnhomtp", async (req, res) => {
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     console.log(strpx);
-    const nhomtp = req.query.nhomthanhpham;
-    console.log(req.query.nhomtp);
+    const nhomtp = req.query.nhomtp;
+    // console.log(req.query.nhomtp);
     await pool.connect();
     const result = await pool.request().query(
       `with t as(

@@ -1996,9 +1996,9 @@ router.get("/filteronlypxandnhomtpmatp", async (req, res) => {
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    const nhomtp = req.query.nhomthanhpham;
+    const nhomtp = req.query.matp;
     // console.log(nhomtp);
-    const matp = req.query.mathanhpham;
+    const matp = req.query.nhomtp;
     // console.log(matp);
     await pool.connect();
     const result = await pool.request().query(
@@ -2031,7 +2031,7 @@ router.get("/filteronlypxandmatptrangthai", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     // console.log(nhomtp);
-    const matp = req.query.mathanhpham;
+    const matp = req.query.matp;
     // console.log(matp);
     await pool.connect();
     const result = await pool.request().query(

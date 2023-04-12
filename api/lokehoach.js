@@ -1776,7 +1776,7 @@ router.get("/filteronlymapxandnhomtp", async (req, res) => {
     const strpx = "'" + mapxList.join("','") + "'";
     console.log(strpx);
     const nhomtp = req.query.nhomthanhpham;
-    console.log(req.query.nhomthanhpham);
+    console.log(req.query.nhomtp);
     await pool.connect();
     const result = await pool.request().query(
       `with t as(

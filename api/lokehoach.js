@@ -2476,6 +2476,43 @@ router.get("/filtermapxnhomspmasp", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí nhóm sp
+router.get("/filteronlynhomsp", async (req, res) => {
+  try {
+    const nhomsp = req.query.nhomsp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where nhomsp='${nhomsp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí nhóm sp; mã sp
+router.get("/filternhomspmasp", async (req, res) => {
+  try {
+    const nhomsp = req.query.nhomsp;
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where nhomsp='${nhomsp}' and masp='${masp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu mã thành phẩm + tên thành phẩm
 router.get("/locmathanhphamnhomthanhpham", async (req, res) => {
   try {

@@ -2774,6 +2774,34 @@ router.get("/maspindmnc", async (req, res) => {
   }
 });
 
+router.get("/searchMaspinnc", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('mavt', req.query.mavt)
+      .query(`select * from dmnc where mavt=@mavt`);
+    const nhomsp = result.recordset;
+    res.json(nhomsp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/searchnhomspinnc", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('nhomsp', req.query.nhomsp)
+      .query(`select * from dmnc where nhomsp=@nhomsp`);
+    const nhomsp = result.recordset;
+    res.json(nhomsp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all lô sản xuất trong 1 kế hoạch phân xưởng
 router.get("/getalllsxinkhpx", async (req, res) => {
   try {

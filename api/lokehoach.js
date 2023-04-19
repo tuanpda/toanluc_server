@@ -2748,6 +2748,20 @@ router.get("/nhomspinlosanxuat", async (req, res) => {
   }
 });
 
+// Tìm xem có bao nhiêu sản phẩm trong dmnc
+router.get("/nhomspindmnc", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(nhomsp) as nhomsp from dmnc`);
+    const nhomsp = result.recordset;
+    res.json(nhomsp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all lô sản xuất trong 1 kế hoạch phân xưởng
 router.get("/getalllsxinkhpx", async (req, res) => {
   try {

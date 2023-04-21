@@ -2995,6 +2995,38 @@ router.get("/getlokhnmwithmasp", async (req, res) => {
   }
 });
 
+// tìm phiếu lô theo id
+router.get("/searchwithid", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('_id', req.query._id)
+      .query(`select * from losanxuat where _id=@_id`);
+    const lsx = result.recordset;
+
+    res.json(lsx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm phiếu lô theo ngày hoàn thành tt
+router.get("/searchwithngayhttt", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('ngayhoanthanhtt', req.query.ngayhoanthanhtt)
+      .query(`select * from losanxuat where ngayhoanthanhtt=@ngayhoanthanhtt`);
+    const lsx = result.recordset;
+
+    res.json(lsx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get by id
 router.get("/:_id", async (req, res) => {
   try {

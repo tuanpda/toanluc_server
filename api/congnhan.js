@@ -27,7 +27,7 @@ router.get("/allcongnhanpx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select * from congnhan where mapx=@mapx");
+      .query("select * from congnhan where mapx=@mapx order by sttchon");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -42,7 +42,7 @@ router.get("/allcongnhanto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .query("select * from congnhan where mato=@mato");
+      .query("select * from congnhan where mato=@mato order by sttchon");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

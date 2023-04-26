@@ -1560,7 +1560,7 @@ router.get("/checklosanxuatstussxtrangthai2", async (req, res) => {
 // cập nhật lo kế hoạch tại phân xưởng cho ngaybdtt
 router.patch("/updatelokehoachngaybdtt/:_id", async (req, res) => {
   try {
-    console.log(req.body.ngaybdthucte);
+    // console.log(req.body.ngaybdthucte);
     await pool.connect();
     const result = await pool
       .request()
@@ -1582,6 +1582,36 @@ router.patch("/updatelokehoachngaybdtt/:_id", async (req, res) => {
         message: "Update success !",
       });
     }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật ngày bắt đầu và ngày kết thúc cho lô sản xuất
+router.patch("/updatengaybdngayktlosx/:_id", async (req, res) => {
+  try {
+    console.log(req.body);
+    // await pool.connect();
+    // const result = await pool
+    //   .request()
+    //   .input("_id", req.params._id)
+    //   .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
+    // let lokehoach = result.recordset[0];
+    // if (lokehoach) {
+    //   await pool
+    //     .request()
+    //     .input("_id", req.params._id)
+    //     .input("ngaybdthucte", req.body.ngaybdthucte)
+    //     .query(
+    //       `UPDATE lokehoachphanxuong SET 
+    //             ngaybdthucte = @ngaybdthucte
+    //                     WHERE _id = @_id;`
+    //     );
+    //   res.json({
+    //     success: true,
+    //     message: "Update success !",
+    //   });
+    // }
   } catch (error) {
     res.status(500).json(error);
   }

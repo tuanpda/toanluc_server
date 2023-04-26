@@ -385,7 +385,6 @@ router.post("/addphieulosx", async (req, res) => {
       .request()
       .query("SELECT TOP 1 * FROM losanxuat ORDER BY _id DESC");
     res.status(200).json(result.recordset[0]);
-
   } catch (error) {
     res.status(500).json(error);
   }
@@ -1590,28 +1589,30 @@ router.patch("/updatelokehoachngaybdtt/:_id", async (req, res) => {
 // cập nhật ngày bắt đầu và ngày kết thúc cho lô sản xuất
 router.patch("/updatengaybdngayktlosx/:_id", async (req, res) => {
   try {
-    console.log(req.body);
-    // await pool.connect();
-    // const result = await pool
-    //   .request()
-    //   .input("_id", req.params._id)
-    //   .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
-    // let lokehoach = result.recordset[0];
-    // if (lokehoach) {
-    //   await pool
-    //     .request()
-    //     .input("_id", req.params._id)
-    //     .input("ngaybdthucte", req.body.ngaybdthucte)
-    //     .query(
-    //       `UPDATE lokehoachphanxuong SET 
-    //             ngaybdthucte = @ngaybdthucte
-    //                     WHERE _id = @_id;`
-    //     );
-    //   res.json({
-    //     success: true,
-    //     message: "Update success !",
-    //   });
-    // }
+    // console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("ngaybd", req.body.ngaybd)
+        .input("ngaykt", req.body.ngaykt)
+        .query(
+          `UPDATE losanxuat SET 
+                ngaybd = @ngaybd,
+                ngaykt = @ngaykt
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
   } catch (error) {
     res.status(500).json(error);
   }

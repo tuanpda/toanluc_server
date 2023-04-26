@@ -2366,7 +2366,7 @@ router.get("/filteronlymapxandstatuslosanxuat", async (req, res) => {
   }
 });
 
-// lọc dữ liệu theo tiêu chí chỉ có mã px và trạng thái
+// lọc dữ liệu theo tiêu chí chỉ có mã px và trạng thái và nhóm sp
 router.get("/filteronlymapxandstatusnhomsplosanxuat", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
@@ -2381,6 +2381,30 @@ router.get("/filteronlymapxandstatusnhomsplosanxuat", async (req, res) => {
       .request()
       .query(
         `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus}) and nhomsp='${nhomsp}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu theo tiêu chí chỉ có mã px và trạng thái và mã sp
+router.get("/filteronlymapxandstatusmasplosanxuat", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(mapxList);
+    const statusList = req.query.status;
+    // console.log(strpx);
+    const strstatus = "'" + statusList.join("','") + "'";
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus}) and masp='${masp}'`
       );
     const tenpx = result.recordset;
 

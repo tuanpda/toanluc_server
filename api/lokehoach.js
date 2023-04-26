@@ -489,6 +489,35 @@ router.patch("/lokehoach/status2/:_id", async (req, res) => {
   }
 });
 
+// update stt chọn trong bảng cong nhân
+router.patch("/congnhan/sttchon/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhan WHERE _id = @_id`);
+    let cn = result.recordset[0];
+    if (cn) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("sttchon", req.body.sttchon)
+        .query(
+          `UPDATE congnhan SET 
+              sttchon = @sttchon
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // update trạng thái của lô kế hoạch thành đăng ký
 router.patch("/lokehoach/status1/:_id", async (req, res) => {
   try {

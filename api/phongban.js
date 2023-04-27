@@ -270,6 +270,20 @@ router.get("/allbophan", async (req, res) => {
   }
 });
 
+// get all danh mục công nhật
+router.get("/alldmcongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`SELECT * FROM dmcongnhat`);
+    const bp = result.recordset;
+
+    res.json(bp);
+    //console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all phân xưởng
 router.get("/allphanxuong", async (req, res) => {
   try {

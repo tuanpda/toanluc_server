@@ -77,7 +77,7 @@ router.patch("/congnhat/:_id", async (req, res) => {
         .input("updatedAt", req.body.updatedAt)
         .query(
           `UPDATE dmcongnhat SET 
-              manc = @manc, 
+              macn = @macn, 
               tencn = @tencn,
               dongia = @dongia, 
               loailuong = @loailuong,

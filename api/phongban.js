@@ -652,4 +652,31 @@ router.delete("/bophan/:_id", async (req, res) => {
   }
 });
 
+router.delete("/congnhat/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM dmcongnhat WHERE _id = @_id`);
+    let cn = result.recordset.length ? result.recordset[0] : null;
+    if (cn) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM dmcongnhat WHERE _id = @_id;`);
+      res.json({
+        success: true,
+        message: "Delete success !",
+      });
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

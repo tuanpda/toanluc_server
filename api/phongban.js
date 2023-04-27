@@ -224,6 +224,30 @@ router.post("/addphongban", async (req, res) => {
   }
 });
 
+// add công nhật
+router.post("/addcongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("macn", req.body.macn)
+      .input("tencn", req.body.tencn)
+      .input("dongia", req.body.dongia)
+      .input("loailuong", req.body.loailuong)
+      .input("loaiphanbo", req.body.loaiphanbo)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                      INSERT INTO dmcongnhat (macn, tencn, dongia, loailuong, loaiphanbo, ghichu, createdAt, createdBy) 
+                      VALUES (@macn, @tencn, @dongia, @loailuong, @loaiphanbo, @ghichu, @createdAt, @createdBy);
+                  `);
+    const dmcongnhat = req.body;
+    res.json(dmcongnhat);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/addphanxuong", async (req, res) => {
   try {
     await pool.connect();

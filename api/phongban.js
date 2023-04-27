@@ -54,6 +54,49 @@ router.patch("/:_id", async (req, res) => {
   }
 });
 
+// update công nhật
+router.patch("/congnhat/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM dmcongnhat WHERE _id = @_id`);
+    let congnhat = result.recordset[0];
+    if (congnhat) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("macn", req.body.macn)
+        .input("tencn", req.body.tencn)
+        .input("dongia", req.body.dongia)
+        .input("loailuong", req.body.loailuong)
+        .input("loaiphanbo", req.body.loaiphanbo)
+        .input("ghichu", req.body.ghichu)
+        .input("updatedBy", req.body.updatedBy)
+        .input("updatedAt", req.body.updatedAt)
+        .query(
+          `UPDATE dmcongnhat SET 
+              manc = @manc, 
+              tencn = @tencn,
+              dongia = @dongia, 
+              loailuong = @loailuong,
+              loaiphanbo = @loaiphanbo,
+              ghichu = @ghichu,
+              updatedBy = @updatedBy,
+              updatedAt = @updatedAt
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.patch("/phanxuong/:_id", async (req, res) => {
   try {
     await pool.connect();

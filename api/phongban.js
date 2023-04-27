@@ -241,8 +241,11 @@ router.post("/addcongnhat", async (req, res) => {
                       INSERT INTO dmcongnhat (macn, tencn, dongia, loailuong, loaiphanbo, ghichu, createdAt, createdBy) 
                       VALUES (@macn, @tencn, @dongia, @loailuong, @loaiphanbo, @ghichu, @createdAt, @createdBy);
                   `);
-    const dmcongnhat = req.body;
-    res.json(dmcongnhat);
+
+    res.json({
+      success: true,
+      message: "Add success !",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

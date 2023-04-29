@@ -119,7 +119,7 @@ router.get("/execldatawithtimeandxuong", async (req, res) => {
       .input("mapx", req.query.mapx)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query("SELECT * FROM luongcongnhan where mapx=@mapx ngaythuchien BETWEEN @tungay AND @denngay");
+      .query("SELECT * FROM luongcongnhan where mapx=@mapx and ngaythuchien BETWEEN @tungay AND @denngay");
     const data = result.recordset;
 
     res.json(data);

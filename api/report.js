@@ -69,9 +69,9 @@ router.get("/execldatawithphanxuong", async (req, res) => {
       .request()
       .input("mapx", req.query.mapx)
       .query("select * from luongcongnhan where mapx=@mapx");
-    const his = result.recordset;
+    const data = result.recordset;
 
-    res.json(his);
+    res.json(data);
   } catch (error) {
     res.status(500).json(error);
   }

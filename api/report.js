@@ -135,7 +135,7 @@ router.get("/execldatawithtimeandto", async (req, res) => {
       .input("mato", req.query.mato)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query("SELECT * FROM luongcongnhan where mato=@mato ngaythuchien BETWEEN @tungay AND @denngay");
+      .query("SELECT * FROM luongcongnhan where mato=@mato and ngaythuchien BETWEEN @tungay AND @denngay");
     const data = result.recordset;
 
     res.json(data);

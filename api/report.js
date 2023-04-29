@@ -144,4 +144,55 @@ router.get("/execldatawithtimeandto", async (req, res) => {
   }
 });
 
+// execl data công nhật
+router.get("/execldatawithphanxuongcongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query("select * from congnhat where mapx=@mapx");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// execl data
+router.get("/execldatawithtimecongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .query("SELECT * FROM congnhat where ngaythuchien BETWEEN @tungay AND @denngay");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// execl data
+router.get("/execldatawithtimeandxuongcongnhat", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .query("SELECT * FROM congnhat where mapx=@mapx and ngaythuchien BETWEEN @tungay AND @denngay");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

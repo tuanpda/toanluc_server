@@ -93,4 +93,20 @@ router.get("/execldatawithto", async (req, res) => {
   }
 });
 
+router.get("/execldatawithtime", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tungay", req.body.tungay)
+      .input("denngay", req.body.denngay)
+      .query("SELECT * FROM luongcongnhan where ngaythuchien BETWEEN @tungay AND @denngay");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

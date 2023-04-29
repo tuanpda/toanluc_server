@@ -109,4 +109,39 @@ router.get("/execldatawithtime", async (req, res) => {
   }
 });
 
+// execl data
+router.get("/execldatawithtimeandxuong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .query("SELECT * FROM luongcongnhan where mapx=@mapx ngaythuchien BETWEEN @tungay AND @denngay");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/execldatawithtimeandto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mato", req.query.mato)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .query("SELECT * FROM luongcongnhan where mato=@mato ngaythuchien BETWEEN @tungay AND @denngay");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

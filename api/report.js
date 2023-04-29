@@ -99,8 +99,8 @@ router.get("/execldatawithtime", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("tungay", req.body.tungay)
-      .input("denngay", req.body.denngay)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
       .query("SELECT * FROM luongcongnhan where ngaythuchien BETWEEN @tungay AND @denngay");
     const data = result.recordset;
 

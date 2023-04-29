@@ -61,4 +61,20 @@ router.get("/reportsumluong", async (req, res) => {
   }
 });
 
+// execl data
+router.get("/execldatawithphanxuong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query("select * from luongcongnhan where mapx=@mapx");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

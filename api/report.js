@@ -77,4 +77,20 @@ router.get("/execldatawithphanxuong", async (req, res) => {
   }
 });
 
+// execl data
+router.get("/execldatawithto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mato", req.query.mato)
+      .query("select * from luongcongnhan where mato=@mato");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

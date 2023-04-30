@@ -93,7 +93,6 @@ router.get("/execldatawithto", async (req, res) => {
   }
 });
 
-// execl data
 router.get("/execldatawithtime", async (req, res) => {
   try {
     await pool.connect();
@@ -195,6 +194,5 @@ router.get("/execldatawithtimeandxuongcongnhat", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
 
 module.exports = router;

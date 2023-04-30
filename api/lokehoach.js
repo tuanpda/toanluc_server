@@ -417,7 +417,7 @@ router.patch("/losanxuat/:_id", async (req, res) => {
         success: true,
         message: "Update success !",
       });
-      console.log(res)
+      console.log(res);
     }
   } catch (error) {
     res.status(500).json(error);
@@ -1821,7 +1821,7 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
       ) select * from t where t.mapx in (${strpx}) and t.nhomthanhpham='${nhomtp}'`
     );
     const tenpx = result.recordset;
-    console.log(tenpx)
+    console.log(tenpx);
     res.json(tenpx);
   } catch (error) {
     res.status(500).json(error);
@@ -2509,6 +2509,34 @@ router.get("/filteronlynhomspandstatuslosxmasp", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất có cả ngày hoàn thành
+router.get("/filterfulldklosanxuatwithngayhttt", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    // console.log(masp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(strstatus);
+    const ngayhoanthanh = req.query.ngayhoanthanh;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and masp='${masp}' and status in (${strstatus}) and ngayhoanthanhtt='${ngayhoanthanh}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí mapx; nhóm sp; mã sp
 router.get("/filtermapxnhomspmasp", async (req, res) => {
   try {
@@ -2537,9 +2565,7 @@ router.get("/filteronlynhomsp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select * from losanxuat where nhomsp='${nhomsp}'`
-      );
+      .query(`select * from losanxuat where nhomsp='${nhomsp}'`);
     const tenpx = result.recordset;
 
     res.json(tenpx);
@@ -2832,7 +2858,7 @@ router.get("/searchMaspinnc", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('mavt', req.query.mavt)
+      .input("mavt", req.query.mavt)
       .query(`select * from dmnc where mavt=@mavt`);
     const nhomsp = result.recordset;
     res.json(nhomsp);
@@ -2846,7 +2872,7 @@ router.get("/searchnhomspinnc", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('nhomsp', req.query.nhomsp)
+      .input("nhomsp", req.query.nhomsp)
       .query(`select * from dmnc where nhomsp=@nhomsp`);
     const nhomsp = result.recordset;
     res.json(nhomsp);
@@ -3054,7 +3080,7 @@ router.get("/searchwithid", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('_id', req.query._id)
+      .input("_id", req.query._id)
       .query(`select * from losanxuat where _id=@_id`);
     const lsx = result.recordset;
 
@@ -3070,7 +3096,7 @@ router.get("/searchwithngayhttt", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('ngayhoanthanhtt', req.query.ngayhoanthanhtt)
+      .input("ngayhoanthanhtt", req.query.ngayhoanthanhtt)
       .query(`select * from losanxuat where ngayhoanthanhtt=@ngayhoanthanhtt`);
     const lsx = result.recordset;
 

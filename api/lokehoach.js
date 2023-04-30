@@ -461,6 +461,35 @@ router.patch("/losanxuat/status/:_id", async (req, res) => {
   }
 });
 
+// update ngày hoàn thành thực tế
+router.patch("/losanxuat/updatengayhttt/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id = @_id`);
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
+        .query(
+          `UPDATE losanxuat SET 
+          ngayhoanthanhtt = @ngayhoanthanhtt
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // update trạng thái của lô kế hoạch thành sản xuất
 router.patch("/lokehoach/status2/:_id", async (req, res) => {
   try {

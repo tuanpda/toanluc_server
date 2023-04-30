@@ -2537,6 +2537,28 @@ router.get("/filterfulldklosanxuatwithngayhttt", async (req, res) => {
   }
 });
 
+// lọc dữ liệu phân xưởng ngày hoàn thành
+router.get("/filterphanxuongandngayhttt", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const ngayhoanthanh = req.query.ngayhoanthanh;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and ngayhoanthanhtt='${ngayhoanthanh}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí mapx; nhóm sp; mã sp
 router.get("/filtermapxnhomspmasp", async (req, res) => {
   try {

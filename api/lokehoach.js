@@ -2593,6 +2593,34 @@ router.get("/mapxstatusngayhoanthanhlsx", async (req, res) => {
   }
 });
 
+// ma spham trạng thái ngay hoan thanh
+router.get("/maspstatusngayhoanthanhlsx", async (req, res) => {
+  try {
+    // const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    // const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    // console.log(masp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(strstatus);
+    const ngayhoanthanh = req.query.ngayhoanthanh;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where masp = ('${masp}') and status in (${strstatus}) and ngayhoanthanhtt='${ngayhoanthanh}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu phân xưởng ngày hoàn thành
 router.get("/filterphanxuongandngayhttt", async (req, res) => {
   try {

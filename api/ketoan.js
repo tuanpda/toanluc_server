@@ -296,9 +296,11 @@ router.post("/addluongcongdoan", async (req, res) => {
       .input("stopday_losx", req.body.stopday_losx)
       .input("status", req.body.status)
       .input("executedAt", req.body.executedAt)
-      .input("ngaythuchien", req.body.ngaythuchien).query(`
-                      INSERT INTO luongcongnhan (_id_losx, kehoachnam, malonhamay, makhpx, malosx,mapx, mato,masp,tensp, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien) 
-                      VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @mato, @masp, @tensp, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien);
+      .input("ngaythuchien", req.body.ngaythuchien)
+      .input("createdAt", req.body.createdAt)
+      .input("createdby", req.body.createdby).query(`
+                      INSERT INTO luongcongnhan (_id_losx, kehoachnam, malonhamay, makhpx, malosx,mapx, mato,masp,tensp, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien, createdAt, createdBy) 
+                      VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @mato, @masp, @tensp, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien, @createdAt, @createdBy);
                   `);
     const lc = req.body;
     res.json(lc);
@@ -330,9 +332,11 @@ router.post("/addcongnhat", async (req, res) => {
       .input("dongia", req.body.dongia)
       .input("ghichu", req.body.ghichu)
       .input("ngaythuchien", req.body.ngaythuchien)
-      .input("status", 0).query(`
-                      INSERT INTO congnhat (_id_losx, kehoachnam,malonhamay, makhpx, masp, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien, status) 
-                      VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @masp, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien, @status);
+      .input("status", 0)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                      INSERT INTO congnhat (_id_losx, kehoachnam,malonhamay, makhpx, masp, tensp, mapx, malosx, macongnhat, tencongnhat, macongnhan, nguoithuchien, sogiocong, dongia, ghichu, ngaythuchien, status, createdAt, createdBy) 
+                      VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @masp, @tensp, @mapx, @malosx, @macongnhat, @tencongnhat, @macongnhan, @nguoithuchien, @sogiocong, @dongia, @ghichu, @ngaythuchien, @status, @createdAt, @createdBy);
                   `);
     const lcn = req.body;
     res.json(lcn);

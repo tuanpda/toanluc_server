@@ -270,8 +270,8 @@ router.post("/themluongthang", async (req, res) => {
 // thêm lương công đoạn
 router.post("/addluongcongdoan", async (req, res) => {
   try {
-    console.log(req.body.createdBy)
-    console.log(req.body.createdAt)
+    // console.log(req.body.createdBy)
+    // console.log(req.body.createdAt)
     await pool.connect();
     const result = await pool
       .request()
@@ -872,7 +872,7 @@ router.patch("/updatetonghong", async (req, res) => {
 
 // cập nhật tổng hỏng trong 1 lô sản xuất theo _id
 router.patch("/updateonlytonghong", async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   try {
     await pool.connect();
     const result = await pool
@@ -886,9 +886,11 @@ router.patch("/updateonlytonghong", async (req, res) => {
         .request()
         .input("_id", req.query._id)
         .input("tonghong", req.body.tonghong)
+        .input("tongdat", req.body.tongdat)
         .query(
           `UPDATE losanxuat SET 
-                tonghong = @tonghong
+                tonghong = @tonghong,
+                tongdat = @tongdat
               WHERE _id=@_id`
         );
       res.json({

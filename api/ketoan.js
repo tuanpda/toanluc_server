@@ -270,7 +270,8 @@ router.post("/themluongthang", async (req, res) => {
 // thêm lương công đoạn
 router.post("/addluongcongdoan", async (req, res) => {
   try {
-    // console.log(req.body)
+    console.log(req.body.createdBy)
+    console.log(req.body.createdAt)
     await pool.connect();
     const result = await pool
       .request()
@@ -298,7 +299,7 @@ router.post("/addluongcongdoan", async (req, res) => {
       .input("executedAt", req.body.executedAt)
       .input("ngaythuchien", req.body.ngaythuchien)
       .input("createdAt", req.body.createdAt)
-      .input("createdby", req.body.createdby).query(`
+      .input("createdBy", req.body.createdBy).query(`
                       INSERT INTO luongcongnhan (_id_losx, kehoachnam, malonhamay, makhpx, malosx,mapx, mato,masp,tensp, nguyencong, dongia, may, phanxuong_cn, to_cn, congnhan, tencn, sodat, sohong, ghichu, stopday_losx, status, executedAt, ngaythuchien, createdAt, createdBy) 
                       VALUES (@_id_losx, @kehoachnam, @malonhamay, @makhpx, @malosx, @mapx, @mato, @masp, @tensp, @nguyencong, @dongia, @may, @phanxuong_cn, @to_cn, @congnhan, @tencn, @sodat, @sohong, @ghichu, @stopday_losx, @status, @executedAt, @ngaythuchien, @createdAt, @createdBy);
                   `);

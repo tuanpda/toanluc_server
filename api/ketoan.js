@@ -1071,6 +1071,10 @@ router.patch("/capnhatstatusluongcnhat/:_id_losx", async (req, res) => {
       });
     } else {
       console.log("Không tìm thấy lương công nhật");
+      res.json({
+        success: false,
+        message: "Không có dữ liệu để cập nhật !",
+      });
     }
   } catch (error) {
     res.status(500).json(error);

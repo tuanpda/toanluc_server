@@ -1018,15 +1018,11 @@ router.patch("/capnhatstatuslcd/:_id_losx", async (req, res) => {
       .input("_id_losx", req.params._id_losx)
       .query(`SELECT * FROM luongcongnhan WHERE _id_losx=@_id_losx`);
     let ut = result.recordset[0];
-    console.log(ut);
+    // console.log(ut);
     if (ut) {
       await pool
         .request()
         .input("_id_losx", req.params._id_losx)
-        .input("makh", req.query.makh)
-        .input("makhpx", req.query.makhpx)
-        .input("mapx", req.query.mapx)
-        .input("malosx", req.query.malosx)
         .input("stopday_losx", req.body.stopday_losx)
         .input("status", req.body.status)
         .query(
@@ -1056,7 +1052,7 @@ router.patch("/capnhatstatusluongcnhat/:_id_losx", async (req, res) => {
       .input("_id_losx", req.params._id_losx)
       .query(`SELECT * FROM congnhat WHERE _id_losx=@_id_losx`);
     let ut = result.recordset[0];
-    // console.log(ut)
+    console.log(ut)
     if (ut) {
       await pool
         .request()
@@ -1074,7 +1070,7 @@ router.patch("/capnhatstatusluongcnhat/:_id_losx", async (req, res) => {
         message: "Update success !",
       });
     } else {
-      console.log("Not found");
+      console.log("Không tìm thấy lương công nhật");
     }
   } catch (error) {
     res.status(500).json(error);

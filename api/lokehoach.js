@@ -2740,7 +2740,7 @@ router.get("/locphanxuonggiaidoanhoanthanh", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `select * from losanxuat where status=3 mapx in (${strpx}) and ngayhoanthanhtt between '${batdau}' and '${ketthuc}'`
+        `select * from losanxuat where status=3 and mapx in (${strpx}) and ngayhoanthanhtt between '${batdau}' and '${ketthuc}'`
       );
     const tenpx = result.recordset;
 

@@ -2728,6 +2728,28 @@ router.get("/filterphanxuongandngayhttt", async (req, res) => {
   }
 });
 
+// lọc dữ liệu lô sản xuất theo phân xưởng và ngày hoàn thành trong giai đoạn
+router.get("/locphanxuonggiaidoanhoanthanh", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const strpx = "'" + mapxList.join("','") + "'";
+    const batdau = req.query.dateFrom
+    const ketthuc = req.query.dateTo
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where status=3 mapx in (${strpx}) and ngayhoanthanhtt between '${batdau}' and '${ketthuc}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí mapx; nhóm sp; mã sp
 router.get("/filtermapxnhomspmasp", async (req, res) => {
   try {

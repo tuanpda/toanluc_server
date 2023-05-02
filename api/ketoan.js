@@ -872,7 +872,7 @@ router.patch("/updatetonghong", async (req, res) => {
 
 // cập nhật tổng hỏng trong 1 lô sản xuất theo _id
 router.patch("/updateonlytonghong", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     await pool.connect();
     const result = await pool
@@ -1374,7 +1374,7 @@ router.get("/allphieulosx", async (req, res) => {
   }
 });
 
-// get all phiếu lô sản xuất chưa hoàn thành
+// get all phiếu lô sản xuất tại màn vào lương công đoạn
 router.get("/getallphieulocht", async (req, res) => {
   try {
     await pool.connect();
@@ -1383,6 +1383,24 @@ router.get("/getallphieulocht", async (req, res) => {
       // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
       .query(
         `SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`
+      );
+    const pl = result.recordset;
+
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// get all phiếu lô sản xuất tại màn chốt lương
+router.get("/getallphieulosxatcholuong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
+      .query(
+        `SELECT * FROM losanxuat where status=3 order by ngayhoanthanhtt`
       );
     const pl = result.recordset;
 

@@ -1037,6 +1037,10 @@ router.patch("/capnhatstatuslcd/:_id_losx", async (req, res) => {
       });
     } else {
       console.log("Not found");
+      res.json({
+        success: false,
+        message: "Không có dữ liệu để cập nhật !",
+      });
     }
   } catch (error) {
     res.status(500).json(error);

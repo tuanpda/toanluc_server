@@ -1037,6 +1037,10 @@ router.patch("/capnhatstatuslcd/:_id_losx", async (req, res) => {
       });
     } else {
       console.log("Not found");
+      res.json({
+        success: false,
+        message: "Không có dữ liệu để cập nhật !",
+      });
     }
   } catch (error) {
     res.status(500).json(error);
@@ -1052,7 +1056,7 @@ router.patch("/capnhatstatusluongcnhat/:_id_losx", async (req, res) => {
       .input("_id_losx", req.params._id_losx)
       .query(`SELECT * FROM congnhat WHERE _id_losx=@_id_losx`);
     let ut = result.recordset[0];
-    console.log(ut)
+    // console.log(ut)
     if (ut) {
       await pool
         .request()

@@ -1056,7 +1056,7 @@ router.patch("/capnhatstatusluongcnhat/:_id_losx", async (req, res) => {
       .input("_id_losx", req.params._id_losx)
       .query(`SELECT * FROM congnhat WHERE _id_losx=@_id_losx`);
     let ut = result.recordset[0];
-    console.log(ut)
+    // console.log(ut)
     if (ut) {
       await pool
         .request()

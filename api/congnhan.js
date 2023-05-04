@@ -35,7 +35,7 @@ router.get("/allcongnhanpx", async (req, res) => {
   }
 });
 
-// all cong nhan with ma to 
+// all cong nhan with ma to
 router.get("/allcongnhanto", async (req, res) => {
   try {
     await pool.connect();
@@ -95,6 +95,39 @@ router.post("/addcongnhan", async (req, res) => {
   // } else {
   //   console.log("File not found !");
   // }
+});
+
+// add chấm công
+router.post("/addchamcong", async (req, res) => {
+  try {
+    await pool.connect();
+    await pool
+      .request()
+      .input("macn", req.body.macn)
+      .input("tencn", req.body.tencn)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("mato", req.body.mato)
+      .input("tento", req.body.tento)
+      .input("sttchon", req.body.sttchon)
+      .input("machamcong", req.body.machamcong)
+      .input("chamcong", req.body.chamcong)
+      .input("diengiai", req.body.diengiai)
+      .input("ghichu", req.body.ghichu)
+      .input("ngaychamcong", req.body.ngaychamcong)
+      .input("tuanchamcong", req.body.tuanchamcong)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                        INSERT INTO chamcong (macn, tencn, mapx, tenpx, mato, tento, sttchon, machamcong, chamcong, diengiai, ghichu, ngaychamcong, tuanchamcong, createdAt, createdBy) 
+                        VALUES (@macn, @tencn, @mapx, @tenpx, @mato, @tento, @sttchon, @machamcong, @chamcong, @diengiai, @ghichu, @ngaychamcong, @tuanchamcong, @createdAt, @createdBy);
+                    `);
+    res.status(200).json({
+      success: true,
+      message: "Chấm công thành công !",
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // get by id

@@ -6,6 +6,24 @@ const jwt = require("jsonwebtoken");
 const verifyToken = require("../services/verify-token");
 const multer = require("multer");
 
+// báo cáo quân số
+router.get("/baocaoquanso", async (req, res) => {
+  try {
+    strSQL =
+      "SELECT mapx, tenpx, mato, tento, COUNT(*) AS tong_nguoi, SUM(CASE WHEN machamcong = '1' THEN 1 ELSE 0 END) AS ca_1, SUM(CASE WHEN machamcong = '2' or machamcong='3' THEN 1 ELSE 0 END) AS ca_2_3, SUM(CASE WHEN machamcong = 'P' THEN 1 ELSE 0 END) AS nghip, SUM(CASE WHEN machamcong = 'M' THEN 1 ELSE 0 END) AS nghim, SUM(CASE WHEN machamcong = 'K' THEN 1 ELSE 0 END) AS nghik, SUM(CASE WHEN machamcong = 'X' THEN 1 ELSE 0 END) AS nghix, SUM(CASE WHEN machamcong = 'L' THEN 1 ELSE 0 END) AS nghil FROM chamcong where ngaychamcong=@ngaychamcong GROUP BY mapx, tenpx, mato, tento";
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .query(strSQL);
+
+    const bcqs = result.recordset;
+    res.json(bcqs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // all cong nhan
 router.get("/allcongnhan", async (req, res) => {
   try {
@@ -152,23 +170,6 @@ router.get("/:_id", async (req, res) => {
   }
 });
 
-// báo cáo quân số
-router.get("/baocaoquanso", async (req, res) => {
-  try {
-    strSQL =
-      "SELECT mapx, tenpx, mato, tento, COUNT(*) AS tong_nguoi, SUM(CASE WHEN machamcong = '1' THEN 1 ELSE 0 END) AS ca_1, SUM(CASE WHEN machamcong = '2' or machamcong='3' THEN 1 ELSE 0 END) AS ca_2_3, SUM(CASE WHEN machamcong = 'P' THEN 1 ELSE 0 END) AS nghip, SUM(CASE WHEN machamcong = 'M' THEN 1 ELSE 0 END) AS nghim, SUM(CASE WHEN machamcong = 'K' THEN 1 ELSE 0 END) AS nghik, SUM(CASE WHEN machamcong = 'X' THEN 1 ELSE 0 END) AS nghix, SUM(CASE WHEN machamcong = 'L' THEN 1 ELSE 0 END) AS nghil FROM chamcong where ngaychamcong=@ngaychamcong GROUP BY mapx, tenpx, mato, tento";
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("ngaychamcong", req.query.ngaychamcong)
-      .query(strSQL);
-
-    const bcqs = result.recordset;
-    res.json(bcqs);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
 
 router.patch("/:_id", async (req, res) => {
   try {

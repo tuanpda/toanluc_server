@@ -15,7 +15,7 @@ router.get("/baocaoquanso", async (req, res) => {
     const result = await pool
       .request()
       .input("ngaychamcong", req.query.ngaychamcong)
-      .execute('baocaoquanso');
+      .execute("baocaoquanso");
 
     const bcqs = result.recordset;
     res.json(bcqs);
@@ -30,9 +30,11 @@ router.get("/detailquansowithdonvi", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('ngaychamcong', req.query.ngaychamcong)
-      .input('mapx', req.query.mapx)
-      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx order by machamcong");
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .input("mapx", req.query.mapx)
+      .query(
+        "select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx order by machamcong"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -46,9 +48,11 @@ router.get("/detailquansowithdonvito", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('ngaychamcong', req.query.ngaychamcong)
-      .input('mato', req.query.mato)
-      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato order by machamcong");
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .input("mato", req.query.mato)
+      .query(
+        "select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato order by machamcong"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -62,10 +66,12 @@ router.get("/baocaothangtheopx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('mapx', req.query.mapx)
-      .input('startDate', req.query.startDate)
-      .input('endDate', req.query.endDate)
-      .query("select * from chamcong where mapx=@mapx and ngaychamcong BETWEEN @startDate AND @endDate");
+      .input("mapx", req.query.mapx)
+      .input("startDate", req.query.startDate)
+      .input("endDate", req.query.endDate)
+      .query(
+        "select * from chamcong where mapx=@mapx and ngaychamcong BETWEEN @startDate AND @endDate"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -79,10 +85,12 @@ router.get("/baocaothangtheoto", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('mato', req.query.mato)
-      .input('startDate', req.query.startDate)
-      .input('endDate', req.query.endDate)
-      .query("select * from chamcong where mato=@mato and ngaychamcong BETWEEN @startDate AND @endDate");
+      .input("mato", req.query.mato)
+      .input("startDate", req.query.startDate)
+      .input("endDate", req.query.endDate)
+      .query(
+        "select * from chamcong where mato=@mato and ngaychamcong BETWEEN @startDate AND @endDate"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -90,7 +98,7 @@ router.get("/baocaothangtheoto", async (req, res) => {
   }
 });
 
-// all cong nhan 
+// all cong nhan
 router.get("/allcongnhan", async (req, res) => {
   try {
     await pool.connect();
@@ -214,6 +222,46 @@ router.post("/addchamcong", async (req, res) => {
   }
 });
 
+// add vi pham
+router.post("/lapbienbanvipham", async (req, res) => {
+  try {
+    await pool.connect();
+    await pool
+      .request()
+      .input("ngayxuphat", req.body.ngayxuphat)
+      .input("soqd", req.body.soqd)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("mato", req.body.mato)
+      .input("tento", req.body.tento)
+      .input("macn", req.body.macn)
+      .input("tencn", req.body.tencn)
+      .input("chucvu", req.body.chucvu)
+      .input("sdt", req.body.sdt)
+      .input("diachi", req.body.diachi)
+      .input("cccd", req.body.cccd)
+      .input("noidung", req.body.noidung)
+      .input("maloaivp", req.body.maloaivp)
+      .input("loaivp", req.body.loaivp)
+      .input("mamucdovp", req.body.mamucdovp)
+      .input("mucdovp", req.body.mucdovp)
+      .input("mamucdokl", req.body.mamucdokl)
+      .input("mucdokl", req.body.mucdokl)
+      .input("nguoikiemtra", req.body.nguoikiemtra)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                        INSERT INTO hosovipham (soqd,	ngayxuphat,	mapx,	tenpx,	mato,	tento,	macn,	tencn,	chuvu,	sdt,	diachi,	cccd,	noidung, maloaivp,	loaivp,	mamucdovp, mucdovp, mamucdokl, mucdokl, nguoikiemtra,	createdAt, createdBy) 
+                        VALUES (@soqd,	@ngayxuphat,	@mapx,	@tenpx,	@mato,	@tento,	@macn,	@tencn,	@chuvu,	@sdt,	@diachi,	@cccd,	@noidung, @maloaivp,	@loaivp,	@mamucdovp, @mucdovp, @mamucdokl, @mucdokl, @nguoikiemtra,	@createdAt, @createdBy);
+                    `);
+    res.status(200).json({
+      success: true,
+      message: "Lap bien ban thanh cong !",
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get by id
 router.get("/:_id", async (req, res) => {
   try {
@@ -235,7 +283,6 @@ router.get("/:_id", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
 
 router.patch("/:_id", async (req, res) => {
   try {

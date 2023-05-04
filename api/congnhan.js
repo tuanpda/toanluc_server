@@ -152,6 +152,22 @@ router.get("/:_id", async (req, res) => {
   }
 });
 
+// báo cáo quân số
+router.get("/baocaoquanso", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .execute("baocaoquanso");
+
+    const bcqs = result.recordset;
+    res.json(bcqs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.patch("/:_id", async (req, res) => {
   try {
     await pool.connect();

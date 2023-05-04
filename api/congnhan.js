@@ -24,6 +24,38 @@ router.get("/baocaoquanso", async (req, res) => {
   }
 });
 
+// chi tiet quan so
+router.get("/detailquansowithdonvi", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('ngaychamcong', req.query.ngaychamcong)
+      .input('mapx', req.query.mapx)
+      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// chi tiet quan so tai to
+router.get("/detailquansowithdonvito", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('ngaychamcong', req.query.ngaychamcong)
+      .input('mato', req.query.mato)
+      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // all cong nhan
 router.get("/allcongnhan", async (req, res) => {
   try {

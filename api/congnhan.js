@@ -32,7 +32,7 @@ router.get("/detailquansowithdonvi", async (req, res) => {
       .request()
       .input('ngaychamcong', req.query.ngaychamcong)
       .input('mapx', req.query.mapx)
-      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx");
+      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx order by machamcong");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -48,7 +48,7 @@ router.get("/detailquansowithdonvito", async (req, res) => {
       .request()
       .input('ngaychamcong', req.query.ngaychamcong)
       .input('mato', req.query.mato)
-      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato");
+      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato order by machamcong");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

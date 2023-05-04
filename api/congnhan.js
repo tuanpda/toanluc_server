@@ -62,10 +62,10 @@ router.get("/baocaothangtheopx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
+      .input('mapx', req.query.mapx)
       .input('startDate', req.query.startDate)
       .input('endDate', req.query.endDate)
-      .input('mapx', req.query.mapx)
-      .query("select * from chamcong where mapx='PXVSBMTL' and ngaychamcong BETWEEN @startDate AND @endDate");
+      .query("select * from chamcong where mapx=@mapx and ngaychamcong BETWEEN @startDate AND @endDate");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

@@ -56,7 +56,24 @@ router.get("/detailquansowithdonvito", async (req, res) => {
   }
 });
 
-// all cong nhan
+// bao cao thang theo phan xuong
+router.get("/baocaothangtheopx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('startDate', req.query.startDate)
+      .input('endDate', req.query.endDate)
+      .input('mapx', req.query.mapx)
+      .query("select * from chamcong where mapx='PXVSBMTL' and ngaychamcong BETWEEN @startDate AND @endDate");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// all cong nhan 
 router.get("/allcongnhan", async (req, res) => {
   try {
     await pool.connect();

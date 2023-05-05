@@ -248,10 +248,11 @@ router.post("/lapbienbanvipham", async (req, res) => {
       .input("mamucdokl", req.body.mamucdokl)
       .input("mucdokl", req.body.mucdokl)
       .input("nguoikiemtra", req.body.nguoikiemtra)
+      .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`
-                        INSERT INTO hosovipham (soqd,	ngayxuphat,	mapx,	tenpx,	mato,	tento,	macn,	tencn,	chuvu,	sdt,	diachi,	cccd,	noidung, maloaivp,	loaivp,	mamucdovp, mucdovp, mamucdokl, mucdokl, nguoikiemtra,	createdAt, createdBy) 
-                        VALUES (@soqd,	@ngayxuphat,	@mapx,	@tenpx,	@mato,	@tento,	@macn,	@tencn,	@chuvu,	@sdt,	@diachi,	@cccd,	@noidung, @maloaivp,	@loaivp,	@mamucdovp, @mucdovp, @mamucdokl, @mucdokl, @nguoikiemtra,	@createdAt, @createdBy);
+                        INSERT INTO hosovipham (soqd,	ngayxuphat,	mapx,	tenpx,	mato,	tento,	macn,	tencn,	chuvu,	sdt,	diachi,	cccd,	noidung, maloaivp,	loaivp,	mamucdovp, mucdovp, mamucdokl, mucdokl, nguoikiemtra,	ghichu,createdAt, createdBy) 
+                        VALUES (@soqd,	@ngayxuphat,	@mapx,	@tenpx,	@mato,	@tento,	@macn,	@tencn,	@chuvu,	@sdt,	@diachi,	@cccd,	@noidung, @maloaivp,	@loaivp,	@mamucdovp, @mucdovp, @mamucdokl, @mucdokl, @nguoikiemtra, @ghichu,	@createdAt, @createdBy);
                     `);
     res.status(200).json({
       success: true,

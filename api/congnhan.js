@@ -142,6 +142,20 @@ router.get("/allcongnhanto", async (req, res) => {
   }
 });
 
+// get all bien ban vi pham
+router.get("/getallvipham", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("select * from hosovipham order by ngayxuphat desc");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // report luong
 router.post("/addcongnhan", async (req, res) => {
   // if (req.file) {

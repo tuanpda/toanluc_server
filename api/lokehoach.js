@@ -2750,6 +2750,24 @@ router.get("/locphanxuonggiaidoanhoanthanh", async (req, res) => {
   }
 });
 
+// ngày hoàn thành
+router.get("/onlyngayhoanthanh", async (req, res) => {
+  try {
+    const ngayhoanthanh = req.query.ngayhoanthanh;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where ngayhoanthanhtt='${ngayhoanthanh}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu lô sản xuất ngày hoàn thành trong giai đoạn
 router.get("/locgiaidoanhoanthanh", async (req, res) => {
   try {

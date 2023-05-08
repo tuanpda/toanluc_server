@@ -270,6 +270,41 @@ router.post("/addchamcong", async (req, res) => {
   }
 });
 
+// add chấm công phân xưởng
+router.post("/addchamcongphanxuong", async (req, res) => {
+  try {
+    await pool.connect();
+    await pool
+      .request()
+      .input("ngaychamcong", req.body.ngaychamcong)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("mato", req.body.mato)
+      .input("tento", req.body.tento)
+      .input("tongnguoi", req.body.tongnguoi)
+      .input("ca1hc", req.body.ca1hc)
+      .input("ca23", req.body.ca23)
+      .input("nghip", req.body.nghip)
+      .input("nghim", req.body.nghim)
+      .input("nghik", req.body.nghik)
+      .input("nghix", req.body.nghix)
+      .input("nghil", req.body.nghil)
+      .input("tongnghi", req.body.tongnghi)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                        INSERT INTO chamcongphanxuong (ngaychamcong, mapx, tenpx, mato, tento, tongnguoi, ca1hc, ca23, nghip, nghim, nghik, nghix, nghil, tongnghi, ghichu, createdAt, createdBy) 
+                        VALUES (@ngaychamcong, @mapx, @tenpx, @mato, @tento, @tongnguoi, @ca1hc, @ca23, @nghip, @nghim, @nghik, @nghix, @nghil, @tongnghi, @ghichu, @createdAt, @createdBy);
+                    `);
+    res.status(200).json({
+      success: true,
+      message: "Chấm công thành công !",
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // add vi pham
 router.post("/lapbienbanvipham", async (req, res) => {
   try {

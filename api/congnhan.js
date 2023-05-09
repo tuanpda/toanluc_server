@@ -79,7 +79,7 @@ router.get("/baocaothangtheopx", async (req, res) => {
   }
 });
 
-// bao cao chấm công từng phân xưởng
+// báo cáo tổng hợp từng phân xưởng
 router.get("/baocaotonghoptheophanxuong", async (req, res) => {
   try {
     // console.log(req.body);
@@ -90,6 +90,24 @@ router.get("/baocaotonghoptheophanxuong", async (req, res) => {
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
       .execute('baocaochamcongtheopx')
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// báo cáo tổng hợp từng tổ
+router.get("/baocaotonghoptheoto", async (req, res) => {
+  try {
+    // console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .execute('baocaochamcongtheoto')
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

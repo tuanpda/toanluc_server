@@ -83,21 +83,12 @@ router.get("/baocaothangtheopx", async (req, res) => {
 router.get("/baocaothangtheopx", async (req, res) => {
   try {
     await pool.connect();
-    const result = await // .execute('baocaochamcongtheopx')
-    pool
+    const result = await pool
       .request()
       .input("mapx", req.query.mapx)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query(`SELECT macn, COUNT(CASE WHEN machamcong IN ('1', '2', '3') THEN 1 END) AS SoNgayLam, 
-      COUNT(CASE WHEN machamcong IN ('P') THEN 1 END) AS tongphep,
-          COUNT(CASE WHEN machamcong IN ('M') THEN 1 END) AS tongom,
-          COUNT(CASE WHEN machamcong IN ('K') THEN 1 END) AS tongkhongphep,
-            COUNT(CASE WHEN machamcong IN ('K', 'L') THEN 1 END) AS tongkehoachlecuoituan
-      FROM chamcong
-      WHERE mapx = 'AL_PXD'
-      AND ngaychamcong BETWEEN @tungay AND @denngay
-      GROUP BY macn`);
+      .execute('baocaochamcongtheopx')
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -133,7 +124,7 @@ router.get("/baocaochamcongthangphanxuong", async (req, res) => {
       .input("mapx", req.query.mapx)
       .input("nam", req.query.nam)
       .input("thang", req.query.thang)
-      .execute("bangchamcongthang_phanxuong");
+      .execute('bangchamcongthang_phanxuong')
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -150,7 +141,7 @@ router.get("/baocaochamcongthangto", async (req, res) => {
       .input("mato", req.query.mato)
       .input("nam", req.query.nam)
       .input("thang", req.query.thang)
-      .execute("bangchamcongthang_to");
+      .execute('bangchamcongthang_to')
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

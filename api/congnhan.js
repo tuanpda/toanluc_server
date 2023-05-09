@@ -80,9 +80,9 @@ router.get("/baocaothangtheopx", async (req, res) => {
 });
 
 // bao cao chấm công từng phân xưởng
-router.get("/baocaothangtheopx", async (req, res) => {
+router.get("/baocaotonghoptheophanxuong", async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     await pool.connect();
     const result = await pool
       .request()

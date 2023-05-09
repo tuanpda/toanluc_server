@@ -79,6 +79,23 @@ router.get("/baocaothangtheopx", async (req, res) => {
   }
 });
 
+// bao cao chấm công từng phân xưởng
+router.get("/baocaothangtheopx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .execute('baocaochamcongtheopx')
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // bao cao thang theo to
 router.get("/baocaothangtheoto", async (req, res) => {
   try {

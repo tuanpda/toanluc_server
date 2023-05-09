@@ -85,9 +85,12 @@ router.get("/baocaothangtheopx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("mapx", req.query.mapx)
-      .input("tungay", req.query.tungay)
-      .input("denngay", req.query.denngay)
+      // .input("mapx", req.query.mapx)
+      // .input("tungay", req.query.tungay)
+      // .input("denngay", req.query.denngay)
+      .input("mapx", 'AL_PXD')
+      .input("tungay", '2023-05-01')
+      .input("denngay", '2023-05-05')
       .execute('baocaochamcongtheopx')
     const cn = result.recordset;
     res.json(cn);

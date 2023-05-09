@@ -141,8 +141,8 @@ router.get("/baocaochamcongthangphanxuong", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .input("nam", req.query.nam)
-      .input("thang", req.query.thang)
+      .input("startDate", req.query.startDate)
+      .input("endDate", req.query.endDate)
       .execute('bangchamcongthang_phanxuong')
     const cn = result.recordset;
     res.json(cn);
@@ -158,8 +158,8 @@ router.get("/baocaochamcongthangto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .input("nam", req.query.nam)
-      .input("thang", req.query.thang)
+      .input("startDate", req.query.startDate)
+      .input("endDate", req.query.endDate)
       .execute('bangchamcongthang_to')
     const cn = result.recordset;
     res.json(cn);

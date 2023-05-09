@@ -104,7 +104,7 @@ router.get("/baocaotonghoptheoto", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("mapx", req.query.mapx)
+      .input("mato", req.query.mato)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
       .execute('baocaochamcongtheoto')

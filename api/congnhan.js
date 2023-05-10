@@ -38,6 +38,23 @@ router.get("/xemlaibaocaoquanso", async (req, res) => {
   }
 });
 
+// xem ngày chấm công và mapx đã tồn tại
+router.get("/showngaychamcongandmapx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .input("mapx", req.query.mapx)
+      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx");
+
+    const bcqs = result.recordset;
+    res.json(bcqs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // chi tiet quan so
 router.get("/detailquansowithdonvi", async (req, res) => {
   try {

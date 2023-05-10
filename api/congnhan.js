@@ -71,7 +71,7 @@ router.get("/showmacninpx", async (req, res) => {
 });
 
 // show ma cong nhan tai to
-router.get("/showmacninpx", async (req, res) => {
+router.get("/showmacninto", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool

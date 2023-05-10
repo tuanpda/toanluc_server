@@ -55,6 +55,21 @@ router.get("/showngaychamcongandmapx", async (req, res) => {
   }
 });
 
+// show ma cong nhan tai phanxuong
+router.get("/showmacninpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query("select * from congnhan where mapx=@mapx order by macn");
+    const bcqs = result.recordset;
+    res.json(bcqs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // chi tiet quan so
 router.get("/detailquansowithdonvi", async (req, res) => {
   try {

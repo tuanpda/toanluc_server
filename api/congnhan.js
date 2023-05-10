@@ -62,7 +62,7 @@ router.get("/showmacninpx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select * from congnhan where mapx=@mapx order by macn");
+      .query("select macn from congnhan where mapx=@mapx order by macn");
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {

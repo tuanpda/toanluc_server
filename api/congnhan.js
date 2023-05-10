@@ -70,6 +70,21 @@ router.get("/showmacninpx", async (req, res) => {
   }
 });
 
+// show ma cong nhan tai to
+router.get("/showmacninpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mato", req.query.mato)
+      .query("select macn from congnhan where mato=@mato order by macn");
+    const bcqs = result.recordset;
+    res.json(bcqs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // chi tiet quan so
 router.get("/detailquansowithdonvi", async (req, res) => {
   try {

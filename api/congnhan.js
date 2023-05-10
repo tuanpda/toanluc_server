@@ -55,6 +55,23 @@ router.get("/showngaychamcongandmapx", async (req, res) => {
   }
 });
 
+// xem ngày chấm công và mato đã tồn tại
+router.get("/showngaychamcongandmato", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .input("mato", req.query.mato)
+      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato");
+
+    const bcqs = result.recordset;
+    res.json(bcqs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // show ma cong nhan tai phanxuong
 router.get("/showmacninpx", async (req, res) => {
   try {
@@ -304,16 +321,6 @@ router.get("/getallvipham", async (req, res) => {
 
 // report luong
 router.post("/addcongnhan", async (req, res) => {
-  // if (req.file) {
-  //   let linkAvatar;
-  //   const file = req.file;
-  //   if (!file) {
-  //     anhdd = req.body.anhdd;
-  //   } else {
-  //     // Đổi đường dẫn khi deploy lên máy chủ
-  //     linkAvatar = `http://localhost/avatar/${req.file.filename}`;
-  //   }
-
   try {
     await pool.connect();
     const result = await pool

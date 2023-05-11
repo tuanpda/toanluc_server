@@ -561,7 +561,7 @@ router.patch("/:_id", async (req, res) => {
 });
 
 // update status
-router.patch("updatetrangthaicongnhan/:_id", async (req, res) => {
+router.patch("/updatetrangthaicongnhan/:_id", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool

@@ -354,10 +354,11 @@ router.post("/addcongnhan", async (req, res) => {
       .input("sotknh", req.body.sotknh)
       .input("tennh", req.body.tennh)
       .input("ghichu", req.body.ghichu)
+      .input("trangthai", req.body.trangthai)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`
-                        INSERT INTO congnhan (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, createdAt, createdBy) 
-                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @createdAt, @createdBy);
+                        INSERT INTO congnhan (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, trangthai, createdAt, createdBy) 
+                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @trangthai, @createdAt, @createdBy);
                     `);
     const cn = req.body;
     res.json(cn);

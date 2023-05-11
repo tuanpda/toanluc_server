@@ -559,6 +559,37 @@ router.patch("/:_id", async (req, res) => {
   }
 });
 
+// update status
+router.patch("updatetrangthaicongnhan/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhan WHERE _id = @_id`);
+    let congnhan = result.recordset[0];
+    if (congnhan) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("trangthai", req.body.trangthai)
+        .input("ghichu", req.body.ghichu)
+        .query(
+          `UPDATE congnhan SET 
+                trangthai = @trangthai, 
+                ghichu = @ghichu
+                WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // delete công nhan
 router.delete("/:_id", async (req, res) => {
   try {

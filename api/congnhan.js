@@ -78,7 +78,7 @@ router.get("/showallmacn", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query("select macn from congnhan order by macn");
+      .query("select macn from congnhan order by macn where trangthai=1");
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {
@@ -93,7 +93,7 @@ router.get("/showmacninpx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select macn from congnhan where mapx=@mapx order by macn");
+      .query("select macn from congnhan where mapx=@mapx and trangthai=1 order by macn");
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {
@@ -108,7 +108,7 @@ router.get("/showmacninto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .query("select macn from congnhan where mato=@mato order by macn");
+      .query("select macn from congnhan where mato=@mato and trangthai=1 order by macn");
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {
@@ -266,7 +266,7 @@ router.get("/allcongnhan", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query("select * from congnhan order by _id");
+      .query("select * from congnhan where trangthai=1 order by _id");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -281,7 +281,7 @@ router.get("/allcongnhanpx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select * from congnhan where mapx=@mapx order by sttchon");
+      .query("select * from congnhan where mapx=@mapx and trangthai=1 order by sttchon");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -296,7 +296,7 @@ router.get("/allcongnhanto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .query("select * from congnhan where mato=@mato order by sttchon");
+      .query("select * from congnhan where mato=@mato and trangthai=1 order by sttchon");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -579,6 +579,37 @@ router.patch("/updatetrangthaicongnhan/:_id", async (req, res) => {
           `UPDATE congnhan SET 
                 trangthai = @trangthai, 
                 ghichu = @ghichu
+                WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// update chấm công
+router.patch("/updatechamcong/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM chamcong WHERE _id = @_id`);
+    let congnhan = result.recordset[0];
+    if (congnhan) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("machamcong", req.body.machamcong)
+        .input("chamcong", req.body.chamcong)
+        .query(
+          `UPDATE chamcong SET 
+                machamcong = @machamcong, 
+                chamcong = @chamcong
                 WHERE _id = @_id;`
         );
       res.json({

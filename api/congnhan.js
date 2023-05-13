@@ -260,6 +260,20 @@ router.get("/baocaochamcongthangto", async (req, res) => {
   }
 });
 
+// all cong nhan tại danh mục công nhân. vẫn lấy những người trangthai=0
+router.get("/allcongnhan2trangthai", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("select * from congnhan order by _id");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // all cong nhan
 router.get("/allcongnhan", async (req, res) => {
   try {

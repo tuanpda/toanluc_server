@@ -408,6 +408,20 @@ router.get("/allcongnhannghiviec", async (req, res) => {
   }
 });
 
+// get Log nhân sự
+router.get("/getalllognhansu", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("select * from log_nhansu order by createdAt");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // distinct ngaychamcong
 router.get("/getngaychamcongonsv", async (req, res) => {
   try {

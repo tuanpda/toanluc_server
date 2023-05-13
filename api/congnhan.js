@@ -348,6 +348,51 @@ router.get("/allcongnhanto2trangthai", async (req, res) => {
   }
 });
 
+// công nhân đã nghỉ việc theo tổ
+router.get("/allcongnhannghiviectheoto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mato", req.query.mato)
+      .query("select * from congnhan where mato=@mato and trangthai=0 order by sttchon");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// công nhân đã nghỉ việc theo px
+router.get("/allcongnhannghiviectheopx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query("select * from congnhan where mapx=@mapx and trangthai=0 order by sttchon");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+// công nhân đã nghỉ việc
+router.get("/allcongnhannghiviec", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("select * from congnhan where trangthai=0 order by sttchon");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // distinct ngaychamcong
 router.get("/getngaychamcongonsv", async (req, res) => {
   try {

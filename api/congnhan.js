@@ -303,6 +303,21 @@ router.get("/allcongnhanpx", async (req, res) => {
   }
 });
 
+// all cong nhan with px cả trang thai = 0 trong danh mục cn
+router.get("/allcongnhanpx2trangthai", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query("select * from congnhan where mapx=@mapx order by sttchon");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // all cong nhan with ma to
 router.get("/allcongnhanto", async (req, res) => {
   try {
@@ -311,6 +326,21 @@ router.get("/allcongnhanto", async (req, res) => {
       .request()
       .input("mato", req.query.mato)
       .query("select * from congnhan where mato=@mato and trangthai=1 order by sttchon");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// all cong nhan with ma to 2 trth
+router.get("/allcongnhanto2trangthai", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mato", req.query.mato)
+      .query("select * from congnhan where mato=@mato order by sttchon");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

@@ -288,7 +288,7 @@ router.get("/allcongnhan", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query("select * from congnhan where trangthai=1 order by _id");
+      .query("select * from congnhan where trangthai=1 order by mapx, macn");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

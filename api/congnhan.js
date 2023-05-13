@@ -29,7 +29,9 @@ router.get("/xemlaibaocaoquanso", async (req, res) => {
     const result = await pool
       .request()
       .input("ngaychamcong", req.query.ngaychamcong)
-      .query("select * from chamcongphanxuong where ngaychamcong=@ngaychamcong");
+      .query(
+        "select * from chamcongphanxuong where ngaychamcong=@ngaychamcong"
+      );
 
     const bcqs = result.recordset;
     res.json(bcqs);
@@ -46,7 +48,9 @@ router.get("/showngaychamcongandmapx", async (req, res) => {
       .request()
       .input("ngaychamcong", req.query.ngaychamcong)
       .input("mapx", req.query.mapx)
-      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx");
+      .query(
+        "select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx"
+      );
 
     const bcqs = result.recordset;
     res.json(bcqs);
@@ -63,7 +67,9 @@ router.get("/showngaychamcongandmato", async (req, res) => {
       .request()
       .input("ngaychamcong", req.query.ngaychamcong)
       .input("mato", req.query.mato)
-      .query("select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato");
+      .query(
+        "select * from chamcong where ngaychamcong=@ngaychamcong and mato=@mato"
+      );
 
     const bcqs = result.recordset;
     res.json(bcqs);
@@ -93,7 +99,9 @@ router.get("/showmacninpx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select macn from congnhan where mapx=@mapx and trangthai=1 order by macn");
+      .query(
+        "select macn from congnhan where mapx=@mapx and trangthai=1 order by macn"
+      );
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {
@@ -108,7 +116,9 @@ router.get("/showmacninto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .query("select macn from congnhan where mato=@mato and trangthai=1 order by macn");
+      .query(
+        "select macn from congnhan where mato=@mato and trangthai=1 order by macn"
+      );
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {
@@ -181,7 +191,7 @@ router.get("/baocaotonghoptheophanxuong", async (req, res) => {
       .input("mapx", req.query.mapx)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .execute('baocaochamcongtheopx')
+      .execute("baocaochamcongtheopx");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -199,7 +209,7 @@ router.get("/baocaotonghoptheoto", async (req, res) => {
       .input("mato", req.query.mato)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .execute('baocaochamcongtheoto')
+      .execute("baocaochamcongtheoto");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -235,7 +245,7 @@ router.get("/baocaochamcongthangphanxuong", async (req, res) => {
       .input("mapx", req.query.mapx)
       .input("startDate", req.query.startDate)
       .input("endDate", req.query.endDate)
-      .execute('bangchamcongthang_phanxuong')
+      .execute("bangchamcongthang_phanxuong");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -252,7 +262,7 @@ router.get("/baocaochamcongthangto", async (req, res) => {
       .input("mato", req.query.mato)
       .input("startDate", req.query.startDate)
       .input("endDate", req.query.endDate)
-      .execute('bangchamcongthang_to')
+      .execute("bangchamcongthang_to");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -264,9 +274,7 @@ router.get("/baocaochamcongthangto", async (req, res) => {
 router.get("/allcongnhan2trangthai", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .query("select * from congnhan");
+    const result = await pool.request().query("select * from congnhan");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -295,7 +303,9 @@ router.get("/allcongnhanpx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select * from congnhan where mapx=@mapx and trangthai=1 order by sttchon");
+      .query(
+        "select * from congnhan where mapx=@mapx and trangthai=1 order by sttchon"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -325,7 +335,9 @@ router.get("/allcongnhanto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .query("select * from congnhan where mato=@mato and trangthai=1 order by sttchon");
+      .query(
+        "select * from congnhan where mato=@mato and trangthai=1 order by sttchon"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -355,7 +367,9 @@ router.get("/allcongnhannghiviectheoto", async (req, res) => {
     const result = await pool
       .request()
       .input("mato", req.query.mato)
-      .query("select * from congnhan where mato=@mato and trangthai=0 order by sttchon");
+      .query(
+        "select * from congnhan where mato=@mato and trangthai=0 order by sttchon"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -370,14 +384,15 @@ router.get("/allcongnhannghiviectheopx", async (req, res) => {
     const result = await pool
       .request()
       .input("mapx", req.query.mapx)
-      .query("select * from congnhan where mapx=@mapx and trangthai=0 order by sttchon");
+      .query(
+        "select * from congnhan where mapx=@mapx and trangthai=0 order by sttchon"
+      );
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
     res.status(500).json(error);
   }
 });
-
 
 // công nhân đã nghỉ việc
 router.get("/allcongnhannghiviec", async (req, res) => {
@@ -564,6 +579,25 @@ router.post("/lapbienbanvipham", async (req, res) => {
       success: true,
       message: "Lap bien ban thanh cong !",
     });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// log nhan sy
+router.post("/addlognhansu", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("logname", req.body.logname)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                        INSERT INTO log_nhansu (logname, createdAt, createdBy) 
+                        VALUES (@logname, @createdAt, @createdBy);
+                    `);
+    const cn = req.body;
+    res.json(cn);
   } catch (error) {
     res.status(500).json(error);
   }

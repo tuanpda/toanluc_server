@@ -78,7 +78,7 @@ router.get("/showallmacn", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query("select macn from congnhan order by macn where trangthai=1");
+      .query("select macn from congnhan order by macn");
     const bcqs = result.recordset;
     res.json(bcqs);
   } catch (error) {

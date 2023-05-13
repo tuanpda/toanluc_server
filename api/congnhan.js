@@ -451,7 +451,7 @@ router.get("/getallvipham", async (req, res) => {
   }
 });
 
-// report luong
+// thêm công nhân
 router.post("/addcongnhan", async (req, res) => {
   try {
     await pool.connect();
@@ -487,6 +487,40 @@ router.post("/addcongnhan", async (req, res) => {
   // } else {
   //   console.log("File not found !");
   // }
+});
+
+// thêm dữ liệu điều chuyển
+router.post("/addcongnhandieuchuyen", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("macn", req.body.macn)
+      .input("tencn", req.body.tencn)
+      .input("mapx", req.body.mapx)
+      .input("tenpx", req.body.tenpx)
+      .input("sdt", req.body.sdt)
+      .input("diachi", req.body.diachi)
+      .input("cccd", req.body.cccd)
+      .input("mato", req.body.mato)
+      .input("tento", req.body.tento)
+      .input("chucvu", req.body.chucvu)
+      .input("luongcb", req.body.luongcb)
+      .input("nguoilienhe", req.body.nguoilienhe)
+      .input("sotknh", req.body.sotknh)
+      .input("tennh", req.body.tennh)
+      .input("ghichu", req.body.ghichu)
+      .input("trangthai", req.body.trangthai)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                        INSERT INTO dulieudieuchuyen (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, trangthai, createdAt, createdBy) 
+                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @trangthai, @createdAt, @createdBy);
+                    `);
+    const cn = req.body;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // add chấm công

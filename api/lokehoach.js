@@ -509,10 +509,12 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
         .input("_id", req.params._id)
         .input("status", req.body.status)
         .input("soluongkhsx", req.body.soluongkhsx)
+        .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
         .query(
           `UPDATE losanxuat SET 
                         status = @status,
-                        soluongkhsx = @soluongkhsx
+                        soluongkhsx = @soluongkhsx,
+                        ngayhoanthanhtt = @ngayhoanthanhtt
                         WHERE _id = @_id;`
         );
       res.json({

@@ -533,12 +533,28 @@ router.patch("/updatemato", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`SELECT distinct(malonhamay) FROM losanxuat where mapx='PXGC'`);
-    const lokehoach = result.recordset;
-    console.log(lokehoach);
-
-    res.json(lokehoach);
-
+      .input("malonhamay", req.query.malonhamay)
+      .query(
+        `SELECT * FROM losanxuat WHERE malonhamay = @malonhamay and mapx='PXGC'`
+      );
+    let lokehoach = result.recordset[0];
+    if (lokehoach) {
+      await pool
+        .request()
+        .input("malonhamay", req.query.malonhamay)
+        .input("mato", req.body.mato)
+        .input("tento", req.body.tento)
+        .query(
+          `UPDATE losanxuat SET 
+                        mato = @mato,
+                        tento = @tento
+                        WHERE malonhamay = @malonhamay;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
   } catch (error) {
     res.status(500).json(error);
   }
@@ -553,7 +569,6 @@ router.get("/laydanhsachmlnm", async (req, res) => {
     console.log(lokehoach);
 
     res.json(lokehoach);
-
   } catch (error) {
     res.status(500).json(error);
   }
@@ -563,13 +578,14 @@ router.get("/laydsmatotento", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input('malonhamay', req.query.malonhamay)
-      .query(`SELECT mato, tento FROM lokehoachphanxuong where malonhamay=@malonhamay and mapx='PXGC'`);
+      .input("malonhamay", req.query.malonhamay)
+      .query(
+        `SELECT mato, tento FROM lokehoachphanxuong where malonhamay=@malonhamay and mapx='PXGC'`
+      );
     const lokehoach = result.recordset;
     console.log(lokehoach);
 
     res.json(lokehoach);
-
   } catch (error) {
     res.status(500).json(error);
   }

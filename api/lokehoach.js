@@ -528,7 +528,22 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
 });
 
 // update mato
-router.put("/updatemato", async (req, res) => {
+router.patch("/updatemato", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT distinct(malonhamay) FROM losanxuat where mapx='PXGC'`);
+    const lokehoach = result.recordset;
+    console.log(lokehoach);
+
+    res.json(lokehoach);
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+router.get("/laydanhsachmlnm", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool

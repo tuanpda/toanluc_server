@@ -580,7 +580,7 @@ router.get("/laydsmatotento", async (req, res) => {
       .request()
       .input("malonhamay", req.query.malonhamay)
       .query(
-        `SELECT mato, tento FROM lokehoachphanxuong where malonhamay=@malonhamay and mapx='PXGC'`
+        `SELECT _id, mato, tento FROM lokehoachphanxuong where malonhamay=@malonhamay and mapx='PXGC'`
       );
     const lokehoach = result.recordset;
     console.log(lokehoach);

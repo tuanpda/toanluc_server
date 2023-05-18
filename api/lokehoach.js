@@ -527,6 +527,46 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
   }
 });
 
+// update số lượng cập nhật nhanh và status cho lsx
+router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT distinct(malonhamay) FROM losanxuat WHERE mapx='PXGC'`);
+    let lokehoach = result.recordset[0];
+    console.log(lokehoach);
+
+
+    // const result = await pool
+    //   .request()
+    //   .input("_id", req.params._id)
+    //   .query(`SELECT * FROM losanxuat WHERE _id = @_id`);
+    // let lokehoach = result.recordset[0];
+    // if (lokehoach) {
+    //   await pool
+    //     .request()
+    //     .input("_id", req.params._id)
+    //     .input("status", req.body.status)
+    //     .input("soluongkhsx", req.body.soluongkhsx)
+    //     .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
+    //     .query(
+    //       `UPDATE losanxuat SET 
+    //                     status = @status,
+    //                     soluongkhsx = @soluongkhsx,
+    //                     ngayhoanthanhtt = @ngayhoanthanhtt
+    //                     WHERE _id = @_id;`
+    //     );
+    //   res.json({
+    //     success: true,
+    //     message: "Update success !",
+    //   });
+    // }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // update ngày hoàn thành thực tế
 router.patch("/losanxuat/updatengayhttt/:_id", async (req, res) => {
   try {

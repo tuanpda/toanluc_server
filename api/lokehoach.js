@@ -537,7 +537,6 @@ router.patch("/updatemato", async (req, res) => {
     let lokehoach = result.recordset[0];
     console.log(lokehoach);
 
-
     // const result = await pool
     //   .request()
     //   .input("_id", req.params._id)
@@ -551,16 +550,16 @@ router.patch("/updatemato", async (req, res) => {
     //     .input("soluongkhsx", req.body.soluongkhsx)
     //     .input("ngayhoanthanhtt", req.body.ngayhoanthanhtt)
     //     .query(
-    //       `UPDATE losanxuat SET 
+    //       `UPDATE losanxuat SET
     //                     status = @status,
     //                     soluongkhsx = @soluongkhsx,
     //                     ngayhoanthanhtt = @ngayhoanthanhtt
     //                     WHERE _id = @_id;`
     //     );
-    //   res.json({
-    //     success: true,
-    //     message: "Update success !",
-    //   });
+    res.json({
+      success: true,
+      message: "ok",
+    });
     // }
   } catch (error) {
     res.status(500).json(error);
@@ -2839,8 +2838,8 @@ router.get("/locphanxuonggiaidoanhoanthanh", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
     const strpx = "'" + mapxList.join("','") + "'";
-    const batdau = req.query.dateFrom
-    const ketthuc = req.query.dateTo
+    const batdau = req.query.dateFrom;
+    const ketthuc = req.query.dateTo;
 
     await pool.connect();
     const result = await pool
@@ -2877,8 +2876,8 @@ router.get("/onlyngayhoanthanh", async (req, res) => {
 // lọc dữ liệu lô sản xuất ngày hoàn thành trong giai đoạn
 router.get("/locgiaidoanhoanthanh", async (req, res) => {
   try {
-    const batdau = req.query.dateFrom
-    const ketthuc = req.query.dateTo
+    const batdau = req.query.dateFrom;
+    const ketthuc = req.query.dateTo;
 
     await pool.connect();
     const result = await pool

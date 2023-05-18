@@ -558,6 +558,22 @@ router.get("/laydanhsachmlnm", async (req, res) => {
     res.status(500).json(error);
   }
 });
+router.get("/laydsmatotento", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input('malonhamay', req.query.malonhamay)
+      .query(`SELECT mato, tento FROM lokehoachphanxuong where malonhamay=@malonhamay and mapx='PXGC'`);
+    const lokehoach = result.recordset;
+    console.log(lokehoach);
+
+    res.json(lokehoach);
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 // update ngày hoàn thành thực tế
 router.patch("/losanxuat/updatengayhttt/:_id", async (req, res) => {

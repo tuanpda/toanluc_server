@@ -528,12 +528,12 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
 });
 
 // update mato
-router.patch("/updatemato", async (req, res) => {
+router.patch("/updatemato/:malonhamay", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .input("malonhamay", req.query.malonhamay)
+      .input("malonhamay", req.params.malonhamay)
       .query(
         `SELECT * FROM losanxuat WHERE malonhamay = @malonhamay and mapx='PXGC'`
       );
@@ -541,7 +541,7 @@ router.patch("/updatemato", async (req, res) => {
     if (lokehoach) {
       await pool
         .request()
-        .input("malonhamay", req.query.malonhamay)
+        .input("malonhamay", req.params.malonhamay)
         .input("mato", req.body.mato)
         .input("tento", req.body.tento)
         .query(

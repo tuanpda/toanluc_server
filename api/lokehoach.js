@@ -528,7 +528,7 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
 });
 
 // update số lượng cập nhật nhanh và status cho lsx
-router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
+router.patch("/updatemato", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool

@@ -528,7 +528,7 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
 });
 
 // update mato
-router.get("/updatemato", async (req, res) => {
+router.put("/updatemato", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool

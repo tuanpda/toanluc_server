@@ -330,7 +330,7 @@ router.get("/filterfulldmncmapxandmasp", async (req, res) => {
 });
 
 // nhomsp & masp
-router.get("/filterfulldmncnhomspandmasp", async (req, res) => {
+router.get("/filterfulldmncnhomspmasp", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
     // console.log(mapxList);

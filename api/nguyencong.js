@@ -203,6 +203,23 @@ router.get("/getalldongiacong", async (req, res) => {
   }
 });
 
+// get all danh mục đơn giá công theo px
+router.get("/getalldongiacongwithpx", async (req, res) => {
+  try {
+    await pool.connect();
+
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .query(`SELECT * FROM dongiacong where mapx=@mapx`);
+    const dgc = result.recordset;
+
+    res.json(dgc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all vision
 router.get("/getversion", async (req, res) => {
   try {

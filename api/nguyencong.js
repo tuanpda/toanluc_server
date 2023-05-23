@@ -254,6 +254,30 @@ router.post("/chonphienban", async (req, res) => {
   }
 });
 
+// lọc danh mục sản phẩm từ bảng danh mục nguyên công
+router.get("/filterfulldmnc", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    // console.log(masp);
+    const nhomsp = req.query.nhomsp;
+    // console.log(nhomsp);
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from dmnc where mapx in (${strpx}) and mavt='${masp}' and nhomsp='${nhomsp}'`
+      );
+    const data = result.recordset;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật nguyên công
 router.patch("/nc/:_id", async (req, res) => {
   try {

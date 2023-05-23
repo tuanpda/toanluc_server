@@ -286,8 +286,6 @@ router.get("/filterfulldmncmapxandnhomsp", async (req, res) => {
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
-    const mavt = req.query.mavt;
-    // console.log(mavt);
     const nhomsp = req.query.nhomsp;
     // console.log(nhomsp);
 
@@ -313,8 +311,6 @@ router.get("/filterfulldmncmapxandmasp", async (req, res) => {
     // console.log(strpx);
     const mavt = req.query.mavt;
     // console.log(mavt);
-    const nhomsp = req.query.nhomsp;
-    // console.log(nhomsp);
 
     await pool.connect();
     const result = await pool
@@ -332,10 +328,6 @@ router.get("/filterfulldmncmapxandmasp", async (req, res) => {
 // nhomsp & masp
 router.get("/filterfulldmncnhomspmasp", async (req, res) => {
   try {
-    const mapxList = req.query.mapx;
-    // console.log(mapxList);
-    const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
     const mavt = req.query.mavt;
     // console.log(mavt);
     const nhomsp = req.query.nhomsp;
@@ -360,11 +352,6 @@ router.get("/filteronlymapx", async (req, res) => {
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
-    const mavt = req.query.mavt;
-    // console.log(mavt);
-    const nhomsp = req.query.nhomsp;
-    // console.log(nhomsp);
 
     await pool.connect();
     const result = await pool
@@ -382,14 +369,8 @@ router.get("/filteronlymapx", async (req, res) => {
 // chi nhomsp
 router.get("/filteronlynhomsp", async (req, res) => {
   try {
-    const mapxList = req.query.mapx;
-    // console.log(mapxList);
-    const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
-    const mavt = req.query.mavt;
-    // console.log(mavt);
     const nhomsp = req.query.nhomsp;
-    console.log(nhomsp);
+    // console.log(nhomsp);
 
     await pool.connect();
     const result = await pool
@@ -407,14 +388,8 @@ router.get("/filteronlynhomsp", async (req, res) => {
 // chi masp
 router.get("/filteronlymasp", async (req, res) => {
   try {
-    const mapxList = req.query.mapx;
-    // console.log(mapxList);
-    const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
     const mavt = req.query.mavt;
-    console.log(mavt);
-    const nhomsp = req.query.nhomsp;
-    // console.log(nhomsp);
+    // console.log(mavt);
 
     await pool.connect();
     const result = await pool

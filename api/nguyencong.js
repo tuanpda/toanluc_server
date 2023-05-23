@@ -258,11 +258,11 @@ router.post("/chonphienban", async (req, res) => {
 router.get("/filterfulldmnc", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
-    console.log(mapxList);
+    // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    console.log(strpx);
-    const masp = req.query.masp;
-    // console.log(masp);
+    // console.log(strpx);
+    const mavt = req.query.mavt;
+    // console.log(mavt);
     const nhomsp = req.query.nhomsp;
     // console.log(nhomsp);
 
@@ -270,7 +270,7 @@ router.get("/filterfulldmnc", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `select * from dmnc where mapx in (${strpx}) and mavt='${masp}' and nhomsp='${nhomsp}'`
+        `select * from dmnc where mapx in (${strpx}) and mavt='${mavt}' and nhomsp='${nhomsp}'`
       );
     const data = result.recordset;
     res.json(data);
@@ -286,8 +286,8 @@ router.get("/filterfulldmncmapxandnhomsp", async (req, res) => {
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
-    const masp = req.query.masp;
-    // console.log(masp);
+    const mavt = req.query.mavt;
+    // console.log(mavt);
     const nhomsp = req.query.nhomsp;
     // console.log(nhomsp);
 
@@ -296,6 +296,31 @@ router.get("/filterfulldmncmapxandnhomsp", async (req, res) => {
       .request()
       .query(
         `select * from dmnc where mapx in (${strpx}) and nhomsp='${nhomsp}'`
+      );
+    const data = result.recordset;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// mapx & masp
+router.get("/filterfulldmncmapxandmasp", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const mavt = req.query.mavt;
+    // console.log(mavt);
+    const nhomsp = req.query.nhomsp;
+    // console.log(nhomsp);
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from dmnc where mapx in (${strpx}) and mavt='${mavt}'`
       );
     const data = result.recordset;
     res.json(data);

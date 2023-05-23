@@ -354,6 +354,81 @@ router.get("/filterfulldmncnhomspmasp", async (req, res) => {
   }
 });
 
+// chi mapx
+router.get("/filteronlymapx", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const mavt = req.query.mavt;
+    // console.log(mavt);
+    const nhomsp = req.query.nhomsp;
+    // console.log(nhomsp);
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from dmnc where mapx in (${strpx})`
+      );
+    const data = result.recordset;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// chi nhomsp
+router.get("/filteronlynhomsp", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const mavt = req.query.mavt;
+    // console.log(mavt);
+    const nhomsp = req.query.nhomsp;
+    // console.log(nhomsp);
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from dmnc where nhomsp='${nhomsp}'`
+      );
+    const data = result.recordset;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// chi masp
+router.get("/filteronlymasp", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const mavt = req.query.mavt;
+    // console.log(mavt);
+    const nhomsp = req.query.nhomsp;
+    // console.log(nhomsp);
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from dmnc where mavt='${mavt}'`
+      );
+    const data = result.recordset;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật nguyên công
 router.patch("/nc/:_id", async (req, res) => {
   try {

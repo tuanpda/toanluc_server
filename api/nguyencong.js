@@ -210,8 +210,8 @@ router.get("/getalldongiacongwithpx", async (req, res) => {
 
     const result = await pool
       .request()
-      .input("mapx", req.query.mapx)
-      .query(`SELECT * FROM dongiacong where mapx=@mapx`);
+      .input("PX", req.query.PX)
+      .query(`SELECT * FROM dongiacong where PX=@PX`);
     const dgc = result.recordset;
 
     res.json(dgc);

@@ -389,7 +389,7 @@ router.get("/filteronlynhomsp", async (req, res) => {
     const mavt = req.query.mavt;
     // console.log(mavt);
     const nhomsp = req.query.nhomsp;
-    // console.log(nhomsp);
+    console.log(nhomsp);
 
     await pool.connect();
     const result = await pool
@@ -412,7 +412,7 @@ router.get("/filteronlymasp", async (req, res) => {
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
     const mavt = req.query.mavt;
-    // console.log(mavt);
+    console.log(mavt);
     const nhomsp = req.query.nhomsp;
     // console.log(nhomsp);
 

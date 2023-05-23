@@ -258,8 +258,9 @@ router.post("/chonphienban", async (req, res) => {
 router.get("/filterfulldmnc", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
+    console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
+    console.log(strpx);
     const masp = req.query.masp;
     // console.log(masp);
     const nhomsp = req.query.nhomsp;

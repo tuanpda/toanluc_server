@@ -345,7 +345,7 @@ router.get("/filterfulldmncnhomspmasp", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `select * from dmnc where nhomsp='BCN' and mavt='A-BCN81'`
+        `select * from dmnc where mavt='${mavt}' and nhomsp='${nhomsp}'`
       );
     const data = result.recordset;
     res.json(data);

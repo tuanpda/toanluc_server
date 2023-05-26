@@ -143,6 +143,22 @@ router.get("/getidlsx", async (req, res) => {
   }
 });
 
+// tìm mã lô nhà máy
+router.get("/getmalonhamaywithid", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .request("_id", req.query._id)
+      .query("SELECT malonhamay FROM losanxuat where _id=@_id");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật lại
 router.patch("/updatemalonhamaycongnhat/:_id_losx", async (req, res) => {
   try {

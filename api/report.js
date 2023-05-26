@@ -144,12 +144,12 @@ router.get("/getidlsx", async (req, res) => {
 });
 
 // tìm mã lô nhà máy
-router.get("/getmalonhamaywithid", async (req, res) => {
+router.get("/getmalonhamaywithid/:_id", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .request("_id", req.query._id)
+      .request("_id", req.params._id)
       .query("SELECT malonhamay FROM losanxuat where _id=@_id");
     const data = result.recordset;
 

@@ -250,6 +250,7 @@ router.get("/execldatawithtimeandxuongcongnhat", async (req, res) => {
 // tìm mã lô nhà máy
 router.get("/getmalonhamaywithid/:_id", async (req, res) => {
   try {
+    console.log(req.params._id);
     await pool.connect();
     const result = await pool
       .request()

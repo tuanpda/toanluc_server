@@ -2447,16 +2447,16 @@ router.get("/filtermatomaxuongdklosanxuatthemto", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
     const matoList = req.query.mapx;
-    const statusList = req.query.status;
+    // const statusList = req.query.status;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
     const strto = "'" + matoList.join("','") + "'";
     // console.log(strpx);
-    const masp = req.query.masp;
-    // console.log(masp);
-    const strstatus = "'" + statusList.join("','") + "'";
-    // console.log(strstatus);
-    const nhomsp = req.query.nhomsp;
+    // const masp = req.query.masp;
+    // // console.log(masp);
+    // const strstatus = "'" + statusList.join("','") + "'";
+    // // console.log(strstatus);
+    // const nhomsp = req.query.nhomsp;
 
     await pool.connect();
     const result = await pool

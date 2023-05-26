@@ -149,7 +149,8 @@ router.get("/getmalonhamay", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query("SELECT malonhamay FROM losanxuat where _id=1386");
+      .input("_id", req.query._id)
+      .query("SELECT malonhamay FROM losanxuat where _id=@_id");
     const data = result.recordset;
 
     res.json(data);

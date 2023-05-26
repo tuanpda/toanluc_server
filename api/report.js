@@ -143,6 +143,21 @@ router.get("/getidlsx", async (req, res) => {
   }
 });
 
+// lấy ds malonhamay
+router.get("/getmalonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("SELECT malonhamay FROM losanxuat where _id=1386");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 
 // cập nhật lại
 router.patch("/updatemalonhamaycongnhat/:_id_losx", async (req, res) => {
@@ -247,21 +262,5 @@ router.get("/execldatawithtimeandxuongcongnhat", async (req, res) => {
 });
 
 
-// tìm mã lô nhà máy
-router.get("/getmalonhamaywithid/:_id", async (req, res) => {
-  try {
-    console.log(req.params._id);
-    await pool.connect();
-    const result = await pool
-      .request()
-      .request("_id", req.params._id)
-      .query("SELECT malonhamay FROM losanxuat where _id=@_id");
-    const data = result.recordset;
-
-    res.json(data);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
 
 module.exports = router;

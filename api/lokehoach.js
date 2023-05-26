@@ -2416,7 +2416,7 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 router.get("/filterfulldklosanxuatthemto", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
-    const matoList = req.query.mapx;
+    const matoList = req.query.mato;
     const statusList = req.query.status;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
@@ -2446,7 +2446,7 @@ router.get("/filterfulldklosanxuatthemto", async (req, res) => {
 router.get("/filtermatomaxuongdklosanxuatthemto", async (req, res) => {
   try {
     const mapxList = req.query.mapx;
-    const matoList = req.query.mapx;
+    const matoList = req.query.mato;
     // const statusList = req.query.status;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";

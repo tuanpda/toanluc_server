@@ -127,6 +127,56 @@ router.get("/execldatawithtimeandxuong", async (req, res) => {
   }
 });
 
+// cập nhật lại mã lô nhà máy sai trong công nhật
+// lấy ds _id_losx
+router.get("/getidlsx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("SELECT distinct(_id_losx) FROM congnhat");
+    const data = result.recordset;
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật lại
+router.patch("/updatemalonhamaycongnhat/:_id_losx", async (req, res) => {
+  try {
+    // console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.params._id_losx)
+      .query(`SELECT * FROM congnhat WHERE _id_losx = @_id_losx`);
+    let congnhat = result.recordset[0];
+    if (congnhat) {
+      await pool
+        .request()
+        .input("_id_losx", req.params._id_losx)
+        .input("malonhamay", req.body.malonhamay)
+        .query(
+          `UPDATE congnhat SET 
+              malonhamay = @malonhamay
+              WHERE _id_losx = @_id_losx;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+
+
+
 router.get("/execldatawithtimeandto", async (req, res) => {
   try {
     await pool.connect();

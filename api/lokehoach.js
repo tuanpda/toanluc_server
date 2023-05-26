@@ -2411,6 +2411,40 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
   }
 });
 
+// thêm tổ
+// lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
+router.get("/filterfulldklosanxuatthemto", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const matoList = req.query.mapx;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const strto = "'" + matoList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    // console.log(masp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(strstatus);
+    const nhomsp = req.query.nhomsp;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and mato in (${strto}) and masp='${masp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+
+
 // lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
 router.get("/filterfulldklosanxuat", async (req, res) => {
   try {

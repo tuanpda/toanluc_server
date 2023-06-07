@@ -1403,9 +1403,7 @@ router.get("/getallphieulosxatcholuong", async (req, res) => {
     const result = await pool
       .request()
       // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
-      .query(
-        `SELECT * FROM losanxuat where status=3 order by ngayhoanthanhtt`
-      );
+      .query(`SELECT * FROM losanxuat where status=3 order by ngayhoanthanhtt`);
     const pl = result.recordset;
 
     res.json(pl);
@@ -1715,6 +1713,24 @@ router.get("/getallluongcongdoanto", async (req, res) => {
     const lcd = result.recordset;
 
     res.json(lcd);
+    //console.log(chucvu);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// load bảng lương văn phòng theo bảng chấm công
+router.get("/loadluongchamcong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("month", req.query.month)
+      .input("year", req.query.year)
+      .execute(`load_luongvp`);
+    const luongvp = result.recordset;
+
+    res.json(luongvp);
     //console.log(chucvu);
   } catch (error) {
     res.status(500).json(error);

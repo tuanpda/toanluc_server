@@ -328,9 +328,11 @@ router.post("/addcapbacluong", async (req, res) => {
       .input("phucapmin", req.body.phucapmin)
       .input("ghichu1", req.body.ghichu1)
       .input("ghichu2", req.body.ghichu2)
-      .input("ghichu3", req.body.ghichu3).query(`
-                      INSERT INTO capbacluong (nhom, maso, diengiai, lcbmax, lcbmin, phucapmax, phucapmin, ghichu1, ghichu2, ghichu3) 
-                      VALUES (@nhom, @maso, @diengiai, @lcbmax, @lcbmin, @phucapmax, @phucapmin, @ghichu1, @ghichu2, @ghichu3);
+      .input("ghichu3", req.body.ghichu3)
+      .input("createdBy", req.body.createdBy)
+      .input("createdAt", req.body.createdAt).query(`
+                      INSERT INTO capbacluong (nhom, maso, diengiai, lcbmax, lcbmin, phucapmax, phucapmin, ghichu1, ghichu2, ghichu3, createdBy, createdAt) 
+                      VALUES (@nhom, @maso, @diengiai, @lcbmax, @lcbmin, @phucapmax, @phucapmin, @ghichu1, @ghichu2, @ghichu3, @createdBy, @createdAt);
                   `);
     const to = req.body;
     res.json(to);

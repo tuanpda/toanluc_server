@@ -1805,6 +1805,18 @@ router.get("/getphieulocongdoan", async (req, res) => {
   }
 });
 
+// get all cấp bậc lương
+router.get("/getallcapbacluong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`select * from capbacluong`);
+    const pl = result.recordset;
+    res.json(pl);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all công nhật
 router.get("/getphieulocongnhat", async (req, res) => {
   try {

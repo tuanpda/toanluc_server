@@ -313,6 +313,32 @@ router.post("/addto", async (req, res) => {
   }
 });
 
+// add cấp bậc lương
+router.post("/addcapbacluong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nhom", req.body.nhom)
+      .input("maso", req.body.maso)
+      .input("diengiai", req.body.diengiai)
+      .input("lcbmax", req.body.lcbmax)
+      .input("lcbmin", req.body.lcbmin)
+      .input("phucapmax", req.body.phucapmax)
+      .input("phucapmin", req.body.phucapmin)
+      .input("ghichu1", req.body.ghichu1)
+      .input("ghichu2", req.body.ghichu2)
+      .input("ghichu3", req.body.ghichu3).query(`
+                      INSERT INTO capbacluong (nhom, maso, diengiai, lcbmax, lcbmin, phucapmax, phucapmin, ghichu1, ghichu2, ghichu3) 
+                      VALUES (@nhom, @maso, @diengiai, @lcbmax, @lcbmin, @phucapmax, @phucapmin, @ghichu1, @ghichu2, @ghichu3);
+                  `);
+    const to = req.body;
+    res.json(to);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all data phong ban
 router.get("/allphongban", async (req, res) => {
   try {

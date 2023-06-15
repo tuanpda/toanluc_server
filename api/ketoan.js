@@ -20,6 +20,53 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+// cập nhật cấp bậc lương
+router.patch("/updatecapbacluong/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM capbacluong WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("nhom", req.body.nhom)
+        .input("maso", req.body.maso)
+        .input("diengiai", req.body.diengiai)
+        .input("lcbmax", req.body.lcbmax)
+        .input("lcbmin", req.body.lcbmin)
+        .input("phucapmax", req.body.phucapmax)
+        .input("phucapmin", req.body.phucapmin)
+        .input("ghichu1", req.body.ghichu1)
+        .input("ghichu2", req.body.ghichu2)
+        .input("ghichu3", req.body.ghichu3)
+        .query(
+          `UPDATE capbacluong SET 
+                    nhom = @nhom, 
+                    maso = @maso,
+                    diengiai = @diengiai,
+                    lcbmax = @lcbmax,
+                    lcbmin = @lcbmin,
+                    phucapmax = @phucapmax,
+                    phucapmin = @phucapmin,
+                    ghichu1 = @ghichu1,
+                    ghichu2 = @ghichu2,
+                    ghichu3 = @ghichu3,
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật phiếu ứng tiền
 router.patch("/phieuungtien/:_id", async (req, res) => {
   try {

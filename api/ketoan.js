@@ -54,7 +54,7 @@ router.patch("/updatecapbacluong/:_id", async (req, res) => {
                     phucapmin = @phucapmin,
                     ghichu1 = @ghichu1,
                     ghichu2 = @ghichu2,
-                    ghichu3 = @ghichu3,
+                    ghichu3 = @ghichu3
               WHERE _id = @_id;`
         );
       res.json({

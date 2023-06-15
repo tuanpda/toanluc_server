@@ -1953,6 +1953,31 @@ router.delete("/congnhat/:_id", async (req, res) => {
   }
 });
 
+// delete cấp bậc lương
+router.delete("/capbacluong/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM capbacluong WHERE _id = @_id`);
+    let cn = result.recordset.length ? result.recordset[0] : null;
+    if (cn) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM capbacluong WHERE _id = @_id;`);
+      res.json(cn);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // ghi lại lịch sử thao tác trên phần mềm
 router.post("/record-action", async (req, res) => {
   try {

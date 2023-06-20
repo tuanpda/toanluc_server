@@ -275,6 +275,27 @@ router.post("/taophieuung", async (req, res) => {
   }
 });
 
+// thêm ăn ca
+router.post("/addanca", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("anca", req.body.anca)
+      .input("tienca", req.body.tienca)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                      INSERT INTO buatrua (anca, tienca, ghichu, createdAt, createdBy) 
+                      VALUES (@anca, @tienca, @ghichu, @createdAt, @createdBy);
+                  `);
+    const anca = req.body;
+    res.json(anca);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/themluongthang", async (req, res) => {
   try {
     // console.log(req.body)

@@ -290,7 +290,12 @@ router.post("/addanca", async (req, res) => {
                       VALUES (@anca, @tienan, @ghichu, @createdAt, @createdBy);
                   `);
     const anca = req.body;
-    res.json(anca);
+    // res.json(anca);
+    res.json({
+      success: true,
+      message: "Update success !",
+      data: anca,
+    });
   } catch (error) {
     res.status(500).json(error);
   }

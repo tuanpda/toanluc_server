@@ -673,6 +673,40 @@ router.patch("/updatesodatsohonglcd/:_id", async (req, res) => {
   }
 });
 
+// cập nhật ăn ca
+router.patch("/anca/:_id", async (req, res) => {
+  try {
+    // console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM buatrua WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("anca", req.body.anca)
+        .input("tienan", req.body.tienan)
+        .input("ghichu", req.body.ghichu)
+        .query(
+          `UPDATE buatrua SET 
+                anca=@anca,
+                tienan=@tienan,
+                ghichu=@ghichu      
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật số đạt
 router.patch("/updateluongcongdoansodat/:_id", async (req, res) => {
   try {
@@ -2033,6 +2067,30 @@ router.post("/record-action", async (req, res) => {
                       `);
     const histac = req.body;
     res.json(histac);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.delete("/anca/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM buatrua WHERE _id = @_id`);
+    let antrua = result.recordset.length ? result.recordset[0] : null;
+    if (antrua) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM buatrua WHERE _id = @_id;`);
+      res.json(antrua);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
   } catch (error) {
     res.status(500).json(error);
   }

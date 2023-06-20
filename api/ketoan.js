@@ -282,12 +282,12 @@ router.post("/addanca", async (req, res) => {
     const result = await pool
       .request()
       .input("anca", req.body.anca)
-      .input("tienca", req.body.tienca)
+      .input("tienan", req.body.tienan)
       .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`
-                      INSERT INTO buatrua (anca, tienca, ghichu, createdAt, createdBy) 
-                      VALUES (@anca, @tienca, @ghichu, @createdAt, @createdBy);
+                      INSERT INTO buatrua (anca, tienan, ghichu, createdAt, createdBy) 
+                      VALUES (@anca, @tienan, @ghichu, @createdAt, @createdBy);
                   `);
     const anca = req.body;
     res.json(anca);

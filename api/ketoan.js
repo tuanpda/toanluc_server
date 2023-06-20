@@ -1320,7 +1320,9 @@ router.get("/gettenspkhnm", async (req, res) => {
 router.get("/getallanca", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool.request().query(`SELECT * FROM buatrua`);
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM buatrua order by _id`);
     const at = result.recordset;
 
     res.json(at);

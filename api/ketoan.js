@@ -1256,6 +1256,20 @@ router.get("/gettenspkhnm", async (req, res) => {
   }
 });
 
+// danh mục ăn ca
+router.get("/getallanca", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool.request().query(`SELECT * FROM buatrua`);
+    const at = result.recordset;
+
+    res.json(at);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get tên sản phẩm trong lập kế hoạch
 router.get("/gettensp", async (req, res) => {
   try {

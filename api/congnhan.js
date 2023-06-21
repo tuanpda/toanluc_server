@@ -538,14 +538,17 @@ router.post("/addchamcong", async (req, res) => {
       .input("sttchon", req.body.sttchon)
       .input("machamcong", req.body.machamcong)
       .input("chamcong", req.body.chamcong)
+      .input("anca", req.body.anca)
+      .input("tienan", req.body.tienan)
+      .input("thanhtien", req.body.thanhtien)
       .input("diengiai", req.body.diengiai)
       .input("ghichu", req.body.ghichu)
       .input("ngaychamcong", req.body.ngaychamcong)
       .input("tuanchamcong", req.body.tuanchamcong)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`
-                        INSERT INTO chamcong (macn, tencn, mapx, tenpx, mato, tento, sttchon, machamcong, chamcong, diengiai, ghichu, ngaychamcong, tuanchamcong, createdAt, createdBy) 
-                        VALUES (@macn, @tencn, @mapx, @tenpx, @mato, @tento, @sttchon, @machamcong, @chamcong, @diengiai, @ghichu, @ngaychamcong, @tuanchamcong, @createdAt, @createdBy);
+                        INSERT INTO chamcong (macn, tencn, mapx, tenpx, mato, tento, sttchon, machamcong, chamcong, anca, tienan, thanhtien, diengiai, ghichu, ngaychamcong, tuanchamcong, createdAt, createdBy) 
+                        VALUES (@macn, @tencn, @mapx, @tenpx, @mato, @tento, @sttchon, @machamcong, @chamcong, @anca, @tienan, @thanhtien, @diengiai, @ghichu, @ngaychamcong, @tuanchamcong, @createdAt, @createdBy);
                     `);
     res.status(200).json({
       success: true,

@@ -2532,8 +2532,6 @@ router.get("/filtermatomaxuongdklosanxuatthemto", async (req, res) => {
   }
 });
 
-
-
 // lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
 router.get("/filterfulldklosanxuat", async (req, res) => {
   try {
@@ -2981,6 +2979,24 @@ router.get("/filterphanxuongandngayhttt", async (req, res) => {
   }
 });
 
+// ngày hoàn thành
+router.get("/onlyngayhoanthanh", async (req, res) => {
+  try {
+    const ngayhoanthanh = req.query.ngayhoanthanh;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where ngayhoanthanhtt='${ngayhoanthanh}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu lô sản xuất theo phân xưởng và ngày hoàn thành trong giai đoạn
 router.get("/locphanxuonggiaidoanhoanthanh", async (req, res) => {
   try {
@@ -3003,15 +3019,20 @@ router.get("/locphanxuonggiaidoanhoanthanh", async (req, res) => {
   }
 });
 
-// ngày hoàn thành
-router.get("/onlyngayhoanthanh", async (req, res) => {
+// lọc dữ liệu lô sản xuất theo phân xưởng và ngày hoàn thành trong giai đoạn chưa chốt
+router.get("/locphanxuonggiaidoanhoanthanhlochuachot", async (req, res) => {
   try {
-    const ngayhoanthanh = req.query.ngayhoanthanh;
+    const mapxList = req.query.mapx;
+    const strpx = "'" + mapxList.join("','") + "'";
+    const batdau = req.query.dateFrom;
+    const ketthuc = req.query.dateTo;
+    const status_tinhluong = req.query.status_tinhluong;
+
     await pool.connect();
     const result = await pool
       .request()
       .query(
-        `select * from losanxuat where ngayhoanthanhtt='${ngayhoanthanh}'`
+        `select * from losanxuat where status=3 and mapx in (${strpx}) and ngayhoanthanhtt between '${batdau}' and '${ketthuc}' and status_tinhluong=${status_tinhluong}`
       );
     const tenpx = result.recordset;
 
@@ -3032,6 +3053,27 @@ router.get("/locgiaidoanhoanthanh", async (req, res) => {
       .request()
       .query(
         `select * from losanxuat where status=3 and ngayhoanthanhtt between '${batdau}' and '${ketthuc}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lọc dữ liệu lô sản xuất ngày hoàn thành trong giai đoạn lô chưa chốt
+router.get("/locgiaidoanhoanthanhlochuachot", async (req, res) => {
+  try {
+    const batdau = req.query.dateFrom;
+    const ketthuc = req.query.dateTo;
+    const status_tinhluong = req.query.status_tinhluong;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where status=3 and ngayhoanthanhtt between '${batdau}' and '${ketthuc}' and status_tinhluong=${status_tinhluong}`
       );
     const tenpx = result.recordset;
 

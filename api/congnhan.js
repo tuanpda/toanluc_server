@@ -736,6 +736,39 @@ router.patch("/:_id", async (req, res) => {
   }
 });
 
+// cập nhật chức vụ & lương mềm
+router.patch("/chucvuluongmem/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhan WHERE _id = @_id`);
+    let congnhan = result.recordset[0];
+    if (congnhan) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("chucvu", req.body.chucvu)
+        .input("luongmem", req.body.luongmem)
+        .input("machucvu", req.body.machucvu)
+        .query(
+          `UPDATE congnhan SET 
+                chucvu = @chucvu, 
+                luongmem = @luongmem,
+                machucvu = @machucvu
+                WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // update status
 router.patch("/updatetrangthaicongnhan/:_id", async (req, res) => {
   try {

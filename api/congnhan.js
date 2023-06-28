@@ -752,12 +752,14 @@ router.patch("/chucvuluongmem/:_id", async (req, res) => {
         .input("chucvu", req.body.chucvu)
         .input("luongmem", req.body.luongmem)
         .input("machucvu", req.body.machucvu)
+        .input("luongcb", req.body.luongcb)
         .input("anluongqlsp", req.body.anluongqlsp)
         .query(
           `UPDATE congnhan SET 
                 chucvu = @chucvu, 
                 luongmem = @luongmem,
                 machucvu = @machucvu,
+                luongcb = @luongcb,
                 anluongqlsp = @anluongqlsp
                 WHERE _id = @_id;`
         );

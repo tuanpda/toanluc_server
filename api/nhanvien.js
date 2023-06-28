@@ -97,13 +97,11 @@ router.patch("/luongcoban/:_id", async (req, res) => {
         .request()
         .input("_id", req.params._id)
         .input("mucluong", req.body.mucluong)
-        .input("mucluong", req.body.mucluong)
         .input("luongngay", req.body.luongngay)
         .input("bacluong", req.body.bacluong)
         .input("luongtrachnhiem", req.body.luongtrachnhiem)
         .query(
           `UPDATE nhanvien SET 
-              mucluong = @mucluong,
               mucluong = @mucluong,
               luongngay =@luongngay,
               bacluong = @bacluong,

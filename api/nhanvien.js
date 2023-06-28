@@ -96,12 +96,18 @@ router.patch("/luongcoban/:_id", async (req, res) => {
       await pool
         .request()
         .input("_id", req.params._id)
+        .input("luongcb", req.body.luongcb)
         .input("mucluong", req.body.mucluong)
         .input("luongngay", req.body.luongngay)
+        .input("bacluong", req.body.bacluong)
+        .input("luongtrachnhiem", req.body.luongtrachnhiem)
         .query(
           `UPDATE nhanvien SET 
+              luongcb = @luongcb,
               mucluong = @mucluong,
-              luongngay =@luongngay
+              luongngay =@luongngay,
+              bacluong = @bacluong,
+              luongtrachnhiem = @luongtrachnhiem
               WHERE _id = @_id;`
         );
       res.json({

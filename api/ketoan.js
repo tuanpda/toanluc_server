@@ -1509,7 +1509,7 @@ router.get("/getallphieulocht", async (req, res) => {
       .request()
       // .query(`SELECT * FROM losanxuat where status=2 order by mapx, malosx`);
       .query(
-        `SELECT * FROM losanxuat where status=2 or status=3 order by mapx, malosx`
+        `SELECT * FROM losanxuat where (status=2 or status=3) and status_tinhluong = 0 order by mapx, malosx`
       );
     const pl = result.recordset;
 

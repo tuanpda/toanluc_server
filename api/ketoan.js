@@ -1268,7 +1268,7 @@ router.get("/detailallluongcongdoaninmonth", async (req, res) => {
       .input("nam", req.query.nam)
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from luongcongnhan 
-where id_losx in (select id from losanxuat WHERE year(stopday_losx) = @nam and month(stopday_losx) = @thang
+where _id_losx in (select _id from losanxuat WHERE year(stopday_losx) = @nam and month(stopday_losx) = @thang
 AND status_tinhluong =1 and datinhluong = 0)
 and mapx=@mapx`);
     const cn = result.recordset;

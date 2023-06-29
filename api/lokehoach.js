@@ -3114,6 +3114,25 @@ router.get("/locgiaidoanhoanthanhlochuachot", async (req, res) => {
   }
 });
 
+// lọc dữ liệu lô sản xuất đã chốt
+router.get("/loconlydachotlsx", async (req, res) => {
+  try {
+    const status_tinhluong = req.query.status_tinhluong;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where status=3 and status_tinhluong=${status_tinhluong}`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí mapx; nhóm sp; mã sp
 router.get("/filtermapxnhomspmasp", async (req, res) => {
   try {

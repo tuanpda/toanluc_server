@@ -100,7 +100,9 @@ router.get("/execldatawithtime", async (req, res) => {
       .request()
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query("SELECT * FROM luongcongnhan where ngaythuchien BETWEEN @tungay AND @denngay");
+      .query(
+        "SELECT * FROM luongcongnhan where ngaythuchien BETWEEN @tungay AND @denngay"
+      );
     const data = result.recordset;
 
     res.json(data);
@@ -110,22 +112,22 @@ router.get("/execldatawithtime", async (req, res) => {
 });
 
 // execl data
-router.get("/execldatawithtimeandxuong", async (req, res) => {
-  try {
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("mapx", req.query.mapx)
-      .input("tungay", req.query.tungay)
-      .input("denngay", req.query.denngay)
-      .query("SELECT * FROM luongcongnhan where mapx=@mapx and ngaythuchien BETWEEN @tungay AND @denngay");
-    const data = result.recordset;
+// router.get("/execldatawithtimeandxuong", async (req, res) => {
+//   try {
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("mapx", req.query.mapx)
+//       .input("tungay", req.query.tungay)
+//       .input("denngay", req.query.denngay)
+//       .query("SELECT * FROM luongcongnhan where mapx=@mapx and year(stopday_losx) = @nam and month(stopday_losx) = @thang");
+//     const data = result.recordset;
 
-    res.json(data);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
+//     res.json(data);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
 
 // cập nhật lại mã lô nhà máy sai trong công nhật
 // lấy ds _id_losx
@@ -159,7 +161,6 @@ router.get("/getmalonhamay", async (req, res) => {
   }
 });
 
-
 // cập nhật lại
 router.patch("/updatemalonhamaycongnhat/:_id_losx", async (req, res) => {
   try {
@@ -190,10 +191,6 @@ router.patch("/updatemalonhamaycongnhat/:_id_losx", async (req, res) => {
   }
 });
 
-
-
-
-
 router.get("/execldatawithtimeandto", async (req, res) => {
   try {
     await pool.connect();
@@ -202,7 +199,9 @@ router.get("/execldatawithtimeandto", async (req, res) => {
       .input("mato", req.query.mato)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query("SELECT * FROM luongcongnhan where mato=@mato and ngaythuchien BETWEEN @tungay AND @denngay");
+      .query(
+        "SELECT * FROM luongcongnhan where mato=@mato and ngaythuchien BETWEEN @tungay AND @denngay"
+      );
     const data = result.recordset;
 
     res.json(data);
@@ -235,7 +234,9 @@ router.get("/execldatawithtimecongnhat", async (req, res) => {
       .request()
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query("SELECT * FROM congnhat where ngaythuchien BETWEEN @tungay AND @denngay");
+      .query(
+        "SELECT * FROM congnhat where ngaythuchien BETWEEN @tungay AND @denngay"
+      );
     const data = result.recordset;
 
     res.json(data);
@@ -253,7 +254,9 @@ router.get("/execldatawithtimeandxuongcongnhat", async (req, res) => {
       .input("mapx", req.query.mapx)
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
-      .query("SELECT * FROM congnhat where mapx=@mapx and ngaythuchien BETWEEN @tungay AND @denngay");
+      .query(
+        "SELECT * FROM congnhat where mapx=@mapx and ngaythuchien BETWEEN @tungay AND @denngay"
+      );
     const data = result.recordset;
 
     res.json(data);
@@ -261,7 +264,5 @@ router.get("/execldatawithtimeandxuongcongnhat", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
-
 
 module.exports = router;

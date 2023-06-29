@@ -1279,7 +1279,7 @@ router.delete("/delluongthang", async (req, res) => {
   }
 });
 
-// xem chi tiết lương công đoạn của từng nhân viên
+// xem chi tiết lương công đoạn của từng công nhân
 router.get("/detailluongcongdoancn", async (req, res) => {
   try {
     await pool.connect();
@@ -1290,6 +1290,26 @@ router.get("/detailluongcongdoancn", async (req, res) => {
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from luongcongnhan 
     where congnhan=@congnhan and status=1 and
+    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// xem chi tiết lương công nhật của từng công nhân
+router.get("/detailluongcongnhatcn", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("macongnhan", req.query.macongnhan)
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx).query(`select * from congnhat 
+    where macongnhan=@macongnhan and status=1 and
     year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
     const cn = result.recordset;
 

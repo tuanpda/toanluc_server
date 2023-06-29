@@ -1279,6 +1279,26 @@ and mapx=@mapx`);
   }
 });
 
+// get all chi tiết lương công nhật
+router.get("/detailallluongcongnhatinmonth", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx).query(`select * from congnhat 
+where _id_losx in (select _id from losanxuat WHERE year(stopday_losx) = @nam and month(stopday_losx) = @thang
+AND status_tinhluong =1 and datinhluong = 0)
+and mapx=@mapx`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // hủy lương tháng
 router.delete("/delluongthang", async (req, res) => {
   try {

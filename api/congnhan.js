@@ -842,6 +842,37 @@ router.patch("/updatechamcong/:_id", async (req, res) => {
   }
 });
 
+// update ăn ca
+router.patch("/updateanca/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM chamcong WHERE _id = @_id`);
+    let congnhan = result.recordset[0];
+    if (congnhan) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("anca", req.body.anca)
+        .input("tienan", req.body.tienan)
+        .query(
+          `UPDATE chamcong SET 
+                anca = @anca, 
+                tienan = @tienan
+                WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // delete công nhan
 router.delete("/:_id", async (req, res) => {
   try {

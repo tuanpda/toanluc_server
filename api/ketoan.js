@@ -1876,8 +1876,13 @@ router.get("/getallluongcongdoanpx", async (req, res) => {
       .execute(`luongcongdoan_phanxuong`);
     const lcd = result.recordset;
 
-    res.json(lcd);
+    // res.json(lcd);
     //console.log(chucvu);
+    res.json({
+      success: true,
+      data: lcd,
+      message: "Update success !",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

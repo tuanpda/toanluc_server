@@ -1328,9 +1328,9 @@ router.get("/detailluongcongdoancn", async (req, res) => {
       .input("congnhan", req.query.congnhan)
       .input("nam", req.query.nam)
       .input("thang", req.query.thang)
-      .input("mapx", req.query.mapx).query(`select * from luongcongnhan 
-    where congnhan=@congnhan and status=1 and
-    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
+      .input("mapx", req.query.mapx).query(`select * from luongcongnhan where 
+_id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
+and mapx=@mapx and congnhan=@congnhan`);
     const cn = result.recordset;
 
     res.json(cn);

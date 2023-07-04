@@ -1357,7 +1357,7 @@ router.get("/detailanca", async (req, res) => {
       .input("nam", req.query.nam)
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from chamcong where 
-mapx=@mapx and year(ngaychamcong)=@nam and month(ngaychamcong)=@thang and macn=@congnhan`);
+mapx=@mapx and year(ngaychamcong)=@nam and month(ngaychamcong)=@thang and macn=@congnhan order by ngaychamcong`);
     const cn = result.recordset;
 
     res.json(cn);

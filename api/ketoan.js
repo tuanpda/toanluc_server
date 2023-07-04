@@ -314,11 +314,15 @@ router.post("/themluongthang", async (req, res) => {
       .input("hotennv", req.body.hotennv)
       .input("chucvu", req.body.chucvu)
       .input("luongcb", req.body.luongcb)
+      .input("luongmem", req.body.luongmem)
       .input("luongqlsp", req.body.luongqlsp)
       .input("luongcd", req.body.luongcd)
       .input("luongps", req.body.luongps)
       .input("tongluong", req.body.tongluong)
       .input("antrua", req.body.antrua)
+      .input("songaycong", req.body.songaycong)
+      .input("ngayhotro", req.body.ngayhotro)
+      .input("tienhotro", req.body.tienhotro)
       .input("bhxh", req.body.bhxh)
       .input("congdoan", req.body.congdoan)
       .input("tamung", req.body.tamung)
@@ -330,11 +334,15 @@ router.post("/themluongthang", async (req, res) => {
       .input("nam", req.body.nam)
       .input("key_thangnam", req.body.key_thangnam)
       .input("status", req.body.status).query(`
-                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongqlsp, luongcd, luongps, tongluong, antrua, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status);
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status);
                   `);
     const bl = req.body;
-    res.json(bl);
+    // res.json(bl);
+    res.json({
+      success: true,
+      message: "Update success !",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

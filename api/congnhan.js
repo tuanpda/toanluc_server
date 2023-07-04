@@ -49,7 +49,7 @@ router.get("/showngaychamcongandmapx", async (req, res) => {
       .input("ngaychamcong", req.query.ngaychamcong)
       .input("mapx", req.query.mapx)
       .query(
-        "select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx"
+        "select * from chamcong where ngaychamcong=@ngaychamcong and mapx=@mapx order by machamcong, sttchon"
       );
 
     const bcqs = result.recordset;

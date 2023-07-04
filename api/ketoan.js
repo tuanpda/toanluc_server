@@ -1347,6 +1347,25 @@ and mapx=@mapx and congnhan=@congnhan`);
   }
 });
 
+// xem chi tiết ăn ca
+router.get("/detailanca", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("congnhan", req.query.congnhan)
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx).query(`select * from chamcong where 
+mapx=@mapx and year(ngaychamcong)=@nam and month(ngaychamcong)=@thang and macn=@congnhan`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // xem chi tiết lương công nhật của từng công nhân
 router.get("/detailluongcongnhatcn", async (req, res) => {
   try {

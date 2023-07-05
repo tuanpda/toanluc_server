@@ -333,9 +333,10 @@ router.post("/themluongthang", async (req, res) => {
       .input("thang", req.body.thang)
       .input("nam", req.body.nam)
       .input("key_thangnam", req.body.key_thangnam)
-      .input("status", req.body.status).query(`
-                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status);
+      .input("status", req.body.status)
+      .input("stk", req.body.stk).query(`
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk);
                   `);
     const bl = req.body;
     // res.json(bl);

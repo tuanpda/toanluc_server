@@ -1347,6 +1347,26 @@ and mapx=@mapx and congnhan=@congnhan`);
   }
 });
 
+// xem chi tiết lương công nhật của từng công nhân
+router.get("/detailluongcongnhatcn", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("macongnhan", req.query.macongnhan)
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang)
+      .input("mapx", req.query.mapx).query(`select * from congnhat where 
+_id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
+and mapx=@mapx and macongnhan=@macongnhan`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // xem chi tiết ăn ca
 router.get("/detailanca", async (req, res) => {
   try {
@@ -1358,26 +1378,6 @@ router.get("/detailanca", async (req, res) => {
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from chamcong where 
 mapx=@mapx and year(ngaychamcong)=@nam and month(ngaychamcong)=@thang and macn=@congnhan order by ngaychamcong`);
-    const cn = result.recordset;
-
-    res.json(cn);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-// xem chi tiết lương công nhật của từng công nhân
-router.get("/detailluongcongnhatcn", async (req, res) => {
-  try {
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("macongnhan", req.query.macongnhan)
-      .input("nam", req.query.nam)
-      .input("thang", req.query.thang)
-      .input("mapx", req.query.mapx).query(`select * from congnhat 
-    where macongnhan=@macongnhan and status=1 and
-    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
     const cn = result.recordset;
 
     res.json(cn);

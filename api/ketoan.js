@@ -1339,7 +1339,7 @@ router.get("/detailluongcongdoancn", async (req, res) => {
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from luongcongnhan where 
 _id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
-and mapx=@mapx and congnhan=@congnhan`);
+and mapx=@mapx and congnhan=@congnhan order by stopday_losx`);
     const cn = result.recordset;
 
     res.json(cn);
@@ -1359,7 +1359,7 @@ router.get("/detailluongcongnhatcn", async (req, res) => {
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from congnhat where 
 _id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
-and mapx=@mapx and macongnhan=@macongnhan`);
+and mapx=@mapx and macongnhan=@macongnhan order by stopday_losx`);
     const cn = result.recordset;
 
     res.json(cn);

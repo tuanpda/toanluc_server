@@ -1332,14 +1332,17 @@ router.delete("/delluongthang", async (req, res) => {
 router.get("/detailluongcongdoancn", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
+    const result = await // .input("mapx", req.query.mapx)
+    //       .query(`select * from luongcongnhan where
+    // _id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
+    // and mapx=@mapx and congnhan=@congnhan order by stopday_losx`);
+    pool
       .request()
       .input("congnhan", req.query.congnhan)
       .input("nam", req.query.nam)
-      .input("thang", req.query.thang)
-      .input("mapx", req.query.mapx).query(`select * from luongcongnhan where 
+      .input("thang", req.query.thang).query(`select * from luongcongnhan where 
 _id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
-and mapx=@mapx and congnhan=@congnhan order by stopday_losx`);
+and congnhan=@congnhan order by stopday_losx`);
     const cn = result.recordset;
 
     res.json(cn);
@@ -1352,14 +1355,17 @@ and mapx=@mapx and congnhan=@congnhan order by stopday_losx`);
 router.get("/detailluongcongnhatcn", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
+    const result = await // .input("mapx", req.query.mapx)
+    //       .query(`select * from congnhat where
+    // _id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
+    // and mapx=@mapx and macongnhan=@macongnhan order by stopday_losx`);
+    pool
       .request()
       .input("macongnhan", req.query.macongnhan)
       .input("nam", req.query.nam)
-      .input("thang", req.query.thang)
-      .input("mapx", req.query.mapx).query(`select * from congnhat where 
+      .input("thang", req.query.thang).query(`select * from congnhat where 
 _id_losx in (select _id from losanxuat where year(stopday_losx) = @nam and month(stopday_losx) = @thang)
-and mapx=@mapx and macongnhan=@macongnhan order by stopday_losx`);
+and macongnhan=@macongnhan order by stopday_losx`);
     const cn = result.recordset;
 
     res.json(cn);

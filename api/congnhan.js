@@ -479,11 +479,12 @@ router.post("/addcongnhan", async (req, res) => {
       .input("ngayhotro", req.body.ngayhotro)
       .input("tienhotro", req.body.tienhotro)
       .input("antrua", req.body.antrua)
+      .input("congdoan", req.body.congdoan)
       .input("trangthai", req.body.trangthai)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`
-                        INSERT INTO congnhan (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, luongmem, anluongqlsp, luongqlsp, tyleqlsp, ngayhotro, tienhotro, antrua, trangthai, createdAt, createdBy) 
-                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @luongmem, @anluongqlsp, @luongqlsp, @tyleqlsp, @ngayhotro, @tienhotro, @antrua, @trangthai, @createdAt, @createdBy);
+                        INSERT INTO congnhan (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, luongmem, anluongqlsp, luongqlsp, tyleqlsp, ngayhotro, tienhotro, antrua, congdoan, trangthai, createdAt, createdBy) 
+                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @luongmem, @anluongqlsp, @luongqlsp, @tyleqlsp, @ngayhotro, @tienhotro, @antrua, @congdoan, @trangthai, @createdAt, @createdBy);
                     `);
     const cn = req.body;
     res.json(cn);

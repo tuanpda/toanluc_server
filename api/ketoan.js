@@ -334,9 +334,15 @@ router.post("/themluongthang", async (req, res) => {
       .input("nam", req.body.nam)
       .input("key_thangnam", req.body.key_thangnam)
       .input("status", req.body.status)
-      .input("stk", req.body.stk).query(`
-                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk);
+      .input("stk", req.body.stk)
+      .input("nhanl1", req.body.nhanl1)
+      .input("nhanl2", req.body.nhanl2)
+      .input("nhanl3", req.body.nhanl3)
+      .input("nhanl4", req.body.nhanl4)
+      .input("nhanl5", req.body.nhanl5)
+      .input("nhanl6", req.body.nhanl6).query(`
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6);
                   `);
     const bl = req.body;
     // res.json(bl);
@@ -670,6 +676,46 @@ router.patch("/updatesodatsohonglcd/:_id", async (req, res) => {
           `UPDATE luongcongnhan SET 
                 sohong=@sohong,
                 sodat=@sodat      
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật chi trả
+router.patch("/addchitraluongthang/:_id", async (req, res) => {
+  try {
+    // console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM luongthang WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("nhanl1", req.body.nhanl1)
+        .input("nhanl2", req.body.nhanl2)
+        .input("nhanl3", req.body.nhanl3)
+        .input("nhanl4", req.body.nhanl4)
+        .input("nhanl5", req.body.nhanl5)
+        .input("nhanl6", req.body.nhanl6)
+        .query(
+          `UPDATE luongthang SET 
+                nhanl1=@nhanl1,
+                nhanl2=@nhanl2,
+                nhanl3=@nhanl3,
+                nhanl4=@nhanl4,  
+                nhanl5=@nhanl5,
+                nhanl6=@nhanl6      
               WHERE _id = @_id;`
         );
       res.json({

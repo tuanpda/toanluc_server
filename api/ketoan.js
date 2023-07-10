@@ -1305,7 +1305,7 @@ router.get("/getallphieulsxtinhluongcd", async (req, res) => {
       .input("thang", req.query.thang)
       .input("mapx", req.query.mapx).query(`select * from losanxuat 
     where status_tinhluong=1 and
-    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx`);
+    year(stopday_losx)=@nam and month(stopday_losx)=@thang and mapx=@mapx order by _id, stopday_losx`);
     const cn = result.recordset;
 
     res.json(cn);
@@ -2096,8 +2096,8 @@ router.get("/getphieulocongnhat", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("malosx", req.query.malosx)
-      .query(`select * from congnhat where malosx=@malosx order by _id`);
+      .input("_id_losx", req.query._id_losx)
+      .query(`select * from congnhat where _id_losx=@_id_losx order by _id`);
     const cn = result.recordset;
 
     res.json(cn);

@@ -2064,10 +2064,11 @@ router.get("/getphieulocongdoan", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("malosx", req.query.malosx)
-      .input("mapx", req.query.mapx)
+      // .input("malosx", req.query.malosx)
+      // .input("mapx", req.query.mapx)
+      .input("_id_losx", req.query._id_losx)
       .query(
-        `select * from luongcongnhan where malosx=@malosx and mapx=@mapx order by _id`
+        `select * from luongcongnhan where _id_losx=@_id_losx order by _id`
       );
     const pl = result.recordset;
 

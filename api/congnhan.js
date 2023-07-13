@@ -172,7 +172,7 @@ router.get("/baocaothangtheopx", async (req, res) => {
       .input("startDate", req.query.startDate)
       .input("endDate", req.query.endDate)
       .query(
-        "select * from chamcong where mapx=@mapx and ngaychamcong BETWEEN @startDate AND @endDate"
+        "select * from chamcong where mapx=@mapx and ngaychamcong BETWEEN @startDate AND @endDate order by sttchon"
       );
     const cn = result.recordset;
     res.json(cn);

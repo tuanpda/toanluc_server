@@ -1528,6 +1528,24 @@ mapx=@mapx and year(ngaychamcong)=@nam and month(ngaychamcong)=@thang and macn=@
   }
 });
 
+// xem chi tiết chấm công nhân viên ngoài giờ
+router.get("/detailchamngoaigio", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("manv", req.query.manv)
+      .input("nam", req.query.nam)
+      .input("thang", req.query.thang).query(`select * from ngoaigio where 
+year(ngaylam)=@nam and month(ngaylam)=@thang and manv=@manv order by ngaylam`);
+    const cn = result.recordset;
+
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get tên sản phẩm trong lập kế hoạch nhà máy
 router.get("/gettenspkhnm", async (req, res) => {
   try {

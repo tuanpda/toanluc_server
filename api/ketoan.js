@@ -2340,4 +2340,28 @@ router.delete("/anca/:_id", async (req, res) => {
   }
 });
 
+router.delete("/ngoaigio/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM dinhmucngoaigio WHERE _id = @_id`);
+    let antrua = result.recordset.length ? result.recordset[0] : null;
+    if (antrua) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM dinhmucngoaigio WHERE _id = @_id;`);
+      res.json(antrua);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

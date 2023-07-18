@@ -301,6 +301,32 @@ router.post("/addanca", async (req, res) => {
   }
 });
 
+// thêm định mức ngoài giờ
+router.post("/adddinhmucngoaigio", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("noidung", req.body.anca)
+      .input("muctien", req.body.tienan)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                      INSERT INTO dinhmucngoaigio (noidung, muctien, ghichu, createdAt, createdBy) 
+                      VALUES (@noidung, @muctien, @ghichu, @createdAt, @createdBy);
+                  `);
+    const dmng = req.body;
+    // res.json(anca);
+    res.json({
+      success: true,
+      message: "Update success !",
+      data: dmng,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/themluongthang", async (req, res) => {
   try {
     // console.log(req.body)
@@ -749,6 +775,40 @@ router.patch("/anca/:_id", async (req, res) => {
           `UPDATE buatrua SET 
                 anca=@anca,
                 tienan=@tienan,
+                ghichu=@ghichu      
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật định mức ngoài giờ
+router.patch("/dinhmucng/:_id", async (req, res) => {
+  try {
+    // console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM dinhmucngoaigio WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("noidung", req.body.noidung)
+        .input("muctien", req.body.muctien)
+        .input("ghichu", req.body.ghichu)
+        .query(
+          `UPDATE dinhmucngoaigio SET 
+                noidung=@noidung,
+                muctien=@muctien,
                 ghichu=@ghichu      
               WHERE _id = @_id;`
         );

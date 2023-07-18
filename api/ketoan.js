@@ -1473,6 +1473,22 @@ router.get("/getallanca", async (req, res) => {
 });
 
 // danh mục ngoài giờ
+router.get("/getdanhmucngoaigio", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`SELECT * FROM dinhmucngoaigio order by _id`);
+    const at = result.recordset;
+
+    res.json(at);
+    // console.log(phongban);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// dữ liệu chấm ngoài giờ
 router.get("/getallngoaigio", async (req, res) => {
   try {
     await pool.connect();

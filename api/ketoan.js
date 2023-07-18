@@ -307,8 +307,8 @@ router.post("/adddinhmucngoaigio", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("noidung", req.body.anca)
-      .input("muctien", req.body.tienan)
+      .input("noidung", req.body.noidung)
+      .input("muctien", req.body.muctien)
       .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`

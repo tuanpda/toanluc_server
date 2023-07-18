@@ -327,6 +327,35 @@ router.post("/adddinhmucngoaigio", async (req, res) => {
   }
 });
 
+// thêm chấm ngoài giờ
+router.post("/addchamcongngoaigio", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("manv", req.body.manv)
+      .input("tennv", req.body.tennv)
+      .input("muctien", req.body.muctien)
+      .input("sogio", req.body.sogio)
+      .input("ngaylam", req.body.ngaylam)
+      .input("ghichu", req.body.ghichu)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy).query(`
+                      INSERT INTO ngoaigio (manv, tennv, muctien, sogio, ngaylam, ghichu, createdAt, createdBy) 
+                      VALUES (@manv, @tennv, @muctien, @sogio, @ngaylam, @ghichu, @createdAt, @createdBy);
+                  `);
+    const dmng = req.body;
+    // res.json(anca);
+    res.json({
+      success: true,
+      message: "Update success !",
+      data: dmng,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/themluongthang", async (req, res) => {
   try {
     // console.log(req.body)

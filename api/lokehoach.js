@@ -3752,7 +3752,7 @@ router.delete("/dellkhnhamay/:makh", async (req, res) => {
   }
 });
 
-/* Import table regvssid */
+/* Import table  */
 router.post("/importkehoachnam", upload.single("file"), async (req, res) => {
   if (req.file) {
     //console.log(req.file);

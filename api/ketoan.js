@@ -5,6 +5,17 @@ const { pool } = require("../database/dbinfo");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../services/verify-token");
 const multer = require("multer");
+const {
+  ConnectionPool,
+  Table,
+  NVarChar,
+  NChar,
+  Int,
+  rows,
+  Date,
+  DateTime,
+  Bit,
+} = require("mssql");
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -1527,6 +1538,98 @@ mapx=@mapx and year(ngaychamcong)=@nam and month(ngaychamcong)=@thang and macn=@
     res.status(500).json(error);
   }
 });
+
+// import ngoài giờ
+router.post(
+  "/importchamcongngoaigio",
+  upload.single("file"),
+  async (req, res) => {
+    if (req.file) {
+      //console.log(req.file);
+      //console.log(req.file.path)
+      let path = req.file.path;
+
+      let rows = await readXlsxFile(path);
+      rows.shift();
+      //console.table(rows);
+      // console.log(rows);
+
+      const createdBy = req.body.createdBy;
+      const createdAt = req.body.createdAt;
+
+      const table = new Table("ngoaigio");
+      table.create = false;
+
+      table.columns.add("mapb", NVarChar, { nullable: true });
+      table.columns.add("tenpb", NVarChar, {
+        nullable: true,
+      });
+      table.columns.add("manv", NVarChar, {
+        nullable: true,
+      });
+      table.columns.add("tennv", NVarChar, { nullable: true });
+      table.columns.add("muctien", NVarChar, {
+        nullable: true,
+      });
+      table.columns.add("sogio", NVarChar, {
+        nullable: true,
+      });
+      table.columns.add("ngaylam", Date, {
+        nullable: true,
+      });
+      table.columns.add("ghichu", NVarChar, {
+        length: "max",
+        nullable: true,
+      });
+      table.columns.add("createdBy", NVarChar, {
+        nullable: true,
+      });
+      table.columns.add("createdAt", Date, {
+        nullable: true,
+      });
+      table.columns.add("status", Bit, {
+        nullable: true,
+      });
+
+      // rows.forEach((row) => table.rows.add.apply(table.rows, row));
+
+      // console.log(rows);
+
+      for (let j = 0; j < rows.length; j += 1) {
+        table.rows.add(
+          rows[j][0],
+          rows[j][1],
+          rows[j][2],
+          rows[j][3],
+          rows[j][4],
+          rows[j][5],
+          rows[j][6],
+          rows[j][7],
+          createdAt,
+          createdBy,
+          1
+        );
+      }
+
+      try {
+        await pool.connect();
+        const results = await pool.request().bulk(table);
+        console.log(`rows affected ${results.rowsAffected}`);
+      } catch (error) {
+        return res.status(500).json({
+          status: "error",
+          error,
+        });
+      }
+
+      res.status(200).json({
+        status: "succes",
+      });
+    } else {
+      console.log("File not found !");
+    }
+  }
+);
 
 // xem chi tiết chấm công nhân viên ngoài giờ
 router.get("/detailchamngoaigio", async (req, res) => {

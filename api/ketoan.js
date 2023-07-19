@@ -1623,7 +1623,7 @@ router.post(
       }
 
       res.status(200).json({
-        status: "succes",
+        success: true,
       });
     } else {
       console.log("File not found !");

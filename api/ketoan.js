@@ -5,6 +5,7 @@ const { pool } = require("../database/dbinfo");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../services/verify-token");
 const multer = require("multer");
+const readXlsxFile = require("read-excel-file/node");
 const {
   ConnectionPool,
   Table,

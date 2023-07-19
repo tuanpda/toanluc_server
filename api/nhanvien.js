@@ -158,9 +158,10 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("luongngoaih", req.body.luongngoaih)
       .input("luongngay", req.body.luongngay)
       .input("bacluong", req.body.bacluong)
-      .input("luongtrachnhiem", req.body.luongtrachnhiem).query(`
-                      INSERT INTO nhanvien (manv, tennv, mapb, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem) 
-                      VALUES (@manv, @tennv, @mapb, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem);
+      .input("luongtrachnhiem", req.body.luongtrachnhiem)
+      .input("congdoan", req.body.congdoan).query(`
+                      INSERT INTO nhanvien (manv, tennv, mapb, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan) 
+                      VALUES (@manv, @tennv, @mapb, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan);
                   `);
     const nhanvien = req.body;
     // res.json(nhanvien);

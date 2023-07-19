@@ -25,7 +25,7 @@ var storage = multer.diskStorage({
     cb(null, "E:\\PROJECT\\TINHLUONGCONGDOAN\\client\\static\\avatar");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, "-" + file.originalname);
   },
 });
 

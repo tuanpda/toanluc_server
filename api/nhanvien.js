@@ -53,6 +53,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
         .input("sotknh", req.body.sotknh)
         .input("tennh", req.body.tennh)
         .input("diengiai", req.body.diengiai)
+        .input("trangthai", req.body.trangthai)
         .input("updatedAt", req.body.updatedAt)
         .query(
           `UPDATE nhanvien SET 
@@ -70,6 +71,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
               sotknh = @sotknh,
               tennh = @tennh,
               diengiai = @diengiai,
+              trangthai = @trangthai,
               updatedAt = @updatedAt
               WHERE _id = @_id;`
         );
@@ -159,9 +161,10 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("luongngay", req.body.luongngay)
       .input("bacluong", req.body.bacluong)
       .input("luongtrachnhiem", req.body.luongtrachnhiem)
-      .input("congdoan", req.body.congdoan).query(`
-                      INSERT INTO nhanvien (manv, tennv, mapb, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan) 
-                      VALUES (@manv, @tennv, @mapb, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan);
+      .input("congdoan", req.body.congdoan)
+      .input("trangthai", req.body.trangthai).query(`
+                      INSERT INTO nhanvien (manv, tennv, mapb, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai) 
+                      VALUES (@manv, @tennv, @mapb, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai);
                   `);
     const nhanvien = req.body;
     // res.json(nhanvien);

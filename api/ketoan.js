@@ -22,7 +22,8 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     /* Nhớ sửa đường dẫn khi deploy lên máy chủ */
     //cb(null, "E:\\PROJECT\\docthuBhxh\\client\\static\\avatar");
-    cb(null, "E:\\PROJECT\\TINHLUONGCONGDOAN\\client\\static\\avatar");
+    // cb(null, "E:\\PROJECT\\TINHLUONGCONGDOAN\\client\\static\\avatar");
+    cb(null, "E:\\CODE_APP\\TEAMGIT\\server\\filesupload"); // server
   },
   filename: function (req, file, cb) {
     cb(null, "-" + file.originalname);

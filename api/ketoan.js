@@ -920,7 +920,7 @@ router.get("/getkeythangnam", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`select distinct(key_thangnam), mapb from luongthang`);
+      .query(`select distinct(key_thangnam) from luongthang`);
     const ktn = result.recordset;
 
     res.json(ktn);

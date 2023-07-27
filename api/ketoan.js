@@ -371,7 +371,7 @@ router.post("/addchamcongngoaigio", async (req, res) => {
 
 router.post("/themluongthang", async (req, res) => {
   try {
-    // console.log(req.body)
+    console.log(req.body);
     await pool.connect();
     const result = await pool
       .request()

@@ -3692,8 +3692,8 @@ router.get("/lokehoachsearchwithid", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("_id", req.query._id)
-      .query(`select * from lokehoachphanxuong where _id=@_id`);
+      .input("_id_khpx", req.query._id_khpx)
+      .query(`select * from losanxuat where _id_khpx=@_id_khpx`);
     const lsx = result.recordset;
 
     res.json(lsx);

@@ -225,6 +225,20 @@ router.get("/", async (req, res) => {
   }
 });
 
+// công nhân đã nghỉ việc
+router.get("/allnhanviennghiviec", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query("select * from nhanvien where trangthai=0 order by _id desc");
+    const cn = result.recordset;
+    res.json(cn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all data nhóm mpb
 router.get("/reportnhansu", async (req, res) => {
   try {

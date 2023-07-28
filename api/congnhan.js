@@ -414,7 +414,7 @@ router.get("/getalllognhansu", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query("select * from log_nhansu order by createdAt");
+      .query("select * from log_nhansu order by createdAt desc");
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

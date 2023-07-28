@@ -3686,6 +3686,22 @@ router.get("/searchwithid", async (req, res) => {
   }
 });
 
+// tìm cả lô kế hoạch theo id
+router.get("/lokehoachsearchwithid", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`select * from lokehoachphanxuong where _id=@_id`);
+    const lsx = result.recordset;
+
+    res.json(lsx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // tìm phiếu lô theo ngày hoàn thành tt
 router.get("/searchwithngayhttt", async (req, res) => {
   try {

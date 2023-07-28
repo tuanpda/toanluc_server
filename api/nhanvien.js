@@ -85,6 +85,37 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
   }
 });
 
+// update status
+router.patch("/updatetrangthainhanvien/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM nhanvien WHERE _id = @_id`);
+    let nv = result.recordset[0];
+    if (nv) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("trangthai", req.body.trangthai)
+        .input("diengiai", req.body.diengiai)
+        .query(
+          `UPDATE nhanvien SET 
+                trangthai = @trangthai, 
+                diengiai = @diengiai
+                WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật lương cơ bản
 router.patch("/luongcoban/:_id", async (req, res) => {
   try {

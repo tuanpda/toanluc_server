@@ -4023,7 +4023,7 @@ router.delete("/losx/:_id", async (req, res) => {
         .request()
         .input("_id", req.params._id)
         .query(
-          `DELETE FROM losanxuat WHERE _id = @_id and status=1 and datinhluong=0 and status_tinhluong=0;`
+          `DELETE FROM losanxuat WHERE _id = @_id and status=0 and datinhluong=0 and status_tinhluong=0;`
         );
       res.json(lcn);
     } else {

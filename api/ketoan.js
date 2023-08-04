@@ -409,9 +409,10 @@ router.post("/themluongthang", async (req, res) => {
       .input("nhanl3", req.body.nhanl3)
       .input("nhanl4", req.body.nhanl4)
       .input("nhanl5", req.body.nhanl5)
-      .input("nhanl6", req.body.nhanl6).query(`
-                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, tienphat, createdAt, createdBy, thang, nam, key_thangnam, status, stk, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @tienphat, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6);
+      .input("nhanl6", req.body.nhanl6)
+      .input("sttchon", req.body.sttchon).query(`
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, tienphat, createdAt, createdBy, thang, nam, key_thangnam, status, stk, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6, sttchon) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @tienphat, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6, @sttchon);
                   `);
     const bl = req.body;
     // res.json(bl);

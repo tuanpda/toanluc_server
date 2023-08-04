@@ -396,6 +396,7 @@ router.post("/themluongthang", async (req, res) => {
       .input("tamung", req.body.tamung)
       .input("tongtru", req.body.tongtru)
       .input("tongnhan", req.body.tongnhan)
+      .input("tienphat", req.body.tienphat)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy)
       .input("thang", req.body.thang)
@@ -409,8 +410,8 @@ router.post("/themluongthang", async (req, res) => {
       .input("nhanl4", req.body.nhanl4)
       .input("nhanl5", req.body.nhanl5)
       .input("nhanl6", req.body.nhanl6).query(`
-                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6);
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, tienphat, createdAt, createdBy, thang, nam, key_thangnam, status, stk, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @tienphat, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6);
                   `);
     const bl = req.body;
     // res.json(bl);

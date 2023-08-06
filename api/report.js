@@ -16,7 +16,7 @@ router.get("/reportluongthang_to", async (req, res) => {
       .input("nam", req.query.nam)
       .input("mato", req.query.mato)
       .query(
-        "select * from luongthang where thang=@thang and nam=@nam and mato=@mato order by sttchon"
+        "select * from luongthang where thang=@thang and nam=@nam and mato=@mato order by cast(sttchon as int)"
       );
     const rp = result.recordset;
     res.json(rp);
@@ -35,7 +35,7 @@ router.get("/reportluongthang_px", async (req, res) => {
       .input("nam", req.query.nam)
       .input("mapb", req.query.mapb)
       .query(
-        "select * from luongthang where thang=@thang and nam=@nam and mapb=@mapb order by sttchon"
+        "select * from luongthang where thang=@thang and nam=@nam and mapb=@mapb order by cast(sttchon as int)"
       );
     const rp = result.recordset;
     res.json(rp);

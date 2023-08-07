@@ -44,7 +44,7 @@ router.get("/reportluongthang_px", async (req, res) => {
   }
 });
 
-// report luong
+// report luong px
 router.get("/reportsumluong", async (req, res) => {
   try {
     await pool.connect();
@@ -52,7 +52,26 @@ router.get("/reportsumluong", async (req, res) => {
       .request()
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
+      .input("mapb", req.query.mapb)
       .execute("tongluong_thang_to");
+    const his = result.recordset;
+
+    res.json(his);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// report luong to
+router.get("/reportsumluongto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mato", req.query.mato)
+      .execute("tongluong_thang_to_px");
     const his = result.recordset;
 
     res.json(his);

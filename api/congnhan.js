@@ -454,6 +454,7 @@ router.get("/getallvipham", async (req, res) => {
 // thêm công nhân
 router.post("/addcongnhan", async (req, res) => {
   try {
+    const luongcb = req.body.luongcb.toString().replace(/,/g, "");
     await pool.connect();
     const result = await pool
       .request()
@@ -467,7 +468,7 @@ router.post("/addcongnhan", async (req, res) => {
       .input("mato", req.body.mato)
       .input("tento", req.body.tento)
       .input("chucvu", req.body.chucvu)
-      .input("luongcb", req.body.luongcb)
+      .input("luongcb", luongcb)
       .input("nguoilienhe", req.body.nguoilienhe)
       .input("sotknh", req.body.sotknh)
       .input("tennh", req.body.tennh)

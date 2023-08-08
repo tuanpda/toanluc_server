@@ -2473,6 +2473,30 @@ router.get("/filterfulldklosanxuatthemto", async (req, res) => {
   }
 });
 
+router.get("/filtermatomaxuongstatuslosanxuatthemto", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const matoList = req.query.mato;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const strto = "'" + matoList.join("','") + "'";
+    const strstatus = "'" + statusList.join("','") + "'";
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and mato in (${strto}) and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // chỉ có ma to ma xxuong nhomsp
 router.get("/filtermatomaxuongnhomspdklosanxuatthemto", async (req, res) => {
   try {

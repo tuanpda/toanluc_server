@@ -93,7 +93,7 @@ router.patch("/user/:_id", upload.single("avatar"), async (req, res) => {
   if (!req.file) {
     linkAvatar = req.body.avatar;
   } else {
-    linkAvatar = `http://localhost/avatar/${req.file.filename}`;
+    linkAvatar = `http://toanluc.online/avatar/${req.file.filename}`;
   }
   try {
     await pool.connect();
@@ -220,7 +220,7 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
     linkAvatar = req.body.avatar;
   } else {
     // Đổi đường dẫn khi deploy lên máy chủ
-    linkAvatar = `http://localhost/avatar/${req.file.filename}`;
+    linkAvatar = `http://toanluc.online/avatar/${req.file.filename}`;
   }
   try {
     await pool.connect();

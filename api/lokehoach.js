@@ -2628,7 +2628,7 @@ router.get("/filterlosxmapxstatusngaybd", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus}) and ngaybd=${ngaybd}`
+        `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus})`
       );
     const tenpx = result.recordset;
 

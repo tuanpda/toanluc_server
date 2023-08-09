@@ -911,6 +911,41 @@ router.delete("/ngaychamcongphanxuong", async (req, res) => {
   }
 });
 
+// delete chấm công tổ
+router.delete("/ngaychamcongto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .input("mato", req.query.mato)
+      .query(
+        `SELECT * FROM chamcong WHERE ngaychamcong = @ngaychamcong and mato=@mapx`
+      );
+    let chamcongngay = result.recordset.length ? result.recordset[0] : null;
+    if (chamcongngay) {
+      await pool
+        .request()
+        .input("ngaychamcong", req.query.ngaychamcong)
+        .input("mato", req.query.mato)
+        .query(
+          `DELETE FROM chamcong WHERE ngaychamcong = @ngaychamcong and mato=@mato;`
+        );
+      res.json({
+        data: chamcongngay,
+        success: true,
+        message: "Xóa thành công",
+      });
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // delete công nhan
 router.delete("/:_id", async (req, res) => {
   try {

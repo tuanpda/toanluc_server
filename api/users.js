@@ -184,7 +184,7 @@ router.post("/auth/login", async (req, res, next) => {
     const user = result.recordset[0];
     //console.log(user)
     if (!user) {
-      res.status().json({
+      res.json({
         success: false,
         message: "Authenticate failed, not found user",
       });

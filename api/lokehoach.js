@@ -2615,6 +2615,28 @@ router.get("/filterfulldklosanxuat", async (req, res) => {
   }
 });
 
+// lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
+router.get("/filterlosxmapxstatusngaybd", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    const strpx = "'" + mapxList.join("','") + "'";
+    const strstatus = "'" + statusList.join("','") + "'";
+    const ngaybd = req.query.ngaybd;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and status in (${strstatus}) and ngaybd=${ngaybd}`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí chỉ có mã px
 router.get("/filteronlymapxlosanxuat", async (req, res) => {
   try {

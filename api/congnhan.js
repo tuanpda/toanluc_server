@@ -904,6 +904,9 @@ router.delete("/:_id", async (req, res) => {
 router.delete("/ngaychamcongphanxuong", async (req, res) => {
   try {
     console.log("hjhfdsjhf");
+    res.json({
+      message: "Xóa thành công",
+    });
     // await pool.connect();
     // const result = await pool
     //   .request()

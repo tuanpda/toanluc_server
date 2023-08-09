@@ -2618,6 +2618,7 @@ router.get("/filterfulldklosanxuat", async (req, res) => {
 // lọc dữ liệu theo tiêu chí full tiêu chí lô sản xuất
 router.get("/filterlosxmapxstatusngaybd", async (req, res) => {
   try {
+    console.log(req.query.ngaybd);
     const mapxList = req.query.mapx;
     const statusList = req.query.status;
     const strpx = "'" + mapxList.join("','") + "'";

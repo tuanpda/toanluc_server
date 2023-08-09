@@ -193,7 +193,7 @@ router.post("/auth/login", async (req, res, next) => {
       // console.log(match)
       if (match) {
         let token = jwt.sign(user, process.env.SECRET, { expiresIn: "10h" });
-        res.json({ user, token });
+        res.json({ data: user, token, success: true });
         //localStorage.setItem('user', JSON.stringify(user))
         //console.log(user);
         //console.log(token);

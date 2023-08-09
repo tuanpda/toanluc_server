@@ -920,7 +920,7 @@ router.delete("/ngaychamcongto", async (req, res) => {
       .input("ngaychamcong", req.query.ngaychamcong)
       .input("mato", req.query.mato)
       .query(
-        `SELECT * FROM chamcong WHERE ngaychamcong = @ngaychamcong and mato=@mapx`
+        `SELECT * FROM chamcong WHERE ngaychamcong = @ngaychamcong and mato=@mato`
       );
     let chamcongngay = result.recordset.length ? result.recordset[0] : null;
     if (chamcongngay) {

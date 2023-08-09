@@ -875,31 +875,6 @@ router.patch("/updateanca/:_id", async (req, res) => {
   }
 });
 
-// delete công nhan
-router.delete("/:_id", async (req, res) => {
-  try {
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("_id", req.params._id)
-      .query(`SELECT * FROM congnhan WHERE _id = @_id`);
-    let cn = result.recordset.length ? result.recordset[0] : null;
-    if (cn) {
-      await pool
-        .request()
-        .input("_id", req.params._id)
-        .query(`DELETE FROM congnhan WHERE _id = @_id;`);
-      res.json(cn);
-    } else {
-      res.status(404).json({
-        message: "Không tìm thấy",
-      });
-    }
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
 // delete chấm công phân xưởng
 router.delete("/ngaychamcongphanxuong", async (req, res) => {
   try {
@@ -935,6 +910,31 @@ router.delete("/ngaychamcongphanxuong", async (req, res) => {
     //     message: "Không tìm thấy",
     //   });
     // }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// delete công nhan
+router.delete("/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhan WHERE _id = @_id`);
+    let cn = result.recordset.length ? result.recordset[0] : null;
+    if (cn) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .query(`DELETE FROM congnhan WHERE _id = @_id;`);
+      res.json(cn);
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
   } catch (error) {
     res.status(500).json(error);
   }

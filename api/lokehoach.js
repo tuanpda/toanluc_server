@@ -876,6 +876,35 @@ router.patch("/lonhamay/status0/:_id", async (req, res) => {
   }
 });
 
+// update ghi chú lô sản xuất tại form dslosx
+router.patch("/losanxuat/ghichu/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM losanxuat WHERE _id = @_id`);
+    let lsx = result.recordset[0];
+    if (lsx) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("ghichu", req.body.ghichu)
+        .query(
+          `UPDATE losanxuat SET 
+                        ghichu = @ghichu
+                        WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/addkehoach", async (req, res) => {
   try {
     await pool.connect();
@@ -2640,7 +2669,7 @@ router.get("/filterlosxmapxstatusngaybd", async (req, res) => {
 
 router.get("/filterlosxmapxstatusngaybdwithto", async (req, res) => {
   try {
-    console.log(req.query.ngaybd);
+    // console.log(req.query.ngaybd);
     const mapxList = req.query.mapx;
     const statusList = req.query.status;
     const strpx = "'" + mapxList.join("','") + "'";

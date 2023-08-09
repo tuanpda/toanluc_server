@@ -912,6 +912,7 @@ router.delete("/ngaychamcongphanxuong", async (req, res) => {
         `SELECT * FROM chamcong WHERE ngaychamcong = @ngaychamcong and mapx=@mapx`
       );
     let chamcongngay = result.recordset.length ? result.recordset[0] : null;
+    console.log(chamcongngay);
     if (chamcongngay) {
       await pool
         .request()

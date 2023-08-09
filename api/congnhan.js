@@ -900,4 +900,39 @@ router.delete("/:_id", async (req, res) => {
   }
 });
 
+// delete chấm công phân xưởng
+router.delete("/ngaychamcongphanxuong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaychamcong", req.query.ngaychamcong)
+      .input("mapx", req.query.mapx)
+      .query(
+        `SELECT * FROM chamcong WHERE ngaychamcong = @ngaychamcong and mapx=@mapx`
+      );
+    let chamcongngay = result.recordset.length ? result.recordset[0] : null;
+    if (chamcongngay) {
+      await pool
+        .request()
+        .input("ngaychamcong", req.query.ngaychamcong)
+        .input("mapx", req.query.mapx)
+        .query(
+          `DELETE FROM chamcong WHERE ngaychamcong = @ngaychamcong and mapx=@mapx;`
+        );
+      res.json({
+        data: chamcongngay,
+        success: true,
+        message: "Xóa thành công",
+      });
+    } else {
+      res.status(404).json({
+        message: "Không tìm thấy",
+      });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

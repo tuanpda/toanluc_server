@@ -185,21 +185,24 @@ router.post("/auth/login", async (req, res, next) => {
     //console.log(user)
     if (!user) {
       res.json({
-        success: false,
-        message: "Authenticate failed, not found user",
+        success: 1,
+        message: "Authenticate failed, không có user",
       });
     } else {
+      if (user.status == 0) {
+        res.json({
+          success: 2,
+          message: "Authenticate failed, đã bị khóa",
+        });
+      }
       const match = await bcrypt.compare(password, user.password);
       // console.log(match)
       if (match) {
         let token = jwt.sign(user, process.env.SECRET, { expiresIn: "10h" });
-        res.json({ data: user, token, success: true });
-        //localStorage.setItem('user', JSON.stringify(user))
-        //console.log(user);
-        //console.log(token);
+        res.json({ data: user, token, success: 3, message: "login success" });
       } else {
-        res.status(403).json({
-          success: false,
+        res.json({
+          success: 4,
           message: "Authenticate failed, wrong password",
         });
       }

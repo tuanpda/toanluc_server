@@ -2749,6 +2749,31 @@ router.get("/filterlosxmapxstatusngaybdwithto", async (req, res) => {
   }
 });
 
+router.get("/filterxuongtomaspstatusngaybd", async (req, res) => {
+  try {
+    // console.log(req.query.ngaybd);
+    const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    const strpx = "'" + mapxList.join("','") + "'";
+    const strstatus = "'" + statusList.join("','") + "'";
+    const ngaybd = req.query.ngaybd;
+    const matoList = req.query.mato;
+    const strto = "'" + matoList.join("','") + "'";
+    const masp = req.query.masp;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and mato in(${strto}) and and masp='${masp}' and status in (${strstatus}) and ngaybd='${ngaybd}'`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // lọc dữ liệu theo tiêu chí chỉ có mã px
 router.get("/filteronlymapxlosanxuat", async (req, res) => {
   try {

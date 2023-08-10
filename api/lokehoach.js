@@ -2586,6 +2586,35 @@ router.get("/filtermatomaxuongmaspdklosanxuatthemto", async (req, res) => {
   }
 });
 
+router.get("/filterxuongtomaspstatus", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx;
+    const matoList = req.query.mato;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    const strto = "'" + matoList.join("','") + "'";
+    // console.log(strpx);
+    const masp = req.query.masp;
+    // // console.log(masp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // // console.log(strstatus);
+    // const nhomsp = req.query.nhomsp;
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `select * from losanxuat where mapx in (${strpx}) and mato in (${strto}) and masp='${masp}' and status in (${strstatus})`
+      );
+    const tenpx = result.recordset;
+
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // chỉ có ma to ma xxuong
 router.get("/filtermatomaxuongdklosanxuatthemto", async (req, res) => {
   try {

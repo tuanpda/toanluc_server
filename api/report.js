@@ -45,18 +45,17 @@ router.get("/reportluongthang_px", async (req, res) => {
 });
 
 // report luong px
-router.get("/reportsumluong", async (req, res) => {
+router.get("/reportsumluongvanphong", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
-      .input("mapb", req.query.mapb)
-      .execute("tongluong_thang_to");
-    const his = result.recordset;
+      .execute("tongluong_vanphong");
+    const tlvp = result.recordset;
 
-    res.json(his);
+    res.json(tlvp);
   } catch (error) {
     res.status(500).json(error);
   }

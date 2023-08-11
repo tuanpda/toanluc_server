@@ -461,8 +461,8 @@ router.post("/themluongthangvanphong", async (req, res) => {
       .input("status", req.body.status)
       .input("stk", req.body.stk)
       .input("tennganhang", req.body.tennganhang).query(`
-                      INSERT INTO luongthang_vp (mapb, tenpb, mato, manv, hotennv, chucvu, mucluong, luongngay, luongtrachnhiem, bacluong, luongngaycong, dieuchinhdt, thuongdt, phat, luongngoaigio, sogiongoaigio, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @mucluong, @luongngay, @luongtrachnhiem, @bacluong, @luongngaycong, @dieuchinhdt, @thuongdt, @phat, @luongngoaigio, @sogiongoaigio, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @tennganhang);
+                      INSERT INTO luongthang_vp (mapb, tenpb, manv, hotennv, chucvu, mucluong, luongngay, luongtrachnhiem, bacluong, luongngaycong, dieuchinhdt, thuongdt, phat, luongngoaigio, sogiongoaigio, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang) 
+                      VALUES (@mapb, @tenpb, @manv, @hotennv, @chucvu, @mucluong, @luongngay, @luongtrachnhiem, @bacluong, @luongngaycong, @dieuchinhdt, @thuongdt, @phat, @luongngoaigio, @sogiongoaigio, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @tennganhang);
                   `);
     const bl = req.body;
     // res.json(bl);

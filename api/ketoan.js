@@ -980,6 +980,19 @@ router.get("/getkeythangnam", async (req, res) => {
     res.status(500).json(error);
   }
 });
+router.get("/getkeythangnamvanphong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(`select distinct(key_thangnam) from luongthang_vp`);
+    const ktn = result.recordset;
+
+    res.json(ktn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 // cập nhật status trong công đoạn lương
 router.patch("/updatestatusluongcongdoan/:_id", async (req, res) => {

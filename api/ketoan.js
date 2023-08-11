@@ -425,6 +425,56 @@ router.post("/themluongthang", async (req, res) => {
   }
 });
 
+router.post("/themluongthangvanphong", async (req, res) => {
+  try {
+    console.log(req.body);
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapb", req.body.mapb)
+      .input("tenpb", req.body.tenpb)
+      .input("manv", req.body.manv)
+      .input("hotennv", req.body.hotennv)
+      .input("chucvu", req.body.chucvu)
+      .input("mucluong", req.body.mucluong)
+      .input("luongngay", req.body.luongngay)
+      .input("luongtrachnhiem", req.body.luongtrachnhiem)
+      .input("bacluong", req.body.bacluong)
+      .input("ngaycong", req.body.ngaycong)
+      .input("luongngaycong", req.body.luongngaycong)
+      .input("dieuchinhdt", req.body.dieuchinhdt)
+      .input("thuongdt", req.body.thuongdt)
+      .input("phat", req.body.phat)
+      .input("luongngoaigio", req.body.luongngoaigio)
+      .input("sogiongoaigio", req.body.sogiongoaigio)
+      .input("hotro", req.body.hotro)
+      .input("tongluong", req.body.tongluong)
+      .input("bhxh", req.body.bhxh)
+      .input("congdoan", req.body.congdoan)
+      .input("tongkt", req.body.tongkt)
+      .input("luongnhan", req.body.luongnhan)
+      .input("createdAt", req.body.createdAt)
+      .input("createdBy", req.body.createdBy)
+      .input("thang", req.body.thang)
+      .input("nam", req.body.nam)
+      .input("key_thangnam", req.body.key_thangnam)
+      .input("status", req.body.status)
+      .input("stk", req.body.stk)
+      .input("tennganhang", req.body.tennganhang).query(`
+                      INSERT INTO luongthang_vp (mapb, tenpb, mato, manv, hotennv, chucvu, mucluong, luongngay, luongtrachnhiem, bacluong, luongngaycong, dieuchinhdt, thuongdt, phat, luongngoaigio, sogiongoaigio, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @mucluong, @luongngay, @luongtrachnhiem, @bacluong, @luongngaycong, @dieuchinhdt, @thuongdt, @phat, @luongngoaigio, @sogiongoaigio, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @tennganhang);
+                  `);
+    const bl = req.body;
+    // res.json(bl);
+    res.json({
+      success: true,
+      message: "Update success !",
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // thêm lương công đoạn
 router.post("/addluongcongdoan", async (req, res) => {
   try {

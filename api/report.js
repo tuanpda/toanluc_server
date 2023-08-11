@@ -80,6 +80,21 @@ router.get("/reportsumluongto", async (req, res) => {
   }
 });
 
+router.get("/reportluongthangvanphong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .query("select * from luongthang_vp where thang=@thang and nam=@nam");
+    const rp = result.recordset;
+    res.json(rp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // execl data
 router.get("/execldatawithphanxuong", async (req, res) => {
   try {

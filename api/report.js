@@ -156,7 +156,7 @@ router.get("/execldatawithtimeandxuong", async (req, res) => {
       .input("tungay", req.query.tungay)
       .input("denngay", req.query.denngay)
       .query(
-        "SELECT * FROM luongcongnhan where mapx=@mapx and year(stopday_losx) = @nam and month(stopday_losx) = @thang"
+        "SELECT * FROM luongcongnhan where mapx=@mapx and year(stopday_losx) = @tungay and month(stopday_losx) = @denngay"
       );
     const data = result.recordset;
 

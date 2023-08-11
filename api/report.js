@@ -147,22 +147,24 @@ router.get("/execldatawithtime", async (req, res) => {
 });
 
 // execl data
-// router.get("/execldatawithtimeandxuong", async (req, res) => {
-//   try {
-//     await pool.connect();
-//     const result = await pool
-//       .request()
-//       .input("mapx", req.query.mapx)
-//       .input("tungay", req.query.tungay)
-//       .input("denngay", req.query.denngay)
-//       .query("SELECT * FROM luongcongnhan where mapx=@mapx and year(stopday_losx) = @nam and month(stopday_losx) = @thang");
-//     const data = result.recordset;
+router.get("/execldatawithtimeandxuong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mapx", req.query.mapx)
+      .input("tungay", req.query.tungay)
+      .input("denngay", req.query.denngay)
+      .query(
+        "SELECT * FROM luongcongnhan where mapx=@mapx and year(stopday_losx) = @nam and month(stopday_losx) = @thang"
+      );
+    const data = result.recordset;
 
-//     res.json(data);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 // cập nhật lại mã lô nhà máy sai trong công nhật
 // lấy ds _id_losx

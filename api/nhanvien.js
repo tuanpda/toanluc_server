@@ -25,7 +25,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
   if (!req.file) {
     linkAvatar = req.body.anhdd;
   } else {
-    linkAvatar = `http://toanluc.online/avatar/anhdd/nhanvien/${req.file.filename}`;
+    linkAvatar = `http://toanluc.online/anhdd/nhanvien/${req.file.filename}`;
   }
   try {
     await pool.connect();
@@ -159,7 +159,7 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
     anhdd = req.body.anhdd;
   } else {
     // Đổi đường dẫn khi deploy lên máy chủ
-    linkAvatar = `http://toanluc.online/avatar/anhdd/nhanvien/anhdaidien_default.jpg`;
+    linkAvatar = `http://toanluc.online/anhdd/nhanvien/anhdaidien_default.jpg`;
   }
 
   try {

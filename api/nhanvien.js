@@ -10,7 +10,8 @@ const multer = require("multer");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     /* Nhớ sửa đường dẫn khi deploy lên máy chủ */
-    cb(null, "D:\\CODE\\PROJECT\\client\\static\\avatar");
+    // cb(null, "D:\\CODE\\PROJECT\\client\\static\\avatar");
+    cb(null, "E:\\CODE_APP\\TEAMGIT\\client\\static\\anhdd\\nhanvien");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -24,7 +25,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
   if (!req.file) {
     linkAvatar = req.body.anhdd;
   } else {
-    linkAvatar = `http://localhost/avatar/${req.file.filename}`;
+    linkAvatar = `http://toanluc.online/avatar/anhdd/nhanvien/${req.file.filename}`;
   }
   try {
     await pool.connect();
@@ -158,7 +159,7 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
     anhdd = req.body.anhdd;
   } else {
     // Đổi đường dẫn khi deploy lên máy chủ
-    linkAvatar = `http://localhost/avatar/${req.file.filename}`;
+    linkAvatar = `http://toanluc.online/avatar/anhdd/nhanvien/anhdaidien_default.jpg`;
   }
 
   try {

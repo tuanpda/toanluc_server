@@ -70,6 +70,24 @@ router.get("/reportsumluongto", async (req, res) => {
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
       .input("mato", req.query.mato)
+      .execute("tongluong_thang_to");
+    const his = result.recordset;
+
+    res.json(his);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// report luong xuong
+router.get("/reportsumluong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mato", req.query.mato)
       .execute("tongluong_thang_to_px");
     const his = result.recordset;
 

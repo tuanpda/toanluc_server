@@ -242,7 +242,7 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
                 VALUES (@username, @name, @password, @role, @createdAt, @createdBy, @avatar, @ghichu, @maxuong);
             `);
     const user = req.body;
-    let token = jwt.sign({ user }, process.env.SECRET, { expiresIn: "60" });
+    let token = jwt.sign({ user }, process.env.SECRET);
     res.json({ user, token, message: "Create user success!" });
   } catch (error) {
     res.status(500).json(error);

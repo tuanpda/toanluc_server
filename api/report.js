@@ -88,7 +88,7 @@ router.get("/reportsumluong_phanxuong", async (req, res) => {
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
       .input("mapb", req.query.mapb)
-      .execute("sum_month_phanxuong");
+      .execute("sumluong_month_phanxuong");
     const his = result.recordset;
 
     res.json(his);

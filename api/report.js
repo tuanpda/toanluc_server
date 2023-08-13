@@ -70,7 +70,7 @@ router.get("/reportsumluongto", async (req, res) => {
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
       .input("mato", req.query.mato)
-      .execute("tongluong_thang_to");
+      .execute("sum_month_to");
     const his = result.recordset;
 
     res.json(his);
@@ -80,15 +80,15 @@ router.get("/reportsumluongto", async (req, res) => {
 });
 
 // report luong xuong
-router.get("/reportsumluong", async (req, res) => {
+router.get("/reportsumluong_phanxuong", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool
       .request()
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
-      .input("mato", req.query.mato)
-      .execute("tongluong_thang_to_px");
+      .input("mapb", req.query.mapb)
+      .execute("sum_month_phanxuong");
     const his = result.recordset;
 
     res.json(his);

@@ -715,6 +715,7 @@ router.patch("/:_id", async (req, res) => {
         .input("tennh", req.body.tennh)
         .input("ghichu", req.body.ghichu)
         .input("updatedAt", req.body.updatedAt)
+        .input("chutaikhoan", req.body.chutaikhoan)
         .query(
           `UPDATE congnhan SET 
                 macn = @macn, 
@@ -733,7 +734,8 @@ router.patch("/:_id", async (req, res) => {
                 trangthai = @trangthai,
                 tennh = @tennh,
                 ghichu = @ghichu,
-                updatedAt = @updatedAt
+                updatedAt = @updatedAt,
+                chutaikhoan = @chutaikhoan
                 WHERE _id = @_id;`
         );
       res.json({

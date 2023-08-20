@@ -8,6 +8,7 @@ const mssql = require("mssql");
 
 const SQL_DRIVER = "SQL server";
 const SQL_SERVER = "192.168.1.97";
+// const SQL_SERVER = "192.168.1.97";
 const SQL_DATABASE = "tinhluong_bu";
 const SQL_UID = "sa";
 const SQL_PWD = "Sa)(%^0702!@";

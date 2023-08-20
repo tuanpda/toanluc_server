@@ -708,7 +708,6 @@ router.patch("/:_id", async (req, res) => {
         .input("mato", req.body.mato)
         .input("tento", req.body.tento)
         .input("chucvu", req.body.chucvu)
-        .input("luongcb", req.body.luongcb)
         .input("nguoilienhe", req.body.nguoilienhe)
         .input("sotknh", req.body.sotknh)
         .input("trangthai", req.body.trangthai)
@@ -728,7 +727,6 @@ router.patch("/:_id", async (req, res) => {
                 mato = @mato,
                 tento = @tento,
                 chucvu = @chucvu,
-                luongcb = @luongcb,
                 nguoilienhe = @nguoilienhe,
                 sotknh = @sotknh,
                 trangthai = @trangthai,

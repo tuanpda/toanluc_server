@@ -234,7 +234,7 @@ router.get("/getallldatawithidlsx", async (req, res) => {
     // console.log(result);
     // const dgc = result.recordset;
 
-    res.json(dgc);
+    // res.json(dgc);
   } catch (error) {
     res.status(500).json(error);
   }

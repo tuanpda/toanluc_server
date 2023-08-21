@@ -222,7 +222,7 @@ router.get("/getalllosxupdatedongiacong", async (req, res) => {
 });
 router.get("/getallldatawithidlsx", async (req, res) => {
   try {
-    const idlist = req.query.mapx;
+    const idlist = req.query._id;
     // console.log(mapxList);
     const strid = "'" + idlist.join("','") + "'";
     console.log(strid);

@@ -229,9 +229,7 @@ router.get("/getallldatawithidlsx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `SELECT * FROM luongcongnhan where status = 0 and _id_losx in (${strid}) order by _id_losx`
-      );
+      .query(`SELECT * FROM luongcongnhan where status = 0`);
     const dgc = result.recordset;
 
     res.json(dgc);

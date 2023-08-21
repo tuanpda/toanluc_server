@@ -220,6 +220,26 @@ router.get("/getalllosxupdatedongiacong", async (req, res) => {
     res.status(500).json(error);
   }
 });
+router.get("/getallldatawithidlsx", async (req, res) => {
+  try {
+    const idlist = req.query.mapx;
+    // console.log(mapxList);
+    const strid = "'" + idlist.join("','") + "'";
+
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("i", req.query.nhomluong)
+      .query(
+        `SELECT * FROM luongcongnhan where status = 0 and _id_losx in (${strid}) order by _id_losx`
+      );
+    const dgc = result.recordset;
+
+    res.json(dgc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 // get all danh mục đơn giá công theo px
 router.get("/getalldongiacongwithpx", async (req, res) => {

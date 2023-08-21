@@ -203,6 +203,24 @@ router.get("/getalldongiacong", async (req, res) => {
   }
 });
 
+// get all data losanxuat dung update dongia cong
+router.get("/getalllosxupdatedongiacong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nhomluong", req.query.nhomluong)
+      .query(
+        `SELECT * FROM losanxuat where status_tinhluong = 0 and nhomluong=@nhomluong order by _id_losx`
+      );
+    const dgc = result.recordset;
+
+    res.json(dgc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all danh mục đơn giá công theo px
 router.get("/getalldongiacongwithpx", async (req, res) => {
   try {
@@ -315,9 +333,7 @@ router.get("/filterfulldmncmapxandmasp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select * from dmnc where mapx in (${strpx}) and mavt='${mavt}'`
-      );
+      .query(`select * from dmnc where mapx in (${strpx}) and mavt='${mavt}'`);
     const data = result.recordset;
     res.json(data);
   } catch (error) {
@@ -336,9 +352,7 @@ router.get("/filterfulldmncnhomspmasp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select * from dmnc where mavt='${mavt}' and nhomsp='${nhomsp}'`
-      );
+      .query(`select * from dmnc where mavt='${mavt}' and nhomsp='${nhomsp}'`);
     const data = result.recordset;
     res.json(data);
   } catch (error) {
@@ -356,9 +370,7 @@ router.get("/filteronlymapx", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select * from dmnc where mapx in (${strpx})`
-      );
+      .query(`select * from dmnc where mapx in (${strpx})`);
     const data = result.recordset;
     res.json(data);
   } catch (error) {
@@ -375,9 +387,7 @@ router.get("/filteronlynhomsp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select * from dmnc where nhomsp='${nhomsp}'`
-      );
+      .query(`select * from dmnc where nhomsp='${nhomsp}'`);
     const data = result.recordset;
     res.json(data);
   } catch (error) {
@@ -394,9 +404,7 @@ router.get("/filteronlymasp", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(
-        `select * from dmnc where mavt='${mavt}'`
-      );
+      .query(`select * from dmnc where mavt='${mavt}'`);
     const data = result.recordset;
     res.json(data);
   } catch (error) {

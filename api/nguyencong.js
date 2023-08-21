@@ -230,6 +230,7 @@ router.get("/getallldatawithidlsx", async (req, res) => {
     const result = await pool
       .request()
       .query(`SELECT * FROM luongcongnhan where status = 0`);
+    console.log(result);
     const dgc = result.recordset;
 
     res.json(dgc);

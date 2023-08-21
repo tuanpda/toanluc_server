@@ -225,13 +225,14 @@ router.get("/getallldatawithidlsx", async (req, res) => {
     const idlist = req.query.mapx;
     // console.log(mapxList);
     const strid = "'" + idlist.join("','") + "'";
+    console.log(strid);
 
-    await pool.connect();
-    const result = await pool
-      .request()
-      .query(`SELECT * FROM luongcongnhan where status = 0`);
-    console.log(result);
-    const dgc = result.recordset;
+    // await pool.connect();
+    // const result = await pool
+    //   .request()
+    //   .query(`SELECT * FROM luongcongnhan where status = 0`);
+    // console.log(result);
+    // const dgc = result.recordset;
 
     res.json(dgc);
   } catch (error) {

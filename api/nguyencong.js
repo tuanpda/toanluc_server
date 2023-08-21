@@ -225,16 +225,16 @@ router.get("/getallldatawithidlsx", async (req, res) => {
     const idlist = req.query._id;
     // console.log(mapxList);
     const strid = "'" + idlist.join("','") + "'";
-    console.log(strid);
 
-    // await pool.connect();
-    // const result = await pool
-    //   .request()
-    //   .query(`SELECT * FROM luongcongnhan where status = 0`);
-    // console.log(result);
-    // const dgc = result.recordset;
+    await pool.connect();
+    const result = await pool
+      .request()
+      .query(
+        `SELECT * FROM luongcongnhan where status = 0 and _id_losx in (${strid}) order by _id_losx`
+      );
+    const dgc = result.recordset;
 
-    // res.json(dgc);
+    res.json(dgc);
   } catch (error) {
     res.status(500).json(error);
   }

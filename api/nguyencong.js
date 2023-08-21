@@ -240,6 +240,23 @@ router.get("/getallldatawithidlsx", async (req, res) => {
   }
 });
 
+router.get("/getdatapreviewbyid", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.params._id_losx)
+      .query(
+        `SELECT * FROM luongcongnhan where status = 0 and _id_losx=@_id_losx order by _id`
+      );
+    const dgc = result.recordset;
+
+    res.json(dgc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all danh mục đơn giá công theo px
 router.get("/getalldongiacongwithpx", async (req, res) => {
   try {

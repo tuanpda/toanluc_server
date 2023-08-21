@@ -242,11 +242,10 @@ router.get("/getallldatawithidlsx", async (req, res) => {
 
 router.get("/getdatapreviewbyid", async (req, res) => {
   try {
-    console.log(req.params._id_losx);
     await pool.connect();
     const result = await pool
       .request()
-      .input("_id_losx", req.params._id_losx)
+      .input("_id_losx", req.query._id_losx)
       .query(
         `SELECT * FROM luongcongnhan where status = 0 and _id_losx=@_id_losx order by _id`
       );

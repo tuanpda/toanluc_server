@@ -211,7 +211,7 @@ router.get("/getalllosxupdatedongiacong", async (req, res) => {
       .request()
       .input("nhomluong", req.query.nhomluong)
       .query(
-        `SELECT * FROM losanxuat where status_tinhluong = 0 and nhomluong=@nhomluong order by _id_losx`
+        `SELECT * FROM losanxuat where status_tinhluong = 0 and nhomluong=@nhomluong order by _id`
       );
     const dgc = result.recordset;
 

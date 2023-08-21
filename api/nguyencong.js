@@ -242,6 +242,7 @@ router.get("/getallldatawithidlsx", async (req, res) => {
 
 router.get("/getdatapreviewbyid", async (req, res) => {
   try {
+    console.log(req.params._id_losx);
     await pool.connect();
     const result = await pool
       .request()

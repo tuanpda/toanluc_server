@@ -20,7 +20,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-router.patch("/updatedongiaconginlcd", async (req, res) => {
+router.get("/updatedongiaconginlcd", async (req, res) => {
   try {
     const idlist = req.query.id;
     console.log(idlist);

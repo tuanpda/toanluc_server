@@ -210,8 +210,9 @@ router.get("/getalllosxupdatedongiacong", async (req, res) => {
     const result = await pool
       .request()
       .input("nhomluong", req.query.nhomluong)
+      .input("mapx", req.query.mapx)
       .query(
-        `SELECT * FROM losanxuat where status_tinhluong = 0 and nhomluong=@nhomluong order by _id`
+        `SELECT * FROM losanxuat where status_tinhluong = 0 and nhomluong=@nhomluong and mapx=@mapx order by _id`
       );
     const dgc = result.recordset;
 

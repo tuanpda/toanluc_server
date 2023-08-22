@@ -257,24 +257,6 @@ router.get("/getdatapreviewbyid", async (req, res) => {
     res.status(500).json(error);
   }
 });
-router.patch("/updatedongiaconginlcd", async (req, res) => {
-  try {
-    const idlist = req.query._id_losx;
-    // console.log(idlist);
-    const strid = "'" + idlist.join("','") + "'";
-
-    await pool.connect();
-    const result = await pool.request().query(
-      `update luongcongnhan set dongiacong=@dongiacong where
-         status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
-    );
-    const dgc = result.recordset;
-
-    res.json(dgc);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
 
 // get all danh mục đơn giá công theo px
 router.get("/getalldongiacongwithpx", async (req, res) => {
@@ -501,6 +483,25 @@ router.patch("/nc/:_id", async (req, res) => {
         message: "Update success !",
       });
     }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.patch("/updatedongiaconginlcd", async (req, res) => {
+  try {
+    const idlist = req.query._id_losx;
+    console.log(idlist);
+    const strid = "'" + idlist.join("','") + "'";
+
+    await pool.connect();
+    const result = await pool.request().query(
+      `update luongcongnhan set dongiacong=@dongiacong where
+         status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
+    );
+    const dgc = result.recordset;
+
+    res.json(dgc);
   } catch (error) {
     res.status(500).json(error);
   }

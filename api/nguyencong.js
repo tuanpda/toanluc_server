@@ -240,7 +240,6 @@ router.get("/getallldatawithidlsx", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
 router.get("/getdatapreviewbyid", async (req, res) => {
   try {
     await pool.connect();
@@ -251,6 +250,24 @@ router.get("/getdatapreviewbyid", async (req, res) => {
       .query(
         `SELECT * FROM luongcongnhan where status = 0 and nguyencong=@nguyencong and _id_losx=@_id_losx order by _id`
       );
+    const dgc = result.recordset;
+
+    res.json(dgc);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+router.patch("/updatedongiaconginlcd", async (req, res) => {
+  try {
+    const idlist = req.query._id_losx;
+    // console.log(idlist);
+    const strid = "'" + idlist.join("','") + "'";
+
+    await pool.connect();
+    const result = await pool.request().query(
+      `update luongcongnhan set dongiacong=@dongiacong where
+         status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
+    );
     const dgc = result.recordset;
 
     res.json(dgc);

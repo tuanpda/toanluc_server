@@ -495,10 +495,14 @@ router.patch("/updatedongiaconginlcd", async (req, res) => {
     const strid = "'" + idlist.join("','") + "'";
 
     await pool.connect();
-    const result = await pool.request().query(
-      `update luongcongnhan set dongiacong=@dongiacong where
+    const result = await pool
+      .request()
+      .input("dongiacong", req.query.dongiacong)
+      .input("nguyencong", req.query.nguyencong)
+      .query(
+        `update luongcongnhan set dongiacong=@dongiacong where
          status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
-    );
+      );
     const dgc = result.recordset;
 
     res.json(dgc);

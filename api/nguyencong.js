@@ -492,8 +492,8 @@ router.patch("/updatedongiaconginlcd", async (req, res) => {
   try {
     const idlist = req.query._id_losx;
     console.log(idlist);
-    const strid = "'" + idlist.join("','") + "'";
-    console.log(strid);
+    // const strid = "'" + idlist.join("','") + "'";
+    // console.log(strid);
 
     // await pool.connect();
     // const result = await pool

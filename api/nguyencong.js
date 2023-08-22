@@ -33,7 +33,7 @@ router.get("/updatedongiaconginlcd", async (req, res) => {
       .input("dongiacong", req.query.dongiacong)
       .input("nguyencong", req.query.nguyencong)
       .query(
-        `update luongcongnhan set dongiacong=@dongiacong where
+        `update luongcongnhan set dongia=@dongiacong where
          status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
       );
     const dgc = result.recordset;

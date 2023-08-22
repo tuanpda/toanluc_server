@@ -247,8 +247,9 @@ router.get("/getdatapreviewbyid", async (req, res) => {
     const result = await pool
       .request()
       .input("_id_losx", req.query._id_losx)
+      .input("nguyencong", req.query.nguyencong)
       .query(
-        `SELECT * FROM luongcongnhan where status = 0 and _id_losx=@_id_losx order by _id`
+        `SELECT * FROM luongcongnhan where status = 0 and nguyencong=@nguyencong and _id_losx=@_id_losx order by _id`
       );
     const dgc = result.recordset;
 

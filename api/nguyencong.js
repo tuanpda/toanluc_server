@@ -30,10 +30,10 @@ router.get("/updatedongiaconginlcd", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("dongiacong", req.query.dongiacong)
+      .input("dongia", req.query.dongia)
       .input("nguyencong", req.query.nguyencong)
       .query(
-        `update luongcongnhan set dongia=@dongiacong where
+        `update luongcongnhan set dongia=@dongia where
          status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
       );
     const dgc = result.recordset;

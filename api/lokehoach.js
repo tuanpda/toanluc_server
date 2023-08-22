@@ -1992,7 +1992,7 @@ router.get("/filteronlymapxandmatp", async (req, res) => {
     const strpx = "'" + mapxList.join("','") + "'";
     // console.log(strpx);
     const matp = req.query.matp;
-    console.log(matp);
+    // console.log(matp);
     await pool.connect();
     const result = await pool.request().query(
       `with t as(
@@ -2022,7 +2022,7 @@ router.get("/filteronlymapxandnhomtp", async (req, res) => {
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
-    console.log(strpx);
+    // console.log(strpx);
     const nhomtp = req.query.nhomtp;
     // console.log(req.query.nhomtp);
     await pool.connect();

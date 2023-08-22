@@ -22,7 +22,7 @@ var upload = multer({ storage: storage });
 
 router.patch("/updatedongiaconginlcd", async (req, res) => {
   try {
-    const idlist = req.query._id_losx;
+    const idlist = req.query.id;
     console.log(idlist);
     // const strid = "'" + idlist.join("','") + "'";
     // console.log(strid);

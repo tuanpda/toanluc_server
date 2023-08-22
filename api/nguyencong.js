@@ -23,9 +23,9 @@ var upload = multer({ storage: storage });
 router.get("/updatedongiaconginlcd", async (req, res) => {
   try {
     const idlist = req.query.id;
-    console.log(idlist);
+    // console.log(idlist);
     const strid = "'" + idlist.join("','") + "'";
-    console.log(strid);
+    // console.log(strid);
 
     await pool.connect();
     const result = await pool

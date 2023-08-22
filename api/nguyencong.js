@@ -38,8 +38,11 @@ router.get("/updatedongiaconginlcd", async (req, res) => {
       );
     const dgc = result.recordset;
 
-    res.json(dgc);
-    // res.json("kkk");
+    res.json({
+      success: true,
+      message: "update thanh cong",
+      data: dgc,
+    });
   } catch (error) {
     res.status(500).json(error);
   }

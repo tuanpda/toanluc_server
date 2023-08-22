@@ -493,19 +493,21 @@ router.patch("/updatedongiaconginlcd", async (req, res) => {
     const idlist = req.query._id_losx;
     console.log(idlist);
     const strid = "'" + idlist.join("','") + "'";
+    console.log(strid);
 
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("dongiacong", req.query.dongiacong)
-      .input("nguyencong", req.query.nguyencong)
-      .query(
-        `update luongcongnhan set dongiacong=@dongiacong where
-         status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
-      );
-    const dgc = result.recordset;
+    // await pool.connect();
+    // const result = await pool
+    //   .request()
+    //   .input("dongiacong", req.query.dongiacong)
+    //   .input("nguyencong", req.query.nguyencong)
+    //   .query(
+    //     `update luongcongnhan set dongiacong=@dongiacong where
+    //      status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
+    //   );
+    // const dgc = result.recordset;
 
-    res.json(dgc);
+    // res.json(dgc);
+    res.json("kkk");
   } catch (error) {
     res.status(500).json(error);
   }

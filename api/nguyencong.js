@@ -48,7 +48,7 @@ var upload = multer({ storage: storage });
 //   }
 // });
 
-router.get("/updatedongiaconginlcd", async (req, res) => {
+router.patch("/updatedongiaconginlcd", async (req, res) => {
   try {
     console.log(req.query);
     await pool.connect();

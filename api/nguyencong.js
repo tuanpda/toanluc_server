@@ -59,12 +59,12 @@ router.get("/updatedongiaconginlcd", async (req, res) => {
       `update luongcongnhan set dongia='${dongia}' where
          status = 0 and _id_losx = '${_id_losx}' and nguyencong='${nguyencong}'`
     );
-    const dgc = result.recordset;
-    console.log(dgc);
+    // const dgc = result.recordset;
+    console.log(result);
     res.json({
       success: true,
       message: "update thanh cong",
-      data: dgc,
+      // data: dgc,
     });
   } catch (error) {
     res.status(500).json(error);

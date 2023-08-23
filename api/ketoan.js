@@ -1997,11 +1997,7 @@ router.get("/getallphieulocht", async (req, res) => {
       );
     const pl = result.recordset;
 
-    res.json({
-      success: true,
-      message: "load ok",
-      pl,
-    });
+    res.json(pl);
   } catch (error) {
     res.status(500).json(error);
   }

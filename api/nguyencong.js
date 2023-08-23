@@ -20,21 +20,45 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+// router.get("/updatedongiaconginlcd", async (req, res) => {
+//   try {
+//     const idlist = req.query.id;
+//     // console.log(idlist);
+//     const strid = "'" + idlist.join("','") + "'";
+//     // console.log(strid);
+
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("dongia", req.query.dongia)
+//       .input("nguyencong", req.query.nguyencong)
+//       .query(
+//         `update luongcongnhan set dongia=@dongia where
+//          status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
+//       );
+//     const dgc = result.recordset;
+
+//     res.json({
+//       success: true,
+//       message: "update thanh cong",
+//       data: dgc,
+//     });
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
 router.get("/updatedongiaconginlcd", async (req, res) => {
   try {
-    const idlist = req.query.id;
-    // console.log(idlist);
-    const strid = "'" + idlist.join("','") + "'";
-    // console.log(strid);
-
     await pool.connect();
     const result = await pool
       .request()
+      .input("_id_losx", req.query._id_losx)
       .input("dongia", req.query.dongia)
       .input("nguyencong", req.query.nguyencong)
       .query(
         `update luongcongnhan set dongia=@dongia where
-         status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
+         status = 0 and _id_losx = @_id_losx and nguyencong=@nguyencong`
       );
     const dgc = result.recordset;
 

@@ -48,19 +48,17 @@ var upload = multer({ storage: storage });
 //   }
 // });
 
-router.patch("/updatedongiaconginlcd", async (req, res) => {
+router.get("/updatedongiaconginlcd", async (req, res) => {
   try {
-    console.log(req.query);
+    // console.log(req.query);
+    const _id_losx = req.query._id_losx;
+    const dongia = req.query.dongia;
+    const nguyencong = req.query.nguyencong;
     await pool.connect();
-    const result = await pool
-      .request()
-      .input("_id_losx", req.query._id_losx)
-      .input("dongia", req.query.dongia)
-      .input("nguyencong", req.query.nguyencong)
-      .query(
-        `update luongcongnhan set dongia=@dongia where
-         status = 0 and _id_losx = @_id_losx and nguyencong=@nguyencong`
-      );
+    const result = await pool.request().query(
+      `update luongcongnhan set dongia='${dongia}' where
+         status = 0 and _id_losx = '${_id_losx}' and nguyencong='${nguyencong}'`
+    );
     const dgc = result.recordset;
 
     res.json({

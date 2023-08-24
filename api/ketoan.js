@@ -2032,7 +2032,11 @@ router.get("/getallphieulo", async (req, res) => {
       .query(`SELECT * FROM losanxuat order by mapx, malosx`);
     const pl = result.recordset;
 
-    res.json(pl);
+    res.json({
+      data: pl,
+      success: true,
+      message: "load ok",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

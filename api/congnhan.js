@@ -249,12 +249,12 @@ router.get("/updatethongtinbank", async (req, res) => {
     const chutaikhoan = req.query.chutaikhoan;
     const tennganhang = req.query.tennganhang;
     const stk = req.query.stk;
-    console.log(_id, manv, key_thangnam, chutaikhoan, tennganhang, stk);
+    // console.log(_id, manv, key_thangnam, chutaikhoan, tennganhang, stk);
     await pool.connect();
-    // const result = await pool.request().query(
-    //   `update luongthang set chutaikhoan='${chutaikhoan}', tennganhang='${tennganhang}', stk='${stk}' where
-    //      _id = '${_id}' and manv='${manv}' and key_thangnam='${key_thangnam}'`
-    // );
+    const result = await pool.request().query(
+      `update luongthang set chutaikhoan='${chutaikhoan}', tennganhang='${tennganhang}', stk='${stk}' where
+         _id = '${_id}' and manv='${manv}' and key_thangnam='${key_thangnam}'`
+    );
     // const dgc = result.recordset;
     // console.log(result);
     res.json({

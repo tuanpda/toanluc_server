@@ -222,25 +222,20 @@ router.get("/showallcongnhanwitharrmacn", async (req, res) => {
     const macn = req.query.macn;
     // console.log(idlist);
     const strmacn = "'" + macn.join("','") + "'";
-    console.log(strmacn);
+    // console.log(strmacn);
 
-    // await pool.connect();
-    // const result = await pool
-    //   .request()
-    //   .input("dongia", req.query.dongia)
-    //   .input("nguyencong", req.query.nguyencong)
-    //   .query(
-    //     `update luongcongnhan set dongia=@dongia where
-    //      status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
-    //   );
-    // const dgc = result.recordset;
+    await pool.connect();
+    const result = await pool.request().query(
+      `select * from congnhan where
+         macn in (${strmacn}) and trangthai=1`
+    );
+    const dgc = result.recordset;
 
-    // res.json({
-    //   success: true,
-    //   message: "update thanh cong",
-    //   data: dgc,
-    // });
-    res.json("ok");
+    res.json({
+      success: true,
+      message: "update thanh cong",
+      data: dgc,
+    });
   } catch (error) {
     res.status(500).json(error);
   }

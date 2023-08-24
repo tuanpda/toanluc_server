@@ -2017,7 +2017,11 @@ router.get("/getallphieulosxatcholuong", async (req, res) => {
       .query(`SELECT * FROM losanxuat where status=3 order by ngayhoanthanhtt`);
     const pl = result.recordset;
 
-    res.json(pl);
+    res.json({
+      data: pl,
+      success: true,
+      message: "load ok",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

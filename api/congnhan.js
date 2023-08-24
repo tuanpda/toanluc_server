@@ -240,6 +240,31 @@ router.get("/showallcongnhanwitharrmacn", async (req, res) => {
     res.status(500).json(error);
   }
 });
+router.get("/updatethongtinbank", async (req, res) => {
+  try {
+    // console.log(req.query);
+    const _id = req.query._id;
+    const manv = req.query.manv;
+    const key_thangnam = req.query.key_thangnam;
+    const chutaikhoan = req.query.chutaikhoan;
+    const tennganhang = req.query.tennganhang;
+    const stk = req.query.stk;
+    console.log(_id, manv, key_thangnam, chutaikhoan, tennganhang, stk);
+    await pool.connect();
+    // const result = await pool.request().query(
+    //   `update luongthang set chutaikhoan='${chutaikhoan}', tennganhang='${tennganhang}', stk='${stk}' where
+    //      _id = '${_id}' and manv='${manv}' and key_thangnam='${key_thangnam}'`
+    // );
+    // const dgc = result.recordset;
+    // console.log(result);
+    res.json({
+      success: true,
+      message: "update thanh cong",
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 // bao cao thang theo to
 router.get("/baocaothangtheoto", async (req, res) => {

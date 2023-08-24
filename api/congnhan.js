@@ -227,13 +227,13 @@ router.get("/showallcongnhanwitharrmacn", async (req, res) => {
     await pool.connect();
     const result = await pool.request().query(
       `select * from congnhan where
-         macn in (${strmacn}) and trangthai=1`
+         macn in (${strmacn}) `
     );
     const dgc = result.recordset;
 
     res.json({
       success: true,
-      message: "update thanh cong",
+      message: "load",
       data: dgc,
     });
   } catch (error) {

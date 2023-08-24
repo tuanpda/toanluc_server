@@ -217,6 +217,35 @@ router.get("/baocaotonghoptheoto", async (req, res) => {
   }
 });
 
+router.get("/showallcongnhanwitharrmacn", async (req, res) => {
+  try {
+    const macn = req.query.macn;
+    // console.log(idlist);
+    const strmacn = "'" + macn.join("','") + "'";
+    console.log(strmacn);
+
+    // await pool.connect();
+    // const result = await pool
+    //   .request()
+    //   .input("dongia", req.query.dongia)
+    //   .input("nguyencong", req.query.nguyencong)
+    //   .query(
+    //     `update luongcongnhan set dongia=@dongia where
+    //      status = 0 and _id_losx in (${strid}) and nguyencong=@nguyencong`
+    //   );
+    // const dgc = result.recordset;
+
+    // res.json({
+    //   success: true,
+    //   message: "update thanh cong",
+    //   data: dgc,
+    // });
+    res.json("ok");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // bao cao thang theo to
 router.get("/baocaothangtheoto", async (req, res) => {
   try {

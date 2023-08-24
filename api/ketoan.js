@@ -404,6 +404,7 @@ router.post("/themluongthang", async (req, res) => {
       .input("key_thangnam", req.body.key_thangnam)
       .input("status", req.body.status)
       .input("stk", req.body.stk)
+      .input("chutaikhoan", req.body.chutaikhoan)
       .input("tennganhang", req.body.tennganhang)
       .input("nhanl1", req.body.nhanl1)
       .input("nhanl2", req.body.nhanl2)
@@ -412,8 +413,8 @@ router.post("/themluongthang", async (req, res) => {
       .input("nhanl5", req.body.nhanl5)
       .input("nhanl6", req.body.nhanl6)
       .input("sttchon", req.body.sttchon).query(`
-                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, tienphat, createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6, sttchon) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @tienphat, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @tennganhang, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6, @sttchon);
+                      INSERT INTO luongthang (mapb, tenpb, mato, manv, hotennv, chucvu, luongcb, luongmem, luongqlsp, luongcd, luongps, tongluong, antrua, songaycong, ngayhotro, tienhotro, bhxh, congdoan, tamung, tongtru, tongnhan, tienphat, createdAt, createdBy, thang, nam, key_thangnam, status, stk, chutaikhoan, tennganhang, nhanl1, nhanl2, nhanl3, nhanl4, nhanl5, nhanl6, sttchon) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @chucvu, @luongcb, @luongmem, @luongqlsp, @luongcd, @luongps, @tongluong, @antrua, @songaycong, @ngayhotro, @tienhotro, @bhxh, @congdoan, @tamung, @tongtru, @tongnhan, @tienphat, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @chutaikhoan, @tennganhang, @nhanl1, @nhanl2, @nhanl3, @nhanl4, @nhanl5, @nhanl6, @sttchon);
                   `);
     const bl = req.body;
     // res.json(bl);

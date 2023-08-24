@@ -1338,7 +1338,11 @@ router.get("/alllonhamaywithsoluonglokhpx", async (req, res) => {
       .execute("fetch_lonhamay_pivot_soluong_khpx");
     const lokehoach = result.recordset;
 
-    res.json(lokehoach);
+    res.json({
+      data: lokehoach,
+      success: true,
+      message: "load ok",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

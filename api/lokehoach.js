@@ -1675,9 +1675,13 @@ router.get("/getallkehoachphanxuong_chonlkhdesx", async (req, res) => {
     const result = await pool
       .request()
       .execute("fetch_lokhpx_pivot_soluong_losx_all_status");
-    const tenpx = result.recordset;
+    const lokh = result.recordset;
 
-    res.json(tenpx);
+    res.json({
+      success: true,
+      data: lokh,
+      message: "load ok",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

@@ -114,6 +114,44 @@ router.get("/reportluongthangvanphong", async (req, res) => {
   }
 });
 
+// report chi trả lương tháng phân xưởng
+router.get("/reportchitraluongthang_px", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mapb", req.query.mapb)
+      .query(
+        "select * from chitraluong where thang=@thang and nam=@nam and mapb=@mapb order by cast(sttchon as int)"
+      );
+    const rp = result.recordset;
+    res.json(rp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// report bảng lương theo tháng năm tổ
+router.get("/reportchitraluongthang_to", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mato", req.query.mato)
+      .query(
+        "select * from chitraluong where thang=@thang and nam=@nam and mato=@mato order by cast(sttchon as int)"
+      );
+    const rp = result.recordset;
+    res.json(rp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // execl data
 router.get("/execldatawithphanxuong", async (req, res) => {
   try {

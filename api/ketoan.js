@@ -837,9 +837,10 @@ router.post("/addchitraluongthang", async (req, res) => {
       .input("ck1", req.body.ck1)
       .input("ck2", req.body.ck2)
       .input("ghichu", req.body.ghichu)
-      .input("vanphong", req.body.vanphong).query(`
-                      INSERT INTO chitraluong (mapb, tenpb, mato, manv, hotennv, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, chutaikhoan, tennganhang, stk, chuyenkhoan, tienmat, ck1, ck2, ghichu, vanphong) 
-                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @chutaikhoan, @tennganhang, @stk, @chuyenkhoan, @tienmat, @ck1, @ck2, @ghichu, @vanphong);
+      .input("vanphong", req.body.vanphong)
+      .input("sttchon", req.body.sttchon).query(`
+                      INSERT INTO chitraluong (mapb, tenpb, mato, manv, hotennv, tongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, chutaikhoan, tennganhang, stk, chuyenkhoan, tienmat, ck1, ck2, ghichu, vanphong, sttchon) 
+                      VALUES (@mapb, @tenpb, @mato, @manv, @hotennv, @tongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @chutaikhoan, @tennganhang, @stk, @chuyenkhoan, @tienmat, @ck1, @ck2, @ghichu, @vanphong, @sttchon);
                   `);
     console.log(result);
     res.json({

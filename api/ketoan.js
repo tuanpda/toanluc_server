@@ -2357,6 +2357,7 @@ router.get("/loadluongchamcong", async (req, res) => {
       .request()
       .input("month", req.query.month)
       .input("year", req.query.year)
+      .input("makhoi", req.query.makhoi)
       .execute(`load_luongvp`);
     const luongvp = result.recordset;
 

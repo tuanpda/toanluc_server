@@ -289,6 +289,23 @@ router.get("/getallnhanvien", async (req, res) => {
   }
 });
 
+// get all nhan vien by khối
+router.get("/getallnhanvienmakhoi", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makhoi", req.query.makhoi)
+      .query(`SELECT * FROM nhanvien where makhoi=@makhoi order by mapb`);
+    const nv = result.recordset;
+
+    res.json(nv);
+    //console.log(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get nhan vien by ccd
 router.get("/getcccd", async (req, res) => {
   try {

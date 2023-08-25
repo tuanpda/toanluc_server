@@ -242,6 +242,25 @@ router.get("/statusnhanvien1", async (req, res) => {
   }
 });
 
+// get all data nhanvien status and with makhoi
+router.get("/statusnhanvien1withmakhoi", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makhoi", req.query.makhoi)
+      .query(
+        `SELECT * FROM nhanvien where trangthai=1 and makhoi=@makhoi order by mapb`
+      );
+    const nv = result.recordset;
+
+    res.json(nv);
+    //console.log(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // công nhân đã nghỉ việc
 router.get("/allnhanviennghiviec", async (req, res) => {
   try {

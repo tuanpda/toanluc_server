@@ -56,6 +56,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
         .input("diengiai", req.body.diengiai)
         .input("trangthai", req.body.trangthai)
         .input("updatedAt", req.body.updatedAt)
+        .input("chutaikhoan", req.body.chutaikhoan)
         .query(
           `UPDATE nhanvien SET 
               tennv = @tennv,
@@ -73,7 +74,8 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
               tennh = @tennh,
               diengiai = @diengiai,
               trangthai = @trangthai,
-              updatedAt = @updatedAt
+              updatedAt = @updatedAt,
+              chutaikhoan = @chutaikhoan
               WHERE _id = @_id;`
         );
       res.json({

@@ -171,6 +171,8 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("manv", req.body.manv)
       .input("tennv", req.body.tennv)
       .input("mapb", req.body.mapb)
+      .input("makhoi", req.body.makhoi)
+      .input("tenkhoi", req.body.tenkhoi)
       .input("tenphong", req.body.tenphong)
       .input("sodienthoai", req.body.sodienthoai)
       .input("cccd", req.body.cccd)
@@ -197,8 +199,8 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("luongtrachnhiem", req.body.luongtrachnhiem)
       .input("congdoan", req.body.congdoan)
       .input("trangthai", req.body.trangthai).query(`
-                      INSERT INTO nhanvien (manv, tennv, mapb, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai) 
-                      VALUES (@manv, @tennv, @mapb, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai);
+                      INSERT INTO nhanvien (manv, tennv, mapb, makhoi, tenkhoi, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai) 
+                      VALUES (@manv, @tennv, @mapb, @makhoi, @tenkhoi, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai);
                   `);
     const nhanvien = req.body;
     // res.json(nhanvien);

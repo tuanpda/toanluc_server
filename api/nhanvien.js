@@ -192,7 +192,7 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("tennh", req.body.tennh)
 
       .input("diengiai", req.body.diengiai)
-      .input("createdAt", req.body.createdAt)
+      // .input("createdAt", req.body.createdAt)
       .input("accadd", req.body.accadd)
       .input("thuong", req.body.thuong)
       .input("dt_dieuchinh", req.body.dt_dieuchinh)
@@ -205,8 +205,8 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("congdoan", req.body.congdoan)
       .input("trangthai", req.body.trangthai)
       .input("chutaikhoan", req.body.chutaikhoan).query(`
-                      INSERT INTO nhanvien (manv, tennv, mapb, makhoi, tenkhoi, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai, chutaikhoan) 
-                      VALUES (@manv, @tennv, @mapb, @makhoi, @tenkhoi, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai, @chutaikhoan);
+                      INSERT INTO nhanvien (manv, tennv, mapb, makhoi, tenkhoi, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai, chutaikhoan) 
+                      VALUES (@manv, @tennv, @mapb, @makhoi, @tenkhoi, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai, @chutaikhoan);
                   `);
     const nhanvien = req.body;
     // res.json(nhanvien);

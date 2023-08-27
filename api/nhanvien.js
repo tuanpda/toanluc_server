@@ -166,7 +166,12 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
 
   try {
     await pool.connect();
-    const result = await pool
+    const result = await // .input("phucaptn", req.body.phucaptn)
+    // .input("luongphatsinh", req.body.luongphatsinh)
+    // .input("thuongdoanhthu", req.body.thuongdoanhthu)
+    // .input("ngaycong", req.body.ngaycong)
+    // .input("luongthemgio", req.body.luongthemgio)
+    pool
       .request()
       .input("manv", req.body.manv)
       .input("tennv", req.body.tennv)
@@ -199,14 +204,9 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("luongtrachnhiem", req.body.luongtrachnhiem)
       .input("congdoan", req.body.congdoan)
       .input("trangthai", req.body.trangthai)
-      .input("chutaikhoan", req.body.chutaikhoan)
-      .input("phucaptn", req.body.phucaptn)
-      .input("luongphatsinh", req.body.luongphatsinh)
-      .input("thuongdoanhthu", req.body.thuongdoanhthu)
-      .input("ngaycong", req.body.ngaycong)
-      .input("luongthemgio", req.body.luongthemgio).query(`
-                      INSERT INTO nhanvien (manv, tennv, mapb, makhoi, tenkhoi, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai, chutaikhoan, phucaptn, luongphatsinh, thuongdoanhthu, ngaycong, luongthemgio) 
-                      VALUES (@manv, @tennv, @mapb, @makhoi, @tenkhoi, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai, @chutaikhoan,  @phucaptn, @luongphatsinh, @thuongdoanhthu, @ngaycong, @luongthemgio);
+      .input("chutaikhoan", req.body.chutaikhoan).query(`
+                      INSERT INTO nhanvien (manv, tennv, mapb, makhoi, tenkhoi, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, luongtrachnhiem, congdoan, trangthai, chutaikhoan) 
+                      VALUES (@manv, @tennv, @mapb, @makhoi, @tenkhoi, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, @luongtrachnhiem, @congdoan, @trangthai, @chutaikhoan);
                   `);
     const nhanvien = req.body;
     // res.json(nhanvien);

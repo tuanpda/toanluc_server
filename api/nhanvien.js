@@ -34,8 +34,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
       .input("_id", req.params._id)
       .query(`SELECT * FROM nhanvien WHERE _id = @_id`);
     let nhanvien = result.recordset[0];
-    //console.log(user.email);
-    // console.log(req.file)
+    console.log(req.body.updatedAt);
     if (nhanvien) {
       await pool
         .request()
@@ -55,7 +54,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
         .input("tennh", req.body.tennh)
         .input("diengiai", req.body.diengiai)
         .input("trangthai", req.body.trangthai)
-        .input("updatedAt", req.body.updatedAt)
+        // .input("updatedAt", req.body.updatedAt)
         .input("chutaikhoan", req.body.chutaikhoan)
         .query(
           `UPDATE nhanvien SET 
@@ -74,7 +73,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
               tennh = @tennh,
               diengiai = @diengiai,
               trangthai = @trangthai,
-              updatedAt = @updatedAt,
+              
               chutaikhoan = @chutaikhoan
               WHERE _id = @_id;`
         );

@@ -41,6 +41,8 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
         .input("_id", req.params._id)
         .input("tennv", req.body.tennv)
         .input("mapb", req.body.mapb)
+        .input("makhoi", req.body.makhoi)
+        .input("tenkhoi", req.body.tenkhoi)
         .input("tenphong", req.body.tenphong)
         .input("sodienthoai", req.body.sodienthoai)
         .input("cccd", req.body.cccd)
@@ -60,6 +62,8 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
           `UPDATE nhanvien SET 
               tennv = @tennv,
               mapb =@mapb,
+              makhoi = @makhoi,
+              tenkhoi = @tenkhoi,
               tenphong = @tenphong,
               sodienthoai = @sodienthoai,
               cccd = @cccd,

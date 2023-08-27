@@ -229,7 +229,7 @@ router.get("/", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`SELECT * FROM nhanvien order by mapb`);
+      .query(`SELECT * FROM nhanvien order by makhoi, mapb`);
     const nv = result.recordset;
 
     res.json(nv);

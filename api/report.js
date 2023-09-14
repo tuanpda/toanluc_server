@@ -114,6 +114,24 @@ router.get("/reportluongthangvanphong", async (req, res) => {
   }
 });
 
+// report chi trả lương tháng toàn phân xưởng, tổ
+router.get("/reportchitraluongthang_allpxandto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .query(
+        "select * from chitraluong where thang=@thang and nam=@nam and vanphong=0 order by mapb, cast(sttchon as int)"
+      );
+    const rp = result.recordset;
+    res.json(rp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // report chi trả lương tháng phân xưởng
 router.get("/reportchitraluongthang_px", async (req, res) => {
   try {

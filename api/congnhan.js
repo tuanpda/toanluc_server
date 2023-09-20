@@ -694,7 +694,7 @@ router.post("/lapbienbanvipham", async (req, res) => {
   }
 });
 
-// log nhan sy
+// log nhan su
 router.post("/addlognhansu", async (req, res) => {
   try {
     await pool.connect();

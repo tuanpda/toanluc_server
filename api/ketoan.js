@@ -346,6 +346,8 @@ router.post("/addchamcongngoaigio", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
+      .input("mapb", req.body.mapb)
+      .input("tenpb", req.body.tenpb)
       .input("manv", req.body.manv)
       .input("tennv", req.body.tennv)
       .input("muctien", req.body.muctien)
@@ -354,8 +356,8 @@ router.post("/addchamcongngoaigio", async (req, res) => {
       .input("ghichu", req.body.ghichu)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy).query(`
-                      INSERT INTO ngoaigio (manv, tennv, muctien, sogio, ngaylam, ghichu, createdAt, createdBy) 
-                      VALUES (@manv, @tennv, @muctien, @sogio, @ngaylam, @ghichu, @createdAt, @createdBy);
+                      INSERT INTO ngoaigio (mapb, tenpb, manv, tennv, muctien, sogio, ngaylam, ghichu, createdAt, createdBy) 
+                      VALUES (@mapb, @tenpb, @manv, @tennv, @muctien, @sogio, @ngaylam, @ghichu, @createdAt, @createdBy);
                   `);
     const dmng = req.body;
     // res.json(anca);

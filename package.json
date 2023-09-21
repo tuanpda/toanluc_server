@@ -29,6 +29,7 @@
     "path": "^0.12.7",
     "read-excel-file": "^5.2.4",
     "request": "^2.88.2",
+    "socket.io": "^4.7.2",
     "xlsx": "^0.17.0"
   }
 }

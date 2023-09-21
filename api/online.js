@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const http = require("http");
 const socketIO = require("socket.io");
-
+const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 

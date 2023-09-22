@@ -441,7 +441,7 @@ router.post("/themluongthangvanphong", async (req, res) => {
       .input("hotennv", req.body.hotennv)
       .input("chucvu", req.body.chucvu)
       .input("mucluong", req.body.mucluong)
-      .input("luongngay", req.body.luongngay)
+      .input("luongthang", req.body.luongthang)
       .input("luongtrachnhiem", req.body.luongtrachnhiem)
       .input("bacluong", req.body.bacluong)
       .input("ngaycong", req.body.ngaycong)
@@ -451,6 +451,7 @@ router.post("/themluongthangvanphong", async (req, res) => {
       .input("phat", req.body.phat)
       .input("luongngoaigio", req.body.luongngoaigio)
       .input("sogiongoaigio", req.body.sogiongoaigio)
+      .input("sogiongoaigiochunhat", req.body.sogiongoaigiochunhat)
       .input("hotro", req.body.hotro)
       .input("tongluong", req.body.tongluong)
       .input("bhxh", req.body.bhxh)
@@ -465,8 +466,15 @@ router.post("/themluongthangvanphong", async (req, res) => {
       .input("status", req.body.status)
       .input("stk", req.body.stk)
       .input("tennganhang", req.body.tennganhang).query(`
-                      INSERT INTO luongthang_vp (mapb, tenpb, manv, hotennv, chucvu, mucluong, luongngay, luongtrachnhiem, bacluong, ngaycong, luongngaycong, dieuchinhdt, thuongdt, phat, luongngoaigio, sogiongoaigio, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang) 
-                      VALUES (@mapb, @tenpb, @manv, @hotennv, @chucvu, @mucluong, @luongngay, @luongtrachnhiem, @bacluong, @ngaycong, @luongngaycong, @dieuchinhdt, @thuongdt, @phat, @luongngoaigio, @sogiongoaigio, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk, @tennganhang);
+                      INSERT INTO luongthang_vp (mapb, tenpb, manv, hotennv, chucvu, mucluong, luongthang, 
+                        luongtrachnhiem, bacluong, ngaycong, luongngaycong, dieuchinhdt, thuongdt, phat, 
+                        luongngoaigio, sogiongoaigio, sogiongoaigiochunhat, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, 
+                        createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang) 
+                      VALUES (@mapb, @tenpb, @manv, @hotennv, @chucvu, @mucluong, @luongthang, 
+                        @luongtrachnhiem, @bacluong, @ngaycong, @luongngaycong, @dieuchinhdt, @thuongdt, 
+                        @phat, @luongngoaigio, @sogiongoaigio, @sogiongoaigiochunhat, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, 
+                        @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk,
+                         @tennganhang);
                   `);
     const bl = req.body;
     // res.json(bl);

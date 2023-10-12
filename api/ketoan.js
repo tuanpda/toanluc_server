@@ -1570,6 +1570,26 @@ and mapx=@mapx`);
 });
 
 // hủy lương tháng
+// router.delete("/delluongthang", async (req, res) => {
+//   try {
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("thang", req.query.thang)
+//       .input("nam", req.query.nam)
+//       .input("mapb", req.query.mapb)
+//       .query(
+//         `delete from luongthang where thang = @thang and nam = @nam and mapb=@mapb`
+//       );
+//     const ktn = result.recordset;
+
+//     res.json(ktn);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
+// hủy lương tháng
 router.delete("/delluongthang", async (req, res) => {
   try {
     await pool.connect();
@@ -1578,12 +1598,17 @@ router.delete("/delluongthang", async (req, res) => {
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
       .input("mapb", req.query.mapb)
+      .input("_id", req.query._id)
       .query(
-        `delete from luongthang where thang = @thang and nam = @nam and mapb=@mapb`
+        `delete from luongthang where thang = @thang and nam = @nam and mapb=@mapb and _id=@_id`
       );
     const ktn = result.recordset;
 
-    res.json(ktn);
+    res.json({
+      data: ktn,
+      success: true,
+      message: "deleted!",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

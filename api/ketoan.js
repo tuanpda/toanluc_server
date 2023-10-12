@@ -1588,6 +1588,26 @@ router.delete("/delluongthang", async (req, res) => {
   }
 });
 
+// hủy lương tháng tổ
+router.delete("/delluongthangtheoto", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mato", req.query.mato)
+      .query(
+        `delete from luongthang where thang = @thang and nam = @nam and mato=@mato`
+      );
+    const ktn = result.recordset;
+
+    res.json(ktn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // xem chi tiết lương công đoạn của từng công nhân
 router.get("/detailluongcongdoancn", async (req, res) => {
   try {

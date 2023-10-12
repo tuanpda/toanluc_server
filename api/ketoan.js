@@ -1623,12 +1623,17 @@ router.delete("/delluongthangtheoto", async (req, res) => {
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
       .input("mato", req.query.mato)
+      .input("_id", req.query._id)
       .query(
-        `delete from luongthang where thang = @thang and nam = @nam and mato=@mato`
+        `delete from luongthang where thang = @thang and nam = @nam and mato=@mato and _id=@_id`
       );
     const ktn = result.recordset;
 
-    res.json(ktn);
+    res.json({
+      data: ktn,
+      success: true,
+      message: "deleted!",
+    });
   } catch (error) {
     res.status(500).json(error);
   }

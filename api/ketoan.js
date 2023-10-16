@@ -1042,6 +1042,24 @@ router.get("/getkeythangnamwithdata", async (req, res) => {
   }
 });
 
+// lấy keythangnam từ bảng luongthang văn phòng
+router.get("/getkeythangnamwithdatavanphong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("key_thangnam", req.query.key_thangnam)
+      .query(
+        `select manv+'-'+hotennv+'-'+key_thangnam as keyfind from luongthang_vp where key_thangnam=@key_thangnam`
+      );
+    const ktn = result.recordset;
+
+    res.json(ktn);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật status trong công đoạn lương
 router.patch("/updatestatusluongcongdoan/:_id", async (req, res) => {
   try {

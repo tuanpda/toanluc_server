@@ -104,8 +104,9 @@ router.get("/reportluongthangvanphong", async (req, res) => {
       .request()
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
+      .input("makhoi", req.query.makhoi)
       .query(
-        "select * from luongthang_vp where thang=@thang and nam=@nam order by mapb"
+        "select * from luongthang_vp where thang=@thang and nam=@nam and makhoi=@makhoi order by mapb"
       );
     const rp = result.recordset;
     res.json(rp);

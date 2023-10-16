@@ -1050,7 +1050,7 @@ router.get("/getkeythangnamwithdatavanphong", async (req, res) => {
       .request()
       .input("key_thangnam", req.query.key_thangnam)
       .query(
-        `select manv+'-'+hotennv+'-'+key_thangnam as keyfind from luongthang_vp where key_thangnam=@key_thangnam`
+        `select makhoi+'-'+manv+'-'+hotennv+'-'+key_thangnam as keyfind from luongthang_vp where key_thangnam=@key_thangnam`
       );
     const ktn = result.recordset;
 

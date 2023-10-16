@@ -465,16 +465,17 @@ router.post("/themluongthangvanphong", async (req, res) => {
       .input("nam", req.body.nam)
       .input("key_thangnam", req.body.key_thangnam)
       .input("status", req.body.status)
+      .input("chutaikhoan", req.body.chutaikhoan)
       .input("stk", req.body.stk)
       .input("tennganhang", req.body.tennganhang).query(`
                       INSERT INTO luongthang_vp (makhoi, mapb, tenpb, manv, hotennv, chucvu, mucluong, luongthang, 
                         luongtrachnhiem, bacluong, ngaycong, luongngaycong, dieuchinhdt, thuongdt, phat, 
                         luongngoaigio, sogiongoaigio, sogiongoaigiochunhat, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, 
-                        createdAt, createdBy, thang, nam, key_thangnam, status, stk, tennganhang) 
+                        createdAt, createdBy, thang, nam, key_thangnam, status, chutaikhoan, stk, tennganhang) 
                       VALUES (@makhoi, @mapb, @tenpb, @manv, @hotennv, @chucvu, @mucluong, @luongthang, 
                         @luongtrachnhiem, @bacluong, @ngaycong, @luongngaycong, @dieuchinhdt, @thuongdt, 
                         @phat, @luongngoaigio, @sogiongoaigio, @sogiongoaigiochunhat, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, 
-                        @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @stk,
+                        @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @chutaikhoan, @stk,
                          @tennganhang);
                   `);
     const bl = req.body;

@@ -467,16 +467,19 @@ router.post("/themluongthangvanphong", async (req, res) => {
       .input("status", req.body.status)
       .input("chutaikhoan", req.body.chutaikhoan)
       .input("stk", req.body.stk)
-      .input("tennganhang", req.body.tennganhang).query(`
+      .input("tennganhang", req.body.tennganhang)
+      .input("nhanl1", req.body.nhanl1)
+      .input("nhanl2", req.body.nhanl2)
+      .input("nhanl3", req.body.nhanl3).query(`
                       INSERT INTO luongthang_vp (makhoi, mapb, tenpb, manv, hotennv, chucvu, mucluong, luongthang, 
                         luongtrachnhiem, bacluong, ngaycong, luongngaycong, dieuchinhdt, thuongdt, phat, 
                         luongngoaigio, sogiongoaigio, sogiongoaigiochunhat, hotro, tongluong, bhxh, congdoan, tongkt, luongnhan, 
-                        createdAt, createdBy, thang, nam, key_thangnam, status, chutaikhoan, stk, tennganhang) 
+                        createdAt, createdBy, thang, nam, key_thangnam, status, chutaikhoan, stk, tennganhang, nhanl1, nhanl2, nhanl3) 
                       VALUES (@makhoi, @mapb, @tenpb, @manv, @hotennv, @chucvu, @mucluong, @luongthang, 
                         @luongtrachnhiem, @bacluong, @ngaycong, @luongngaycong, @dieuchinhdt, @thuongdt, 
                         @phat, @luongngoaigio, @sogiongoaigio, @sogiongoaigiochunhat, @hotro, @tongluong, @bhxh, @congdoan, @tongkt, 
                         @luongnhan, @createdAt, @createdBy, @thang, @nam, @key_thangnam, @status, @chutaikhoan, @stk,
-                         @tennganhang);
+                         @tennganhang, @nhanl1, @nhanl2, @nhanl3);
                   `);
     const bl = req.body;
     // res.json(bl);

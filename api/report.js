@@ -189,6 +189,25 @@ router.get("/reportchitraluongthangallvp", async (req, res) => {
   }
 });
 
+// report chi trả lương tháng theo khối văn phòng
+router.get("/reportchitraluongthang_khoi", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("thang", req.query.thang)
+      .input("nam", req.query.nam)
+      .input("mapb", req.query.mapb)
+      .query(
+        "select * from chitraluong where thang=@thang and nam=@nam and vanphong=1 and mapb=@mapb order by mapb"
+      );
+    const rp = result.recordset;
+    res.json(rp);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // execl data
 router.get("/execldatawithphanxuong", async (req, res) => {
   try {

@@ -197,9 +197,9 @@ router.get("/reportchitraluongthang_khoi", async (req, res) => {
       .request()
       .input("thang", req.query.thang)
       .input("nam", req.query.nam)
-      .input("mapb", req.query.mapb)
+      .input("makhoi", req.query.makhoi)
       .query(
-        "select * from chitraluong where thang=@thang and nam=@nam and vanphong=1 and mapb=@mapb order by mapb"
+        "select * from chitraluong where thang=@thang and nam=@nam and vanphong=1 and makhoi=@makhoi order by mapb"
       );
     const rp = result.recordset;
     res.json(rp);

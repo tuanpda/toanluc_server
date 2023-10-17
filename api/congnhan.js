@@ -266,6 +266,30 @@ router.get("/updatethongtinbank", async (req, res) => {
   }
 });
 
+router.get("/showallnhanvienwitharrmacn", async (req, res) => {
+  try {
+    const manv = req.query.manv;
+    // console.log(idlist);
+    const strmanv = "'" + manv.join("','") + "'";
+    // console.log(strmacn);
+
+    await pool.connect();
+    const result = await pool.request().query(
+      `select * from nhanvien where
+         manv in (${strmanv}) `
+    );
+    const dgc = result.recordset;
+
+    res.json({
+      success: true,
+      message: "load",
+      data: dgc,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // bao cao thang theo to
 router.get("/baocaothangtheoto", async (req, res) => {
   try {

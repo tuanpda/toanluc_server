@@ -52,6 +52,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
         .input("mucluong", req.body.mucluong)
         .input("lhkhancap", req.body.lhkhancap)
         .input("diachilh", req.body.diachilh)
+        .input("chutaikhoan", req.body.chutaikhoan)
         .input("sotknh", req.body.sotknh)
         .input("tennh", req.body.tennh)
         .input("diengiai", req.body.diengiai)
@@ -73,6 +74,7 @@ router.patch("/:_id", upload.single("anhdd"), async (req, res) => {
               mucluong = @mucluong,
               lhkhancap = @lhkhancap,
               diachilh = @diachilh,
+              chutaikhoan = @chutaikhoan,
               sotknh = @sotknh,
               tennh = @tennh,
               diengiai = @diengiai,

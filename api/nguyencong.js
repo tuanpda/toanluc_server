@@ -197,9 +197,11 @@ router.post("/adddongiacong", async (req, res) => {
       .input("congdoan", req.body.congdoan)
       .input("khsp", req.body.khsp)
       .input("dongia", req.body.dongia)
+      .input("thoigian", req.body.thoigian)
+      .input("somay", req.body.somay)
       .input("ghichu", req.body.ghichu).query(`
-                      INSERT INTO dongiacong (PX, congdoan, khsp, dongia, ghichu) 
-                      VALUES (@PX, @congdoan, @khsp, @dongia, @ghichu);
+                      INSERT INTO dongiacong (PX, congdoan, khsp, dongia, thoigian, somay, ghichu) 
+                      VALUES (@PX, @congdoan, @khsp, @dongia, @thoigian, @somay, @ghichu);
                   `);
     const nc = req.body;
     res.json(nc);
@@ -556,6 +558,8 @@ router.patch("/dongiacong/:_id", async (req, res) => {
         .input("congdoan", req.body.congdoan)
         .input("khsp", req.body.khsp)
         .input("dongia", req.body.dongia)
+        .input("thoigian", req.body.thoigian)
+        .input("somay", req.body.somay)
         .input("ghichu", req.body.ghichu)
         .query(
           `UPDATE dongiacong SET 
@@ -563,6 +567,8 @@ router.patch("/dongiacong/:_id", async (req, res) => {
               congdoan = @congdoan,
               khsp = @khsp,
               dongia = @dongia,
+              thoigian = @thoigian,
+              somay = @somay,
               ghichu = @ghichu
               WHERE _id = @_id;`
         );

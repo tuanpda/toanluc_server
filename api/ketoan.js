@@ -1131,6 +1131,41 @@ router.patch("/updateluongcongnhat/:_id", async (req, res) => {
   }
 });
 
+// cập nhật công nhật lương cho công nhân
+router.patch("/updateloaicongnhat/:_id", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.params._id)
+      .query(`SELECT * FROM congnhat WHERE _id = @_id`);
+    let ut = result.recordset[0];
+    if (ut) {
+      await pool
+        .request()
+        .input("_id", req.params._id)
+        .input("macongnhat", req.body.macongnhat)
+        .input("tencongnhat", req.body.tencongnhat)
+        .input("dongia", req.body.dongia)
+        .query(
+          `UPDATE congnhat SET 
+                macongnhat=@macongnhat,
+                tencongnhat=@tencongnhat,
+                dongia=@dongia          
+              WHERE _id = @_id;`
+        );
+      res.json({
+        success: true,
+        message: "Update success !",
+      });
+    } else {
+      console.log("Not found");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật tình trạng cho lô sản xuất
 router.patch("/updatelosx/:_id", async (req, res) => {
   try {

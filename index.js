@@ -3,6 +3,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const morgan = require("morgan");
+const verifyToken = require("./services/verify-token");
 
 const app = express();
 dotenv.config();
@@ -11,6 +12,27 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParse.urlencoded({ extended: false }));
 app.use(bodyParse.json());
+
+// Middleware xác thực chỉ áp dụng cho các endpoint cần được bảo vệ
+app.use(
+  [
+    "/",
+    "/api/users",
+    "/api/nhanvien",
+    "/api/phongban",
+    "/api/chucvu",
+    "/api/trinhdo",
+    "/api/sanpham",
+    "/api/lokehoach",
+    "/api/ketoan",
+    "/api/logsystem",
+    "/api/report",
+    "/api/congnhan",
+    "/api/nguyencong",
+    "/api/online",
+  ],
+  verifyToken
+);
 
 app.get("/", (req, res) => {
   res.send("<h1>🤖 API SQLSERVER from NODEJS - TÍNH LƯƠNG CÔNG ĐOẠN</h1>");

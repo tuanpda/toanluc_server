@@ -4106,7 +4106,7 @@ router.post("/importkehoachnam", upload.single("file"), async (req, res) => {
     try {
       await pool.connect();
       const results = await pool.request().bulk(table);
-      console.log(`rows affected ${results.rowsAffected}`);
+      // console.log(`rows affected ${results.rowsAffected}`);
     } catch (error) {
       return res.status(500).json({
         status: "error",

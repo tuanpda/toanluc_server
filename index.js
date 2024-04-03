@@ -54,6 +54,6 @@ app.use("/api/online", require("./api/online"));
 
 app.listen(process.env.PORT, () => {
   console.log(
-    `Server started running on ${process.env.PORT} for ${process.env.NODE_ENV}`
+    `Server started running on ${process.env.PORT}`
   );
 });

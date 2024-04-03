@@ -13,29 +13,10 @@ app.use(morgan("dev"));
 app.use(bodyParse.urlencoded({ extended: false }));
 app.use(bodyParse.json());
 
-// Middleware xác thực chỉ áp dụng cho các endpoint cần được bảo vệ
-// app.use(
-//   [
-//     "/",
-//     "/api/users",
-//     "/api/nhanvien",
-//     "/api/phongban",
-//     "/api/chucvu",
-//     "/api/trinhdo",
-//     "/api/sanpham",
-//     "/api/lokehoach",
-//     "/api/ketoan",
-//     "/api/logsystem",
-//     "/api/report",
-//     "/api/congnhan",
-//     "/api/nguyencong",
-//     "/api/online",
-//   ],
-//   verifyToken
-// );
+app.use("/api", verifyToken);
 
 app.get("/", (req, res) => {
-  res.send("<h1>🤖 API SQLSERVER from NODEJS - TÍNH LƯƠNG CÔNG ĐOẠN</h1>");
+  res.send("<h1>🤖 API SQLSERVER from NODEJS TL.JSC</h1>");
 });
 
 app.use("/api/users", require("./api/users"));

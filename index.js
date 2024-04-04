@@ -13,11 +13,13 @@ app.use(morgan("dev"));
 app.use(bodyParse.urlencoded({ extended: false }));
 app.use(bodyParse.json());
 
-app.use("/api", verifyToken);
-
 app.get("/", (req, res) => {
   res.send("<h1>🤖 API SQLSERVER from NODEJS TL.JSC</h1>");
 });
+
+app.use("/auth/login", require("./auth/login"));
+
+app.use("/api", verifyToken);
 
 app.use("/api/users", require("./api/users"));
 app.use("/api/nhanvien", require("./api/nhanvien"));

@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 router.post("/access/login", async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
+  // console.log(req.body);
   try {
     await pool.connect();
     const result = await pool
@@ -23,8 +24,9 @@ router.post("/access/login", async (req, res, next) => {
       });
     } else {
       const match = await bcrypt.compare(password, user.password);
+      console.log(match);
       if (match) {
-        if (user.active !== true) {
+        if (user.status !== true) {
           res.status(403).json({
             success: 4,
             message: "Authenticate failed, not active user",

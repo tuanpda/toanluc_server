@@ -7,7 +7,7 @@ const SQL_UID = process.env.SQL_UID
 const SQL_PWD = process.env.SQL_PWD
 
 // const SQL_DRIVER = "SQL server";
-// const SQL_SERVER = "192.168.1.97";
+// const SQL_SERVER = "192.168.1.97"; kết nối vào bằng đường public là địa chỉ 14.224.129.177
 // const SQL_DATABASE = "tinhluong_bu";
 // const SQL_UID = "sa";
 // const SQL_PWD = "Sa)(%^0702!@";

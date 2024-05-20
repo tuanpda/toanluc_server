@@ -242,7 +242,7 @@ router.get("/showallcongnhanwitharrmacn", async (req, res) => {
 });
 router.get("/updatethongtinbank", async (req, res) => {
   try {
-    // console.log(req.query);
+    console.log(req.query);
     const _id = req.query._id;
     const manv = req.query.manv;
     const key_thangnam = req.query.key_thangnam;

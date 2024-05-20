@@ -1691,6 +1691,76 @@ router.get("/getallkehoachphanxuong_chonlkhdesx", async (req, res) => {
   }
 });
 
+// get all lô kế hoạch phân xưởng sắp xếp theo mã phân xưởng có phân trang fix ngày 16 tháng 5 2024
+router.get("/getallkehoachphanxuong_chonlkhdesx_pagi", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const offset = (page - 1) * limit;
+
+    await pool.connect();
+
+    // Truy vấn chính với phân trang
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(
+        `SELECT khpx.*, 
+                COALESCE(tongsoluong, 0) AS tong_soluong, 
+                COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
+                COALESCE(tongsodat, 0) AS tongso_dat, 
+                COALESCE(tongsohong, 0) AS tongso_hong
+         FROM lokehoachphanxuong AS khpx 
+         LEFT JOIN (
+             SELECT _id_khpx, 
+                    SUM(CAST(soluonglsx AS INT)) AS tongsoluong, 
+                    SUM(CAST(soluongkhsx AS INT)) AS tongsoluongnhanh,
+                    SUM(CAST(tongdat AS INT)) AS tongsodat, 
+                    SUM(CAST(tonghong AS INT)) AS tongsohong
+             FROM losanxuat
+             GROUP BY _id_khpx
+         ) AS losx ON khpx._id = losx._id_khpx
+         ORDER BY khpx._id
+         OFFSET @offset ROWS
+         FETCH NEXT @limit ROWS ONLY;`
+      );
+
+    const data = result.recordset;
+
+    // Truy vấn để đếm tổng số bản ghi
+    const countResult = await pool.request().query(
+      `SELECT COUNT(*) AS totalCount
+         FROM lokehoachphanxuong AS khpx 
+         LEFT JOIN (
+             SELECT _id_khpx
+             FROM losanxuat
+             GROUP BY _id_khpx
+         ) AS losx ON khpx._id = losx._id_khpx;`
+    );
+
+    const totalCount = countResult.recordset[0].totalCount;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    // Tạo đối tượng JSON phản hồi
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // get all lô kế hoạch phân xưởng sắp xếp theo mã phân xưởng chỉ status=2
 router.get("/getallkehoachphanxuongwithout0", async (req, res) => {
   try {
@@ -1913,8 +1983,45 @@ router.get("/filterfulldk", async (req, res) => {
 });
 
 // lọc dữ liệu theo tiêu chí full tiêu chí --- mã thành phẩm (# mã sản phẩm)
+// router.get("/filterfulldkmtp", async (req, res) => {
+//   try {
+//     const mapxList = req.query.mapx;
+//     const statusList = req.query.status;
+//     // console.log(mapxList);
+//     const strpx = "'" + mapxList.join("','") + "'";
+//     // console.log(strpx);
+//     const matp = req.query.matp;
+//     // console.log(matp);
+//     const strstatus = "'" + statusList.join("','") + "'";
+//     // console.log(strstatus);
+//     const nhomtp = req.query.nhomtp;
+//     // console.log(nhomtp);
+//     await pool.connect();
+//     const result = await pool.request().query(
+//       `with t as(
+//         SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+// coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+// 		FROM lokehoachphanxuong AS khpx
+// 		LEFT JOIN (
+// 		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+// 		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+// 		  FROM losanxuat
+// 		  GROUP BY _id_khpx
+// 		) AS losx ON khpx._id = losx._id_khpx
+//       ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
+//     );
+//     const tenpx = result.recordset;
+//     res.json(tenpx);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
 router.get("/filterfulldkmtp", async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
     const mapxList = req.query.mapx;
     const statusList = req.query.status;
     // console.log(mapxList);
@@ -1927,23 +2034,424 @@ router.get("/filterfulldkmtp", async (req, res) => {
     const nhomtp = req.query.nhomtp;
     // console.log(nhomtp);
     await pool.connect();
-    const result = await pool.request().query(
-      `with t as(
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(
+        `with t as(
         SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
 coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
-		FROM lokehoachphanxuong AS khpx 
+		FROM lokehoachphanxuong AS khpx
 		LEFT JOIN (
 		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
 		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
 		  FROM losanxuat
 		  GROUP BY _id_khpx
 		) AS losx ON khpx._id = losx._id_khpx
-      ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
+      ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}' ORDER BY t._id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`
+      );
+
+    // console.log(result);
+    const data = result.recordset;
+
+    // Đếm tổng số lượng bản ghi
+    const countResult = await pool.request().query(
+      `with t as(
+                SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+        coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+        		FROM lokehoachphanxuong AS khpx
+        		LEFT JOIN (
+        		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+        		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+        		  FROM losanxuat
+        		  GROUP BY _id_khpx
+        		) AS losx ON khpx._id = losx._id_khpx
+              ) SELECT COUNT(*) AS totalCount from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
     );
-    const tenpx = result.recordset;
-    res.json(tenpx);
+    const totalCount = countResult.recordset[0].totalCount;
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    // Tạo đối tượng JSON phản hồi
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+router.get("/filterChonlokhdesx", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const mapxList = req.query.mapx
+      ? Array.isArray(req.query.mapx)
+        ? req.query.mapx
+        : [req.query.mapx]
+      : [];
+    const matp = req.query.matp || "";
+    const statusList = req.query.status
+      ? Array.isArray(req.query.status)
+        ? req.query.status
+        : [req.query.status]
+      : [];
+    const nhomtp = req.query.nhomtp || "";
+
+    await pool.connect();
+
+    let baseQuery = `WITH t AS (
+                       SELECT khpx.*, 
+                              COALESCE(tongsoluong, 0) AS tong_soluong, 
+                              COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
+                              COALESCE(tongsodat, 0) AS tongso_dat, 
+                              COALESCE(tongsohong, 0) AS tongso_hong
+                       FROM lokehoachphanxuong AS khpx
+                       LEFT JOIN (
+                         SELECT _id_khpx, 
+                                SUM(CAST(soluonglsx AS INT)) AS tongsoluong, 
+                                SUM(CAST(soluongkhsx AS INT)) AS tongsoluongnhanh,
+                                SUM(CAST(tongdat AS INT)) AS tongsodat, 
+                                SUM(CAST(tonghong AS INT)) AS tongsohong
+                         FROM losanxuat
+                         GROUP BY _id_khpx
+                       ) AS losx ON khpx._id = losx._id_khpx
+                     ) 
+                     SELECT * FROM t WHERE 1=1`;
+
+    let countQuery = `WITH t AS (
+                       SELECT khpx.*, 
+                              COALESCE(tongsoluong, 0) AS tong_soluong, 
+                              COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
+                              COALESCE(tongsodat, 0) AS tongso_dat, 
+                              COALESCE(tongsohong, 0) AS tongso_hong
+                       FROM lokehoachphanxuong AS khpx
+                       LEFT JOIN (
+                         SELECT _id_khpx, 
+                                SUM(CAST(soluonglsx AS INT)) AS tongsoluong, 
+                                SUM(CAST(soluongkhsx AS INT)) AS tongsoluongnhanh,
+                                SUM(CAST(tongdat AS INT)) AS tongsodat, 
+                                SUM(CAST(tonghong AS INT)) AS tongsohong
+                         FROM losanxuat
+                         GROUP BY _id_khpx
+                       ) AS losx ON khpx._id = losx._id_khpx
+                     ) 
+                     SELECT COUNT(*) AS totalCount FROM t WHERE 1=1`;
+
+    // Adding conditions based on provided parameters
+    if (mapxList.length > 0) {
+      const strpx = "'" + mapxList.join("','") + "'";
+      baseQuery += ` AND t.mapx IN (${strpx})`;
+      countQuery += ` AND t.mapx IN (${strpx})`;
+    }
+    if (matp) {
+      baseQuery += ` AND t.mathanhpham = '${matp}'`;
+      countQuery += ` AND t.mathanhpham = '${matp}'`;
+    }
+    if (statusList.length > 0) {
+      const strstatus = "'" + statusList.join("','") + "'";
+      baseQuery += ` AND t.status IN (${strstatus})`;
+      countQuery += ` AND t.status IN (${strstatus})`;
+    }
+    if (nhomtp) {
+      baseQuery += ` AND t.nhomthanhpham = '${nhomtp}'`;
+      countQuery += ` AND t.nhomthanhpham = '${nhomtp}'`;
+    }
+
+    baseQuery += ` ORDER BY t._id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`;
+
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(baseQuery);
+
+    const data = result.recordset;
+
+    const countResult = await pool.request().query(countQuery);
+    const totalCount = countResult.recordset[0].totalCount;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error(error); // Log lỗi ra console
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+router.get("/filterDanhsachLSX", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx
+      ? Array.isArray(req.query.mapx)
+        ? req.query.mapx
+        : [req.query.mapx]
+      : [];
+    const matoList = req.query.mato
+      ? Array.isArray(req.query.mato)
+        ? req.query.mato
+        : [req.query.mato]
+      : [];
+    const statusList = req.query.status
+      ? Array.isArray(req.query.status)
+        ? req.query.status
+        : [req.query.status]
+      : [];
+    const masp = req.query.masp || "";
+    const nhomsp = req.query.nhomsp || "";
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    await pool.connect();
+
+    let query = `SELECT * FROM losanxuat WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) AS totalCount FROM losanxuat WHERE 1=1`;
+
+    if (mapxList.length > 0) {
+      const strpx = "'" + mapxList.join("','") + "'";
+      query += ` AND mapx IN (${strpx})`;
+      countQuery += ` AND mapx IN (${strpx})`;
+    }
+
+    if (matoList.length > 0) {
+      const strto = "'" + matoList.join("','") + "'";
+      query += ` AND mato IN (${strto})`;
+      countQuery += ` AND mato IN (${strto})`;
+    }
+
+    if (masp) {
+      query += ` AND masp = '${masp}'`;
+      countQuery += ` AND masp = '${masp}'`;
+    }
+
+    if (statusList.length > 0) {
+      const strstatus = "'" + statusList.join("','") + "'";
+      query += ` AND status IN (${strstatus})`;
+      countQuery += ` AND status IN (${strstatus})`;
+    }
+
+    if (nhomsp) {
+      query += ` AND nhomsp = '${nhomsp}'`;
+      countQuery += ` AND nhomsp = '${nhomsp}'`;
+    }
+
+    query += ` ORDER BY _id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`;
+
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(query);
+    const data = result.recordset;
+
+    const countResult = await pool.request().query(countQuery);
+    const totalCount = countResult.recordset[0].totalCount;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+router.get("/filterVaoluongcongdoan", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx
+      ? Array.isArray(req.query.mapx)
+        ? req.query.mapx
+        : [req.query.mapx]
+      : [];
+    const statusList = req.query.status
+      ? Array.isArray(req.query.status)
+        ? req.query.status
+        : [req.query.status]
+      : [];
+    const masp = req.query.masp || "";
+    const ngayhoanthanhtt = req.query.ngayhoanthanhtt || "";
+    // console.log(ngayhoanthanhtt)
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    await pool.connect();
+
+    let query = `SELECT * FROM losanxuat WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) AS totalCount FROM losanxuat WHERE 1=1`;
+
+    if (mapxList.length > 0) {
+      const strpx = "'" + mapxList.join("','") + "'";
+      query += ` AND mapx IN (${strpx})`;
+      countQuery += ` AND mapx IN (${strpx})`;
+    }
+
+    if (masp) {
+      query += ` AND masp = '${masp}'`;
+      countQuery += ` AND masp = '${masp}'`;
+    }
+
+    if (statusList.length > 0) {
+      const strstatus = "'" + statusList.join("','") + "'";
+      query += ` AND status IN (${strstatus})`;
+      countQuery += ` AND status IN (${strstatus})`;
+    }
+
+    if (ngayhoanthanhtt) {
+      query += ` and ngayhoanthanhtt='${ngayhoanthanhtt}'`;
+      countQuery += ` and ngayhoanthanhtt='${ngayhoanthanhtt}'`;
+    }
+
+    query += ` ORDER BY _id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`;
+
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(query);
+    const data = result.recordset;
+
+    const countResult = await pool.request().query(countQuery);
+    const totalCount = countResult.recordset[0].totalCount;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+router.get("/filterKiemvachotphieu", async (req, res) => {
+  try {
+    const mapxList = req.query.mapx
+      ? Array.isArray(req.query.mapx)
+        ? req.query.mapx
+        : [req.query.mapx]
+      : [];
+    const batdau = req.query.dateFrom;
+    const ketthuc = req.query.dateTo;
+    const status_tinhluong = req.query.status_tinhluong;
+    // console.log(req.query);
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    await pool.connect();
+
+    let query = `SELECT * FROM losanxuat WHERE 1=1 AND status = 3`;
+    let countQuery = `SELECT COUNT(*) AS totalCount FROM losanxuat WHERE 1=1 AND status = 3`;
+
+    if (mapxList.length > 0) {
+      const strpx = "'" + mapxList.join("','") + "'";
+      query += ` AND mapx IN (${strpx})`;
+      countQuery += ` AND mapx IN (${strpx})`;
+    }
+
+    if (status_tinhluong) {
+      query += ` and status_tinhluong=${status_tinhluong}`;
+      countQuery += ` and status_tinhluong=${status_tinhluong}`;
+    }
+
+    // Thêm điều kiện cho ngày bắt đầu nếu có
+    if (batdau) {
+      query += ` and ngayhoanthanhtt >= '${batdau}'`;
+      countQuery += ` and ngayhoanthanhtt >= '${batdau}'`;
+    }
+
+    // Thêm điều kiện cho ngày kết thúc nếu có
+    if (ketthuc) {
+      query += ` and ngayhoanthanhtt <= '${ketthuc}'`;
+      countQuery += ` and ngayhoanthanhtt <= '${ketthuc}'`;
+    }
+
+    query += ` ORDER BY _id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`;
+
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(query);
+    const data = result.recordset;
+
+    const countResult = await pool.request().query(countQuery);
+    const totalCount = countResult.recordset[0].totalCount;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 });
 
@@ -2192,6 +2700,10 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 // lọc dữ liệu theo tiêu chí chỉ có nhomsp và trạng thái - new update
 router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const offset = (page - 1) * limit;
+
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
@@ -2199,22 +2711,72 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool.request().query(
-      `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
-coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
-		FROM lokehoachphanxuong AS khpx 
-		LEFT JOIN (
-		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
-		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
-		  FROM losanxuat
-		  GROUP BY _id_khpx
-		) AS losx ON khpx._id = losx._id_khpx
-      ) select * from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
-    );
-    const tenpx = result.recordset;
+    const result = await pool
+      .request()
+      .input("offset", offset)
+      .input("limit", limit)
+      .query(
+        `WITH t AS (
+          SELECT khpx.*, 
+                 COALESCE(tongsoluong, 0) AS tong_soluong, 
+                 COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
+                 COALESCE(tongsodat, 0) AS tongso_dat, 
+                 COALESCE(tongsohong, 0) AS tongso_hong
+          FROM lokehoachphanxuong AS khpx 
+          LEFT JOIN (
+            SELECT _id_khpx, 
+                   SUM(CAST(soluonglsx AS INT)) AS tongsoluong, 
+                   SUM(CAST(soluongkhsx AS INT)) AS tongsoluongnhanh,
+                   SUM(CAST(tongdat AS INT)) AS tongsodat, 
+                   SUM(CAST(tonghong AS INT)) AS tongsohong
+            FROM losanxuat
+            GROUP BY _id_khpx
+          ) AS losx ON khpx._id = losx._id_khpx
+        ) 
+        SELECT * 
+        FROM t 
+        WHERE t.nhomthanhpham='${nhomtp}' 
+          AND t.status IN (${strstatus}) 
+          AND t.mapx IN (${strpx}) 
+        ORDER BY t.nhomthanhpham DESC -- Đây là nơi bạn sắp xếp
+        OFFSET @offset ROWS 
+        FETCH NEXT @limit ROWS ONLY`
+      );
 
-    res.json(tenpx);
+    const data = result.recordset;
+
+    // Đếm tổng số lượng bản ghi
+    const countResult = await pool.request().query(
+      `with t as(
+          SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+  coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+      FROM lokehoachphanxuong AS khpx 
+      LEFT JOIN (
+        SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+        sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+        FROM losanxuat
+        GROUP BY _id_khpx
+      ) AS losx ON khpx._id = losx._id_khpx
+        ) SELECT COUNT(*) AS totalCount from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
+    );
+    const totalCount = countResult.recordset[0].totalCount;
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const info = {
+      count: totalCount,
+      pages: totalPages,
+      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+    };
+
+    // Tạo đối tượng JSON phản hồi
+    const response = {
+      info: info,
+      results: data,
+    };
+
+    res.json(response);
   } catch (error) {
     res.status(500).json(error);
   }

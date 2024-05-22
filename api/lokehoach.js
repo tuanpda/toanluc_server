@@ -1983,8 +1983,49 @@ router.get("/filterfulldk", async (req, res) => {
 });
 
 // lọc dữ liệu theo tiêu chí full tiêu chí --- mã thành phẩm (# mã sản phẩm)
+router.get("/filterfulldkmtp", async (req, res) => {
+  // console.log(req.query);
+  try {
+    const mapxList = req.query.mapx;
+    const statusList = req.query.status;
+    // console.log(mapxList);
+    const strpx = "'" + mapxList.join("','") + "'";
+    // console.log(strpx);
+    const matp = req.query.mathanhpham;
+    // console.log(matp);
+    const strstatus = "'" + statusList.join("','") + "'";
+    // console.log(strstatus);
+    const nhomtp = req.query.nhomthanhpham;
+    // console.log(nhomtp);
+
+    await pool.connect();
+    const result = await pool.request().query(
+      `with t as(
+        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+		FROM lokehoachphanxuong AS khpx
+		LEFT JOIN (
+		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+		  FROM losanxuat
+		  GROUP BY _id_khpx
+		) AS losx ON khpx._id = losx._id_khpx
+      ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
+    );
+    console.log(result.recordset);
+    const tenpx = result.recordset;
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // router.get("/filterfulldkmtp", async (req, res) => {
 //   try {
+//     const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
+//     const limit = parseInt(req.query.limit) || 20;
+//     const offset = (page - 1) * limit;
+
 //     const mapxList = req.query.mapx;
 //     const statusList = req.query.status;
 //     // console.log(mapxList);
@@ -1997,8 +2038,12 @@ router.get("/filterfulldk", async (req, res) => {
 //     const nhomtp = req.query.nhomtp;
 //     // console.log(nhomtp);
 //     await pool.connect();
-//     const result = await pool.request().query(
-//       `with t as(
+//     const result = await pool
+//       .request()
+//       .input("offset", offset)
+//       .input("limit", limit)
+//       .query(
+//         `with t as(
 //         SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
 // coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 // 		FROM lokehoachphanxuong AS khpx
@@ -2008,89 +2053,48 @@ router.get("/filterfulldk", async (req, res) => {
 // 		  FROM losanxuat
 // 		  GROUP BY _id_khpx
 // 		) AS losx ON khpx._id = losx._id_khpx
-//       ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
+//       ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}' ORDER BY t._id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`
+//       );
+
+//     // console.log(result);
+//     const data = result.recordset;
+
+//     // Đếm tổng số lượng bản ghi
+//     const countResult = await pool.request().query(
+//       `with t as(
+//                 SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+//         coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+//         		FROM lokehoachphanxuong AS khpx
+//         		LEFT JOIN (
+//         		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+//         		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+//         		  FROM losanxuat
+//         		  GROUP BY _id_khpx
+//         		) AS losx ON khpx._id = losx._id_khpx
+//               ) SELECT COUNT(*) AS totalCount from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
 //     );
-//     const tenpx = result.recordset;
-//     res.json(tenpx);
+//     const totalCount = countResult.recordset[0].totalCount;
+
+//     const totalPages = Math.ceil(totalCount / limit);
+
+//     const info = {
+//       count: totalCount,
+//       pages: totalPages,
+//       next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+//       prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+//     };
+
+//     // Tạo đối tượng JSON phản hồi
+//     const response = {
+//       info: info,
+//       results: data,
+//     };
+
+//     res.json(response);
 //   } catch (error) {
 //     res.status(500).json(error);
 //   }
 // });
-router.get("/filterfulldkmtp", async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
-    const limit = parseInt(req.query.limit) || 20;
-    const offset = (page - 1) * limit;
-
-    const mapxList = req.query.mapx;
-    const statusList = req.query.status;
-    // console.log(mapxList);
-    const strpx = "'" + mapxList.join("','") + "'";
-    // console.log(strpx);
-    const matp = req.query.matp;
-    // console.log(matp);
-    const strstatus = "'" + statusList.join("','") + "'";
-    // console.log(strstatus);
-    const nhomtp = req.query.nhomtp;
-    // console.log(nhomtp);
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("offset", offset)
-      .input("limit", limit)
-      .query(
-        `with t as(
-        SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
-coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
-		FROM lokehoachphanxuong AS khpx
-		LEFT JOIN (
-		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
-		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
-		  FROM losanxuat
-		  GROUP BY _id_khpx
-		) AS losx ON khpx._id = losx._id_khpx
-      ) select * from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}' ORDER BY t._id OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`
-      );
-
-    // console.log(result);
-    const data = result.recordset;
-
-    // Đếm tổng số lượng bản ghi
-    const countResult = await pool.request().query(
-      `with t as(
-                SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
-        coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
-        		FROM lokehoachphanxuong AS khpx
-        		LEFT JOIN (
-        		  SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
-        		  sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
-        		  FROM losanxuat
-        		  GROUP BY _id_khpx
-        		) AS losx ON khpx._id = losx._id_khpx
-              ) SELECT COUNT(*) AS totalCount from t where t.mapx in (${strpx}) and t.mathanhpham='${matp}' and t.status in (${strstatus}) and t.nhomthanhpham='${nhomtp}'`
-    );
-    const totalCount = countResult.recordset[0].totalCount;
-
-    const totalPages = Math.ceil(totalCount / limit);
-
-    const info = {
-      count: totalCount,
-      pages: totalPages,
-      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
-      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
-    };
-
-    // Tạo đối tượng JSON phản hồi
-    const response = {
-      info: info,
-      results: data,
-    };
-
-    res.json(response);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
 
 router.get("/filterChonlokhdesx", async (req, res) => {
   try {
@@ -2698,12 +2702,92 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 });
 
 // lọc dữ liệu theo tiêu chí chỉ có nhomsp và trạng thái - new update
+// router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
+//     const limit = parseInt(req.query.limit, 10) || 10;
+//     const offset = (page - 1) * limit;
+
+//     const mapxList = req.query.mapx;
+//     // console.log(mapxList);
+//     const strpx = "'" + mapxList.join("','") + "'";
+//     const nhomtp = req.query.nhomtp;
+//     const statusList = req.query.status;
+//     const strstatus = "'" + statusList.join("','") + "'";
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("offset", offset)
+//       .input("limit", limit)
+//       .query(
+//         `WITH t AS (
+//           SELECT khpx.*, 
+//                  COALESCE(tongsoluong, 0) AS tong_soluong, 
+//                  COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
+//                  COALESCE(tongsodat, 0) AS tongso_dat, 
+//                  COALESCE(tongsohong, 0) AS tongso_hong
+//           FROM lokehoachphanxuong AS khpx 
+//           LEFT JOIN (
+//             SELECT _id_khpx, 
+//                    SUM(CAST(soluonglsx AS INT)) AS tongsoluong, 
+//                    SUM(CAST(soluongkhsx AS INT)) AS tongsoluongnhanh,
+//                    SUM(CAST(tongdat AS INT)) AS tongsodat, 
+//                    SUM(CAST(tonghong AS INT)) AS tongsohong
+//             FROM losanxuat
+//             GROUP BY _id_khpx
+//           ) AS losx ON khpx._id = losx._id_khpx
+//         ) 
+//         SELECT * 
+//         FROM t 
+//         WHERE t.nhomthanhpham='${nhomtp}' 
+//           AND t.status IN (${strstatus}) 
+//           AND t.mapx IN (${strpx}) 
+//         ORDER BY t.nhomthanhpham DESC -- Đây là nơi bạn sắp xếp
+//         OFFSET @offset ROWS 
+//         FETCH NEXT @limit ROWS ONLY`
+//       );
+
+//     const data = result.recordset;
+
+//     // Đếm tổng số lượng bản ghi
+//     const countResult = await pool.request().query(
+//       `with t as(
+//           SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
+//   coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
+//       FROM lokehoachphanxuong AS khpx 
+//       LEFT JOIN (
+//         SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
+//         sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
+//         FROM losanxuat
+//         GROUP BY _id_khpx
+//       ) AS losx ON khpx._id = losx._id_khpx
+//         ) SELECT COUNT(*) AS totalCount from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
+//     );
+//     const totalCount = countResult.recordset[0].totalCount;
+
+//     const totalPages = Math.ceil(totalCount / limit);
+
+//     const info = {
+//       count: totalCount,
+//       pages: totalPages,
+//       next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
+//       prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
+//     };
+
+//     // Tạo đối tượng JSON phản hồi
+//     const response = {
+//       info: info,
+//       results: data,
+//     };
+
+//     res.json(response);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
 router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Chuyển đổi page thành số nguyên
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const offset = (page - 1) * limit;
-
     const mapxList = req.query.mapx;
     // console.log(mapxList);
     const strpx = "'" + mapxList.join("','") + "'";
@@ -2713,8 +2797,6 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
     await pool.connect();
     const result = await pool
       .request()
-      .input("offset", offset)
-      .input("limit", limit)
       .query(
         `WITH t AS (
           SELECT khpx.*, 
@@ -2737,46 +2819,12 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
         FROM t 
         WHERE t.nhomthanhpham='${nhomtp}' 
           AND t.status IN (${strstatus}) 
-          AND t.mapx IN (${strpx}) 
-        ORDER BY t.nhomthanhpham DESC -- Đây là nơi bạn sắp xếp
-        OFFSET @offset ROWS 
-        FETCH NEXT @limit ROWS ONLY`
+          AND t.mapx IN (${strpx}) `
       );
+    const tenpx = result.recordset;
 
-    const data = result.recordset;
-
-    // Đếm tổng số lượng bản ghi
-    const countResult = await pool.request().query(
-      `with t as(
-          SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
-  coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
-      FROM lokehoachphanxuong AS khpx 
-      LEFT JOIN (
-        SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
-        sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
-        FROM losanxuat
-        GROUP BY _id_khpx
-      ) AS losx ON khpx._id = losx._id_khpx
-        ) SELECT COUNT(*) AS totalCount from t where t.nhomthanhpham='${nhomtp}' and t.status in (${strstatus}) and t.mapx in (${strpx})`
-    );
-    const totalCount = countResult.recordset[0].totalCount;
-
-    const totalPages = Math.ceil(totalCount / limit);
-
-    const info = {
-      count: totalCount,
-      pages: totalPages,
-      next: page < totalPages ? `${req.path}?page=${page + 1}` : null,
-      prev: page > 1 ? `${req.path}?page=${page - 1}` : null,
-    };
-
-    // Tạo đối tượng JSON phản hồi
-    const response = {
-      info: info,
-      results: data,
-    };
-
-    res.json(response);
+    res.json(tenpx);
+    
   } catch (error) {
     res.status(500).json(error);
   }

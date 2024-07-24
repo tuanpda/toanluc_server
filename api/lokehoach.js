@@ -2721,29 +2721,29 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 //       .input("limit", limit)
 //       .query(
 //         `WITH t AS (
-//           SELECT khpx.*, 
-//                  COALESCE(tongsoluong, 0) AS tong_soluong, 
+//           SELECT khpx.*,
+//                  COALESCE(tongsoluong, 0) AS tong_soluong,
 //                  COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
-//                  COALESCE(tongsodat, 0) AS tongso_dat, 
+//                  COALESCE(tongsodat, 0) AS tongso_dat,
 //                  COALESCE(tongsohong, 0) AS tongso_hong
-//           FROM lokehoachphanxuong AS khpx 
+//           FROM lokehoachphanxuong AS khpx
 //           LEFT JOIN (
-//             SELECT _id_khpx, 
-//                    SUM(CAST(soluonglsx AS INT)) AS tongsoluong, 
+//             SELECT _id_khpx,
+//                    SUM(CAST(soluonglsx AS INT)) AS tongsoluong,
 //                    SUM(CAST(soluongkhsx AS INT)) AS tongsoluongnhanh,
-//                    SUM(CAST(tongdat AS INT)) AS tongsodat, 
+//                    SUM(CAST(tongdat AS INT)) AS tongsodat,
 //                    SUM(CAST(tonghong AS INT)) AS tongsohong
 //             FROM losanxuat
 //             GROUP BY _id_khpx
 //           ) AS losx ON khpx._id = losx._id_khpx
-//         ) 
-//         SELECT * 
-//         FROM t 
-//         WHERE t.nhomthanhpham='${nhomtp}' 
-//           AND t.status IN (${strstatus}) 
-//           AND t.mapx IN (${strpx}) 
+//         )
+//         SELECT *
+//         FROM t
+//         WHERE t.nhomthanhpham='${nhomtp}'
+//           AND t.status IN (${strstatus})
+//           AND t.mapx IN (${strpx})
 //         ORDER BY t.nhomthanhpham DESC -- Đây là nơi bạn sắp xếp
-//         OFFSET @offset ROWS 
+//         OFFSET @offset ROWS
 //         FETCH NEXT @limit ROWS ONLY`
 //       );
 
@@ -2754,7 +2754,7 @@ coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
 //       `with t as(
 //           SELECT khpx.*, COALESCE(tongsoluong, 0) AS tong_soluong, coalesce(tongsoluongnhanh,0) as tongso_luongnhanh,
 //   coalesce(tongsodat,0) as tongso_dat, coalesce(tongsohong,0) as tongso_hong
-//       FROM lokehoachphanxuong AS khpx 
+//       FROM lokehoachphanxuong AS khpx
 //       LEFT JOIN (
 //         SELECT _id_khpx, SUM(cast(soluonglsx as int)) AS tongsoluong, SUM(cast(soluongkhsx as int)) AS tongsoluongnhanh,
 //         sum(cast(tongdat as int)) as tongsodat, sum(cast(tonghong as int)) as tongsohong
@@ -2795,10 +2795,8 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
     const statusList = req.query.status;
     const strstatus = "'" + statusList.join("','") + "'";
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(
-        `WITH t AS (
+    const result = await pool.request().query(
+      `WITH t AS (
           SELECT khpx.*, 
                  COALESCE(tongsoluong, 0) AS tong_soluong, 
                  COALESCE(tongsoluongnhanh, 0) AS tongso_luongnhanh,
@@ -2820,11 +2818,10 @@ router.get("/filteronlypxandnhomtpandstatus", async (req, res) => {
         WHERE t.nhomthanhpham='${nhomtp}' 
           AND t.status IN (${strstatus}) 
           AND t.mapx IN (${strpx}) `
-      );
+    );
     const tenpx = result.recordset;
 
     res.json(tenpx);
-    
   } catch (error) {
     res.status(500).json(error);
   }
@@ -4045,6 +4042,905 @@ router.get("/locnhomthanhpham", async (req, res) => {
   }
 });
 
+// view admin design at 17/7/2024
+// tìm dữ liệu năm kế hoạch
+router.get("/getdatakehoachnamlonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tgbatdau", req.query.tgbatdau)
+      .query(`select * from kehoach where year(tgbatdau) = @tgbatdau`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu kh năm theo nhóm thành phẩm
+router.get("/getdatakehoachnamlonhamaywithnhomthanhpham", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("nhomthanhpham", req.query.nhomthanhpham)
+      .query(`select * from kehoach where nhomthanhpham = @nhomthanhpham`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu kh năm theo mã thành phẩm
+router.get("/getdatakehoachnamlonhamaywithmathanhpham", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("mathanhpham", req.query.mathanhpham)
+      .query(`select * from kehoach where mathanhpham = @mathanhpham`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu kh năm theo mã kế hoạch
+router.get("/getdatakehoachnamlonhamaywithmakehoach", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("makh", req.query.makh)
+      .query(`select * from kehoach where makh = @makh`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu kế hoạch năm kết hợp 3 tiêu chí
+router.get("/getdatakehoachnamlonhamaycombined", async (req, res) => {
+  try {
+    await pool.connect();
+
+    let query = "select * from kehoach where 1=1"; // Bắt đầu với điều kiện luôn đúng
+    let params = {};
+
+    if (req.query.mathanhpham) {
+      query += " and mathanhpham = @mathanhpham";
+      params.mathanhpham = req.query.mathanhpham;
+    }
+    if (req.query.nhomthanhpham) {
+      query += " and nhomthanhpham = @nhomthanhpham";
+      params.nhomthanhpham = req.query.nhomthanhpham;
+    }
+    if (req.query.tgbatdau) {
+      query += " and year(tgbatdau) = @tgbatdau";
+      params.tgbatdau = req.query.tgbatdau;
+    }
+    if (req.query.makh) {
+      query += " and makh = @makh";
+      params.makh = req.query.makh;
+    }
+
+    const request = pool.request();
+    Object.keys(params).forEach((key) => {
+      request.input(key, params[key]);
+    });
+
+    const result = await request.query(query);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    // console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô nhà máy theo kế hoạch năm đã chọn
+router.get("/getlonhamayinkhnam", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_khnam", req.query._id_khnam)
+      .input("mathanhpham", req.query.mathanhpham)
+      .input("nhomthanhpham", req.query.nhomthanhpham)
+      .query(
+        `select * from lokehoach where _id_khnam = @_id_khnam and mathanhpham=@mathanhpham and nhomthanhpham=@nhomthanhpham`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô kế hoạch phân xưởng
+router.get("/getlokehoachphanxuongtheonamkh", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_lonhamay", req.query._id_lonhamay)
+      .input("mathanhpham", req.query.mathanhpham)
+      .input("nhomthanhpham", req.query.nhomthanhpham)
+      .query(
+        `select * from lokehoachphanxuong where _id_lonhamay = @_id_lonhamay and mathanhpham=@mathanhpham and 
+        nhomthanhpham=@nhomthanhpham order by mapx, tuanexc`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm dữ liệu lô kế hoạch phân xưởng theo từng lô nhà máy
+router.get(
+  "/getlokehoachphanxuongtheonamkhwithforlonhamay",
+  async (req, res) => {
+    try {
+      await pool.connect();
+      const result = await pool
+        .request()
+        .input("_id_khnam", req.query._id_khnam)
+        .input("mathanhpham", req.query.mathanhpham)
+        .input("nhomthanhpham", req.query.nhomthanhpham)
+        .input("_id_lonhamay", req.query._id_lonhamay)
+        .query(
+          `select * from lokehoachphanxuong where _id_khnam = @_id_khnam and mathanhpham=@mathanhpham and 
+        nhomthanhpham=@nhomthanhpham and _id_lonhamay=@_id_lonhamay order by mapx, tuanexc`
+        );
+      const lokehoach = result.recordset;
+
+      res.json(lokehoach);
+      //console.log(lokehoach);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
+
+// tìm dữ liệu lô sản xuất
+router.get("/getlosxfromlkhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_khnam", req.query._id_khnam)
+      .input("_id_lonhamay", req.query._id_lonhamay)
+      .input("_id_khpx", req.query._id_khpx)
+      .input("mapx", req.query.mapx)
+      .query(
+        `select * from losanxuat where _id_khnam = @_id_khnam and _id_lonhamay = @_id_lonhamay and _id_khpx=@_id_khpx
+        and mapx=@mapx order by ngaybd`
+      );
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm công đoạn lương
+router.get("/getshowcongdoaninlsx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.query._id_losx)
+      .query(`select * from luongcongnhan where _id_losx=@_id_losx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm công nhật lương
+router.get("/getshowcongnhatinlsx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", req.query._id_losx)
+      .query(`select * from congnhat where _id_losx=@_id_losx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// report
+router.get("/reportChiphi", async (req, res) => {
+  try {
+    const _id_khnam = req.query._id_khnam;
+    await pool.connect();
+
+    // Truy vấn các số liệu khác nhau
+    const [
+      lokehoachCount,
+      lokehoachphanxuongCount,
+      distinctMapxLokehoachphanxuong,
+      losanxuatCount,
+      distinctMapxLosanxuat,
+      minNgaybd,
+      maxNgayhoanthanhtt,
+      completedLosanxuatCount,
+      completedLosanxuatDetails,
+      inProductionLosanxuatCount,
+      registeredLosanxuatCount,
+      otherStatusLosanxuatCount,
+      calculatedSalaryLosanxuatCount,
+      completedCalculatedSalaryLosanxuatCount,
+      completedNotCalculatedSalaryLosanxuatCount,
+      notCompletedCalculatedSalaryLosanxuatCount,
+      notCalculatedSalaryLosanxuatDetails,
+    ] = await Promise.all([
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM lokehoach WHERE _id_khnam=@_id_khnam`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM lokehoachphanxuong WHERE _id_khnam=@_id_khnam`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT mapx, COUNT(mapx) AS luot FROM lokehoachphanxuong WHERE _id_khnam=@_id_khnam GROUP BY mapx`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT mapx, COUNT(mapx) AS luot FROM losanxuat WHERE _id_khnam=@_id_khnam GROUP BY mapx`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT MIN(ngaybd) AS NgayBatDauNhoNhat FROM losanxuat WHERE _id_khnam=@_id_khnam`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT MAX(ngayhoanthanhtt) AS NgayHoanThanhLonNhat FROM losanxuat WHERE _id_khnam=@_id_khnam`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status=3`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT mapx, COUNT(mapx) AS luot FROM losanxuat WHERE _id_khnam=@_id_khnam AND status=3 GROUP BY mapx`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status=2`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status NOT IN (3,2,1)`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status_tinhluong=1`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status_tinhluong=1 AND status=3`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status_tinhluong<>1 AND status=3`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status_tinhluong=1 AND status<>3`
+        ),
+      pool
+        .request()
+        .input("_id_khnam", _id_khnam)
+        .query(
+          `SELECT count(*) as count FROM losanxuat WHERE _id_khnam=@_id_khnam AND status_tinhluong<>1`
+        ),
+    ]);
+
+    // Trả kết quả về client
+    res.json({
+      lokehoachCount: lokehoachCount.recordset[0].count,
+      lokehoachphanxuongCount: lokehoachphanxuongCount.recordset[0].count,
+      distinctMapxLokehoachphanxuong: distinctMapxLokehoachphanxuong.recordset,
+      losanxuatCount: losanxuatCount.recordset[0].count,
+      distinctMapxLosanxuat: distinctMapxLosanxuat.recordset,
+      minNgaybd: minNgaybd.recordset[0].NgayBatDauNhoNhat,
+      maxNgayhoanthanhtt: maxNgayhoanthanhtt.recordset[0].NgayHoanThanhLonNhat,
+      completedLosanxuatCount: completedLosanxuatCount.recordset[0].count,
+      completedLosanxuatDetails: completedLosanxuatDetails.recordset,
+      inProductionLosanxuatCount: inProductionLosanxuatCount.recordset[0].count,
+      registeredLosanxuatCount: registeredLosanxuatCount.recordset[0].count,
+      otherStatusLosanxuatCount: otherStatusLosanxuatCount.recordset[0].count,
+      calculatedSalaryLosanxuatCount:
+        calculatedSalaryLosanxuatCount.recordset[0].count,
+      completedCalculatedSalaryLosanxuatCount:
+        completedCalculatedSalaryLosanxuatCount.recordset[0].count,
+      completedNotCalculatedSalaryLosanxuatCount:
+        completedNotCalculatedSalaryLosanxuatCount.recordset[0].count,
+      notCompletedCalculatedSalaryLosanxuatCount:
+        notCompletedCalculatedSalaryLosanxuatCount.recordset[0].count,
+      notCalculatedSalaryLosanxuatDetails:
+        notCalculatedSalaryLosanxuatDetails.recordset[0].count,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/reportChiphiTongtien", async (req, res) => {
+  try {
+    const kehoachnam = req.query.kehoachnam;
+    await pool.connect();
+
+    // Truy vấn các số liệu khác nhau
+    const [
+      luongcongnhanCount,
+      tongluongcongdoan,
+      tongluongsodat,
+      tongluongsohong,
+      congnhatCount,
+      tongcongnhat,
+      tongDat,
+      tongHong,
+    ] = await Promise.all([
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM luongcongnhan WHERE kehoachnam=@kehoachnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `SELECT SUM(CAST(sodat AS int)*CAST(dongia AS float) + CAST(sohong AS int)*CAST(dongia AS float)) AS tongluongcongdoan FROM luongcongnhan WHERE kehoachnam=@kehoachnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `SELECT SUM(CAST(sodat AS int)*CAST(dongia AS float)) AS tongluongsodat FROM luongcongnhan WHERE kehoachnam=@kehoachnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `SELECT SUM(CAST(sohong AS int)*CAST(dongia AS float)) AS tongluongsohong FROM luongcongnhan WHERE kehoachnam=@kehoachnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `SELECT COUNT(*) AS count FROM congnhat WHERE kehoachnam=@kehoachnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `SELECT SUM(CAST(sogiocong AS float)*CAST(dongia AS float)) AS tongcongnhat FROM congnhat WHERE kehoachnam=@kehoachnam AND status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `select sum(cast(sodat as int)) as count from luongcongnhan where kehoachnam=@kehoachnam and status=1`
+        ),
+      pool
+        .request()
+        .input("kehoachnam", kehoachnam)
+        .query(
+          `select sum(cast(sohong as int)) as count from luongcongnhan where kehoachnam=@kehoachnam and status=1`
+        ),
+    ]);
+
+    // Trả kết quả về client
+    res.json({
+      luongcongnhanCount: luongcongnhanCount.recordset[0].count,
+      tongluongcongdoan: tongluongcongdoan.recordset[0].tongluongcongdoan || 0,
+      tongluongsodat: tongluongsodat.recordset[0].tongluongsodat || 0,
+      tongluongsohong: tongluongsohong.recordset[0].tongluongsohong || 0,
+      congnhatCount: congnhatCount.recordset[0].count,
+      tongcongnhat: tongcongnhat.recordset[0].tongcongnhat || 0,
+      tongDat: tongDat.recordset[0].count || 0,
+      tongHong: tongHong.recordset[0].count || 0,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json(error);
+  }
+});
+
+router.get("/reportTrencackehoachnam", async (req, res) => {
+  try {
+    await pool.connect();
+
+    // Truy vấn các số liệu khác nhau
+    const [luongcongdoantungkehoachnam, luongcongnhattungkehoachnam] =
+      await Promise.all([
+        pool.request().query(
+          `SELECT 
+              kehoachnam,
+              SUM(CAST(sodat AS int) * CAST(dongia AS float) + CAST(sohong AS int) * CAST(dongia AS float)) AS tongluongcongdoan
+            FROM 
+              luongcongnhan 
+            WHERE 
+              status = 1
+            GROUP BY 
+              kehoachnam`
+        ),
+        pool.request().query(
+          `SELECT 
+              kehoachnam,
+              SUM(CAST(sogiocong AS float) * CAST(dongia AS float)) AS tongluongcongnhat
+            FROM 
+              congnhat 
+            WHERE 
+              status = 1
+            GROUP BY 
+              kehoachnam`
+        ),
+      ]);
+
+    // Trả kết quả về client
+    res.json({
+      luongcongdoantungkehoachnam: luongcongdoantungkehoachnam.recordset,
+      luongcongnhattungkehoachnam: luongcongnhattungkehoachnam.recordset,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật trạng thái cho lô khpx
+router.get("/updateStatusLokhpxLastupdate", async (req, res) => {
+  const status = req.query.status;
+  const _id = req.query._id;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("status", status)
+      .input("_id", _id)
+      .query(`update lokehoachphanxuong set status=@status where _id=@_id`);
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật ngày bắt đầu thực tế cho lô khpx
+router.get("/updateNgaybdttLokhpxLastupdate", async (req, res) => {
+  const ngaybdthucte = req.query.ngaybdthucte;
+  const _id = req.query._id;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaybdthucte", ngaybdthucte)
+      .input("_id", _id)
+      .query(
+        `update lokehoachphanxuong set ngaybdthucte=@ngaybdthucte where _id=@_id`
+      );
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật ngày hoàn thành thực tế cho lô khpx
+router.get("/updateNgayhoanthanhttLokhpxLastupdate", async (req, res) => {
+  const ngayhoanthanhtt = req.query.ngayhoanthanhtt;
+  const _id = req.query._id;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngayhoanthanhtt", ngayhoanthanhtt)
+      .input("_id", _id)
+      .query(
+        `update lokehoachphanxuong set ngayhoanthanhtt=@ngayhoanthanhtt where _id=@_id`
+      );
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tổng hỏng cho lô khpx
+router.get("/updateTonghongLokhpxLastupdate", async (req, res) => {
+  const tonghong = req.query.tonghong;
+  const _id = req.query._id;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tonghong", tonghong)
+      .input("_id", _id)
+      .query(`update lokehoachphanxuong set tonghong=@tonghong where _id=@_id`);
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật tổng đạt cho lô khpx
+router.get("/updateTongdatLokhpxLastupdate", async (req, res) => {
+  const tongdat = req.query.tongdat;
+  const _id = req.query._id;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("tongdat", tongdat)
+      .input("_id", _id)
+      .query(`update lokehoachphanxuong set tongdat=@tongdat where _id=@_id`);
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm các công nhật công đoạn trong 1 lô sản xuất nào đó
+router.get("/showLuongcongdoanoflosx", async (req, res) => {
+  const _id_losx = req.query._id_losx;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", _id_losx)
+      .query(`select * from luongcongnhan where _id_losx=@_id_losx`);
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/showLuongcongnhatoflosx", async (req, res) => {
+  const _id_losx = req.query._id_losx;
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_losx", _id_losx)
+      .query(`select * from congnhat where _id_losx=@_id_losx`);
+    const khpx = result.recordset;
+    // console.log(tenpx)
+    res.json(khpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// chi phí cho 1 lô sản xuất
+router.get("/reportChiphiTrenmotlosx", async (req, res) => {
+  try {
+    const _id_losx = req.query._id_losx;
+    await pool.connect();
+
+    // Truy vấn các số liệu khác nhau
+    const [chiPhiDat, chiPhiHong, tongChiPhiCongdoan, tongChiPhiCongnhat] =
+      await Promise.all([
+        pool
+          .request()
+          .input("_id_losx", _id_losx)
+          .query(
+            `select sum((cast(sodat as int) * cast(dongia as float))) as chiphiDat from luongcongnhan where _id_losx=@_id_losx and status=1`
+          ),
+        pool
+          .request()
+          .input("_id_losx", _id_losx)
+          .query(
+            `select sum((cast(sohong as int)*cast(dongia as float))) as chiphiHong from luongcongnhan where _id_losx=@_id_losx  and status=1`
+          ),
+        pool
+          .request()
+          .input("_id_losx", _id_losx)
+          .query(
+            `select sum((cast(sodat as int) * cast(dongia as float)) + (cast(sohong as int)*cast(dongia as float))) as tongchiphiCongdoan from luongcongnhan where _id_losx=@_id_losx  and status=1`
+          ),
+        pool
+          .request()
+          .input("_id_losx", _id_losx)
+          .query(
+            `select sum(cast(sogiocong as float)*cast(dongia as float)) as tongchiphiCongnhat from congnhat where _id_losx=@_id_losx  and status=1`
+          ),
+      ]);
+
+    // Trả kết quả về client
+    res.json({
+      chiPhiDat: chiPhiDat.recordset[0].chiphiDat,
+      chiPhiHong: chiPhiHong.recordset[0].chiphiHong || 0,
+      tongChiPhiCongdoan:
+        tongChiPhiCongdoan.recordset[0].tongchiphiCongdoan || 0,
+      tongChiPhiCongnhat:
+        tongChiPhiCongnhat.recordset[0].tongchiphiCongnhat || 0,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json(error);
+  }
+});
+
+router.get("/reportChiphiTongtienWithPhanXuong", async (req, res) => {
+  try {
+    const makh = req.query.makh;
+    await pool.connect();
+
+    // Truy vấn các số liệu khác nhau
+    const [
+      tongluongcongdoan,
+      tongluongsodat,
+      tongluongsohong,
+      tongsodat,
+      tongsohong,
+      congnhatCount,
+      tongtiencongnhat,
+    ] = await Promise.all([
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          SUM(CAST(sodat AS int) * CAST(dongia AS float) + CAST(sohong AS int) * CAST(dongia AS float)) AS tongluongcongdoan
+        FROM 
+          luongcongnhan 
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          SUM(CAST(sodat AS int) * CAST(dongia AS float) ) AS tongluongsodat
+        FROM 
+          luongcongnhan 
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          SUM(CAST(sohong AS int) * CAST(dongia AS float) ) AS tongluongsohong
+        FROM 
+          luongcongnhan 
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          SUM(CAST(sodat AS int)) AS tongsodat
+        FROM 
+          luongcongnhan 
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          SUM(CAST(sohong AS int)) AS tongsohong
+        FROM 
+          luongcongnhan 
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          COUNT(*) tongcongnhat
+        FROM 
+          congnhat
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+      pool
+        .request()
+        .input("makh", makh)
+        .query(
+          `SELECT 
+          mapx, 
+          SUM(CAST(sogiocong AS float) * CAST(dongia AS float)) AS tongtiencongnhat
+        FROM 
+          congnhat
+        WHERE 
+          kehoachnam = @makh
+          AND status = 1
+        GROUP BY 
+          mapx`
+        ),
+    ]);
+
+    // Trả kết quả về client
+    res.json({
+      tongluongcongdoan: tongluongcongdoan.recordset,
+      tongluongsodat: tongluongsodat.recordset,
+      tongluongsohong: tongluongsohong.recordset,
+      tongsodat: tongsodat.recordset,
+      tongsohong: tongsohong.recordset,
+      congnhatCount: congnhatCount.recordset,
+      tongtiencongnhat: tongtiencongnhat.recordset,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json(error);
+  }
+});
+
+// cập toàn bộ thông tin cho lô kế hoạch phân xưởng
+router.post("/updateLokehoachphanxuongalllsx", async (req, res) => {
+  const lokh = req.body;
+  // console.log(lokh.ngaybatdautt);
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaybdthucte", req.body.ngaybatdautt)
+      .input("ngayhoanthanhtt", req.body.ngayketthuctt)
+      .input("tongdat", req.body.tongdat)
+      .input("tonghong", req.body.tonghong)
+      .input("status", req.body.status)
+      .input("_id", req.body.idkhnam)
+      .query(
+        `update lokehoachphanxuong set ngaybdthucte=@ngaybdthucte, ngayhoanthanhtt=@ngayhoanthanhtt, tongdat=@tongdat, tonghong=@tonghong, status=@status, islock=1 where _id=@_id`
+      );
+    const tenpx = result.recordset;
+    // console.log(tenpx)
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật số lượng đạt ghi nhận cho các lô được ghi nhận theo tỏng đạt
+router.get("/soluongdatghinhanloduocchon", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("slhtghinhan", req.query.slhtghinhan)
+      .input("_id", req.query._id)
+      .query(`update losanxuat set slhtghinhan=@slhtghinhan where _id=@_id`);
+    const tenpx = result.recordset;
+    // console.log(tenpx)
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật số lượng đạt ghi nhận cho các lô không được ghi nhận theo tỏng đạt
+router.get("/soluongdatghinhanlokhongduocchon", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`update losanxuat set slhtghinhan=0 where _id=@_id`);
+    const tenpx = result.recordset;
+    // console.log(tenpx)
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+////////////////
 // Tìm xem có bao nhiêu sản phẩm trong lô sản xuất
 router.get("/hmsanphamlosx", async (req, res) => {
   try {

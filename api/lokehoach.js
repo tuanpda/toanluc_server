@@ -4907,6 +4907,49 @@ router.post("/updateLokehoachphanxuongalllsx", async (req, res) => {
   }
 });
 
+// cập toàn bộ thông tin cho lô kế hoạch nhà máy
+router.post("/updateLokehoachnhamay", async (req, res) => {
+  const lokh = req.body;
+  // console.log(lokh);
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("ngaybatdautt", req.body.ngaybatdautt)
+      .input("ngayhoanthanhtt", req.body.ngayketthuctt)
+      .input("tongdat", req.body.tongdat)
+      .input("tonghong", req.body.tonghong)
+      .input("status", req.body.status)
+      .input("_id", req.body.idlokehoachnhamay)
+      .query(
+        `update lokehoach set ngaybatdautt=@ngaybatdautt, ngayhoanthanhtt=@ngayhoanthanhtt, tongdat=@tongdat, tonghong=@tonghong, status=@status, islock=1 where _id=@_id`
+      );
+    const tenpx = result.recordset;
+    // console.log(tenpx)
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// tìm toàn bộ lsx có trong kh nhà máy
+router.get("/getalllsxinlokhnhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_lonhamay", req.query._id_lonhamay)
+      .query(
+        `select _id, _id_lonhamay, _id_khpx, malosx, status from losanxuat where _id_lonhamay=@_id_lonhamay`
+      );
+    const tenpx = result.recordset;
+    // console.log(tenpx)
+    res.json(tenpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // cập nhật số lượng đạt ghi nhận cho các lô được ghi nhận theo tỏng đạt
 router.get("/soluongdatghinhanloduocchon", async (req, res) => {
   try {

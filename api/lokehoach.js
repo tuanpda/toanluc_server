@@ -1143,6 +1143,54 @@ router.get("/searchmalonmlokhpx", async (req, res) => {
   }
 });
 
+// xem trạng thái lô nhà máy
+router.get("/checkstatuslonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`SELECT status FROM lokehoach where _id=@_id`);
+    const trangthai = result.recordset[0];
+    // console.log(trangthai);
+    res.json(trangthai.status);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// xem lô nhà máy có lô khpx nào chưa
+router.get("/checklokehoachpxdacolonaochua", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_lonhamay", req.query._id_lonhamay)
+      .query(
+        `SELECT * FROM lokehoachphanxuong where _id_lonhamay=@_id_lonhamay`
+      );
+    const lokhpx = result.recordset;
+    res.json(lokhpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật trạng thái lô nhà máy thành đăng ký. sau khi lô KHPX đầu tiên của lô nhà máy này được tạo ra
+router.get("/updatelonhamayaftercreatedlokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`update lokehoach set status=1 where _id=@_id`);
+    const lokhpx = result.recordset;
+    res.json(lokhpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // tìm dữ liệu lô kế hoạch phân xưởng theo trước ngày kết thúc
 router.get("/searchlokhpxtheongaykt", async (req, res) => {
   try {

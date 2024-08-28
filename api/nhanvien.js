@@ -209,13 +209,15 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
       .input("ngaycong", req.body.ngaycong)
       .input("luongthemgio", req.body.luongthemgio)
       .input("sogiongoaigio", req.body.sogiongoaigio)
-      .input("sogiongoaigiochunhat", req.body.sogiongoaigiochunhat).query(`
+      .input("sogiongoaigiochunhat", req.body.sogiongoaigiochunhat)
+      .input("ngayvaocongty", req.body.ngayvaocongty)
+      .input("ngaynghiviec", req.body.ngaynghiviec).query(`
                       INSERT INTO nhanvien (manv, tennv, mapb, makhoi, tenkhoi, tenphong, sodienthoai, cccd, anhdd, ngaysinh, gioitinh, mucluong, 
                         lhkhancap, diachilh, sotknh, tennh, diengiai, createdAt, accadd, thuong, dt_dieuchinh, dt_thuong, dt_phat, luongngoaih, luongngay, bacluong, 
-                        luongtrachnhiem, congdoan, trangthai, chutaikhoan, phucaptn, luongphatsinh, thuongdoanhthu, ngaycong, luongthemgio, sogiongoaigio, sogiongoaigiochunhat) 
+                        luongtrachnhiem, congdoan, trangthai, chutaikhoan, phucaptn, luongphatsinh, thuongdoanhthu, ngaycong, luongthemgio, sogiongoaigio, sogiongoaigiochunhat, ngayvaocongty, ngaynghiviec) 
                       VALUES (@manv, @tennv, @mapb, @makhoi, @tenkhoi, @tenphong, @sodienthoai, @cccd, @anhdd, @ngaysinh, @gioitinh, @mucluong, 
                         @lhkhancap, @diachilh, @sotknh, @tennh, @diengiai, @createdAt, @accadd, @thuong, @dt_dieuchinh, @dt_thuong, @dt_phat, @luongngoaih, @luongngay, @bacluong, 
-                        @luongtrachnhiem, @congdoan, @trangthai, @chutaikhoan, @phucaptn, @luongphatsinh, @thuongdoanhthu, @ngaycong, @luongthemgio, @sogiongoaigio, @sogiongoaigiochunhat);
+                        @luongtrachnhiem, @congdoan, @trangthai, @chutaikhoan, @phucaptn, @luongphatsinh, @thuongdoanhthu, @ngaycong, @luongthemgio, @sogiongoaigio, @sogiongoaigiochunhat, @ngayvaocongty, @ngaynghiviec);
                   `);
     const nhanvien = req.body;
     // res.json(nhanvien);

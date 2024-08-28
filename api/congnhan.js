@@ -582,9 +582,11 @@ router.post("/addcongnhan", async (req, res) => {
       .input("trangthai", req.body.trangthai)
       .input("createdAt", req.body.createdAt)
       .input("createdBy", req.body.createdBy)
-      .input("chutaikhoan", req.body.chutaikhoan).query(`
-                        INSERT INTO congnhan (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, luongmem, anluongqlsp, luongqlsp, tyleqlsp, ngayhotro, tienhotro, antrua, congdoan, trangthai, createdAt, createdBy, chutaikhoan) 
-                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @luongmem, @anluongqlsp, @luongqlsp, @tyleqlsp, @ngayhotro, @tienhotro, @antrua, @congdoan, @trangthai, @createdAt, @createdBy, @chutaikhoan);
+      .input("chutaikhoan", req.body.chutaikhoan)
+      .input("ngayvaocongty", req.body.ngayvaocongty)
+      .input("ngaynghiviec", req.body.ngaynghiviec).query(`
+                        INSERT INTO congnhan (macn, tencn, mapx, tenpx, sdt, diachi, cccd, mato, tento, chucvu, luongcb, nguoilienhe, sotknh, tennh, ghichu, luongmem, anluongqlsp, luongqlsp, tyleqlsp, ngayhotro, tienhotro, antrua, congdoan, trangthai, createdAt, createdBy, chutaikhoan, ngayvaocongty, ngaynghiviec) 
+                        VALUES (@macn, @tencn, @mapx, @tenpx, @sdt, @diachi, @cccd, @mato, @tento, @chucvu, @luongcb, @nguoilienhe, @sotknh, @tennh, @ghichu, @luongmem, @anluongqlsp, @luongqlsp, @tyleqlsp, @ngayhotro, @tienhotro, @antrua, @congdoan, @trangthai, @createdAt, @createdBy, @chutaikhoan, @ngayvaocongty, @ngaynghiviec);
                     `);
     const cn = req.body;
     res.json(cn);
@@ -814,6 +816,8 @@ router.patch("/:_id", async (req, res) => {
         .input("ghichu", req.body.ghichu)
         .input("updatedAt", req.body.updatedAt)
         .input("chutaikhoan", req.body.chutaikhoan)
+        .input("ngayvaocongty", req.body.ngayvaocongty)
+        .input("ngaynghiviec", req.body.ngaynghiviec)
         .query(
           `UPDATE congnhan SET 
                 macn = @macn, 
@@ -832,7 +836,9 @@ router.patch("/:_id", async (req, res) => {
                 tennh = @tennh,
                 ghichu = @ghichu,
                 updatedAt = @updatedAt,
-                chutaikhoan = @chutaikhoan
+                chutaikhoan = @chutaikhoan,
+                ngayvaocongty = @ngayvaocongty,
+                ngaynghiviec = @ngaynghiviec
                 WHERE _id = @_id;`
         );
       res.json({

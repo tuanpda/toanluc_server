@@ -36,7 +36,5 @@ app.use("/api/nguyencong", require("./api/nguyencong"));
 app.use("/api/online", require("./api/online"));
 
 app.listen(process.env.PORT, () => {
-  console.log(
-    `Server started running on ${process.env.PORT}`
-  );
+  console.log(`Server started running on ${process.env.PORT}`);
 });

@@ -558,6 +558,36 @@ router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
   }
 });
 
+// check xem lô sx này có cha là lkhpx và lnm nào??
+router.get("/getinfofatheroflosx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`SELECT * FROM lokehoachphanxuong where _id=@_id`);
+    const lokehoachpx = result.recordset[0];
+    res.json(lokehoachpx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// check xem lô khpx cha này có bao nhiêu lsx
+router.get("/howmuchlosxfromlokhpx", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id_khpx", req.query._id_khpx)
+      .query(`SELECT * FROM losanxuat where _id_khpx=@_id_khpx`);
+    const losx = result.recordset;
+    res.json(losx);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // update mato
 router.patch("/updatemato/:malonhamay", async (req, res) => {
   try {
@@ -5380,10 +5410,10 @@ router.get("/predelete_lokehoachpx", async (req, res) => {
   try {
     await pool.connect();
     // const id = req.query._id;
-    const result = await pool.request().input("_id", req.query._id).query(
-      // `select * from losanxuat where kehoachnam=@kehoachnam and makh=@makh and makhpx=@makhpx and mapx=@mapx`
-      `select _id from lokehoachphanxuong where _id in (select _id_khpx from losanxuat) AND _id = @_id`
-    );
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`select * from losanxuat where _id_khpx=@_id`);
     const losx = result.recordset;
 
     res.json(losx);
@@ -5885,6 +5915,32 @@ router.delete("/kehoachnhamay/:_id", async (req, res) => {
 });
 // delete 1 kế hoạch phân xưởng
 // yêu cầu phải chưa phát sinh lô sản xuất
+// router.delete("/kehoachphanxuong/:_id", async (req, res) => {
+//   try {
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("_id", req.params._id)
+//       .query(`SELECT * FROM lokehoachphanxuong WHERE _id = @_id`);
+//     let lcn = result.recordset.length ? result.recordset[0] : null;
+//     if (lcn) {
+//       await pool
+//         .request()
+//         .input("_id", req.params._id)
+//         .query(
+//           `DELETE FROM lokehoachphanxuong WHERE _id = @_id and status=0 and _id not in(select _id_khpx from losanxuat)`
+//         );
+//       res.json(lcn);
+//     } else {
+//       res.status(404).json({
+//         message: "Không tìm thấy sản phẩm này",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
 router.delete("/kehoachphanxuong/:_id", async (req, res) => {
   try {
     await pool.connect();
@@ -5897,9 +5953,7 @@ router.delete("/kehoachphanxuong/:_id", async (req, res) => {
       await pool
         .request()
         .input("_id", req.params._id)
-        .query(
-          `DELETE FROM lokehoachphanxuong WHERE _id = @_id and status=0 and _id not in(select _id_khpx from losanxuat)`
-        );
+        .query(`DELETE FROM lokehoachphanxuong WHERE _id = @_id and status=0`);
       res.json(lcn);
     } else {
       res.status(404).json({

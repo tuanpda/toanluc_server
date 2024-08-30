@@ -336,6 +336,8 @@ router.get("/baocaothangtheoto", async (req, res) => {
 
 // báo cáo chấm công theo phân xưởng
 router.get("/baocaochamcongthangphanxuong", async (req, res) => {
+  // console.log(req.query);
+
   try {
     await pool.connect();
     const result = await pool

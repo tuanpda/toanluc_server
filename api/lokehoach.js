@@ -47,21 +47,23 @@ router.patch("/:_id", async (req, res) => {
       await pool
         .request()
         .input("_id", req.params._id)
-        .input("makhpx", req.body.makhpx)
+        .input("malonhamay", req.body.malonhamay)
         .input("soluong", req.body.soluong)
         .input("ngaybd", req.body.ngaybd)
         .input("ngaykt", req.body.ngaykt)
         .input("tuanbd", req.body.tuanbd)
         .input("tuankt", req.body.tuankt)
+        .input("status", req.body.status)
         .input("updatedAt", req.body.updatedAt)
         .query(
           `UPDATE lokehoach SET 
-                        makhpx = @makhpx, 
+                        malonhamay = @malonhamay, 
                         soluong = @soluong,
                         ngaybd = @ngaybd, 
                         ngaykt = @ngaykt,
                         tuanbd = @tuanbd, 
                         tuankt = @tuankt,
+                        status = @status,
                         updatedAt = @updatedAt
                         WHERE _id = @_id;`
         );
@@ -248,6 +250,90 @@ router.get("/updatestatuslonhamay", async (req, res) => {
       .input("makhpx", req.query.makhpx)
       .input("status", req.query.status)
       .query(`update lokehoach set status=@status where makhpx=@makhpx`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lấy trạng thái lô nhà máy
+router.get("/gettrangthailonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`select status from lokehoach where _id=@_id`);
+    const lokehoach = result.recordset[0].status;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+// cập nhật lô nhà máy trạng thái = 2
+router.get("/updatestatuslonhamayto2", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`update lokehoach set status=2 where _id=@_id`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// lấy trạng thái lô khpx
+router.get("/gettrangthailokehoachphanxuong", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`select status from lokehoachphanxuong where _id=@_id`);
+    const lokehoach = result.recordset[0].status;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+// cập nhật lô nhà máy trạng thái = 2
+router.get("/updatestatuslokhpxto2", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .query(`update lokehoachphanxuong set status=2 where _id=@_id`);
+    const lokehoach = result.recordset;
+
+    res.json(lokehoach);
+    //console.log(lokehoach);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// cập nhật trạng thái lnm
+router.get("/updatetrangthailonhamay", async (req, res) => {
+  try {
+    await pool.connect();
+    const result = await pool
+      .request()
+      .input("_id", req.query._id)
+      .input("status", req.query.status)
+      .query(`update lokehoach set status=@status where _id=@_id`);
     const lokehoach = result.recordset;
 
     res.json(lokehoach);
@@ -527,6 +613,8 @@ router.patch("/losanxuat/statusandngayhttt/:_id", async (req, res) => {
 
 // update số lượng cập nhật nhanh và status cho lsx
 router.patch("/losanxuat/soluongcnnandststus/:_id", async (req, res) => {
+  console.log(req.body.status);
+
   try {
     await pool.connect();
     const result = await pool

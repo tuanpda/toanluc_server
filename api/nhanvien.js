@@ -239,9 +239,14 @@ router.post("/addnhanvien", upload.single("anhdd"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .query(`SELECT * FROM nhanvien order by makhoi, mapb`);
+    const result = await pool.request().query(`SELECT * FROM nhanvien
+ORDER BY 
+    CASE 
+        WHEN trangthai = 1 THEN 0
+        WHEN trangthai = 0 THEN 1
+    END, 
+    makhoi, 
+    mapb ASC;`);
     const nv = result.recordset;
 
     res.json(nv);
@@ -320,10 +325,17 @@ router.get("/reportnhansu", async (req, res) => {
 router.get("/getallnhanvien", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .input("mapb", req.query.mapb)
-      .query(`SELECT * FROM nhanvien where mapb=@mapb`);
+    const result = await pool.request().input("mapb", req.query.mapb)
+      .query(`SELECT * FROM nhanvien
+WHERE mapb = @mapb AND trangthai IN (0, 1)  -- Điều kiện lọc các bản ghi theo mapb và trạng thái
+ORDER BY 
+    CASE 
+        WHEN trangthai = 1 THEN 0
+        WHEN trangthai = 0 THEN 1
+    END, 
+    makhoi, 
+    mapb ASC;
+`);
     const nv = result.recordset;
 
     res.json(nv);

@@ -374,7 +374,13 @@ router.get("/baocaochamcongthangto", async (req, res) => {
 router.get("/allcongnhan2trangthai", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool.request().query("select * from congnhan");
+    const result = await pool.request().query(`SELECT * FROM congnhan
+ORDER BY 
+    CASE 
+        WHEN trangthai = 1 THEN 0
+        WHEN trangthai = 0 THEN 1
+    END, 
+    mapx ASC;`);
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -417,10 +423,16 @@ router.get("/allcongnhanpx", async (req, res) => {
 router.get("/allcongnhanpx2trangthai", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .input("mapx", req.query.mapx)
-      .query("select * from congnhan where mapx=@mapx order by sttchon");
+    const result = await pool.request().input("mapx", req.query.mapx)
+      .query(`SELECT * FROM congnhan
+            WHERE mapx = @mapx 
+            ORDER BY 
+                CASE 
+                    WHEN sttchon = 1 THEN 0
+                    WHEN sttchon = 0 THEN 1
+                END, 
+                sttchon ASC;
+`);
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {
@@ -449,10 +461,16 @@ router.get("/allcongnhanto", async (req, res) => {
 router.get("/allcongnhanto2trangthai", async (req, res) => {
   try {
     await pool.connect();
-    const result = await pool
-      .request()
-      .input("mato", req.query.mato)
-      .query("select * from congnhan where mato=@mato order by sttchon");
+    const result = await pool.request().input("mato", req.query.mato)
+      .query(`SELECT * FROM congnhan
+            WHERE matp = @mato 
+            ORDER BY 
+                CASE 
+                    WHEN sttchon = 1 THEN 0
+                    WHEN sttchon = 0 THEN 1
+                END, 
+                sttchon ASC;
+`);
     const cn = result.recordset;
     res.json(cn);
   } catch (error) {

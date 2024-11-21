@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -47,6 +46,5 @@ router.post("/access/login", async (req, res, next) => {
     res.status(500).json(error);
   }
 });
-
 
 module.exports = router;

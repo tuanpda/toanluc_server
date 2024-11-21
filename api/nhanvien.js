@@ -352,7 +352,11 @@ router.get("/getallnhanvienmakhoi", async (req, res) => {
     const result = await pool
       .request()
       .input("makhoi", req.query.makhoi)
-      .query(`SELECT * FROM nhanvien where makhoi=@makhoi order by mapb`);
+      .query(
+        `SELECT * FROM nhanvien where makhoi=@makhoi and trangthai in (0,1) order 
+        by case when trangthai=1 then 0 
+        when trangthai = 0 then 1 end, makhoi, mapb asc`
+      );
     const nv = result.recordset;
 
     res.json(nv);

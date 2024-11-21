@@ -463,7 +463,7 @@ router.get("/allcongnhanto2trangthai", async (req, res) => {
     await pool.connect();
     const result = await pool.request().input("mato", req.query.mato)
       .query(`SELECT * FROM congnhan
-            WHERE matp = @mato 
+            WHERE mato = @mato 
             ORDER BY 
                 CASE 
                     WHEN trangthai = 1 THEN 0

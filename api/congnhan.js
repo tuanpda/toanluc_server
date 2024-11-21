@@ -425,11 +425,11 @@ router.get("/allcongnhanpx2trangthai", async (req, res) => {
     await pool.connect();
     const result = await pool.request().input("mapx", req.query.mapx)
       .query(`SELECT * FROM congnhan
-            WHERE mapx = @mapx 
+            WHERE mapx = @mapx
             ORDER BY 
                 CASE 
-                    WHEN sttchon = 1 THEN 0
-                    WHEN sttchon = 0 THEN 1
+                    WHEN trangthai = 1 THEN 0
+                    WHEN trangthai = 0 THEN 1
                 END, 
                 sttchon ASC;
 `);
@@ -466,8 +466,8 @@ router.get("/allcongnhanto2trangthai", async (req, res) => {
             WHERE matp = @mato 
             ORDER BY 
                 CASE 
-                    WHEN sttchon = 1 THEN 0
-                    WHEN sttchon = 0 THEN 1
+                    WHEN trangthai = 1 THEN 0
+                    WHEN trangthai = 0 THEN 1
                 END, 
                 sttchon ASC;
 `);
